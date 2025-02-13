@@ -14,14 +14,14 @@ applications:
       phases:
         preBuild:
           commands:
-            - "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
-            - "export NVM_DIR=\"$HOME/.nvm\""
-            - "[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\""
-            - "nvm install 16"
             - "nvm use 16"
             - "node -v"
-            - "sudo amazon-linux-extras enable corretto8"
-            - "sudo yum install -y java-11-amazon-corretto-devel maven"
+            - "sudo rpm --import https://yum.corretto.aws/corretto.key"
+            - "sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo"
+            - "sudo yum install -y java-11-amazon-corretto-devel"
+            - "sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo"
+            - "sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo"
+            - "sudo yum install -y apache-maven"
             - "export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto"
             - "export PATH=$PATH:$JAVA_HOME/bin"
             - "java -version"
