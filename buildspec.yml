@@ -1,22 +1,34 @@
 version: 0.2
-phases:
-  install:
-    runtime-versions:
-      java: corretto11
-  pre_build:
-    commands:
-      - echo "Pre-build phase"
-      - java -version
-      - mvn -version
-  build:
-    commands:
-      - echo "Build phase"
-      - mvn clean package
-  post_build:
-    commands:
-      - echo "Post-build phase"
-artifacts:
-  files:
-    - target/*.jar
-    - src/main/resources/static/**/*
-  discard-paths: no
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "No frontend pre-build required"
+    build:
+      commands:
+        - echo "No frontend build required"
+  artifacts:
+    baseDirectory: src/main/resources/static
+    files:
+      - '**/*'
+backend:
+  phases:
+    install:
+      runtime-versions:
+        java: corretto11
+    pre_build:
+      commands:
+        - echo "Pre-build phase"
+        - java -version
+        - mvn -version
+    build:
+      commands:
+        - echo "Build phase"
+        - mvn clean package
+    post_build:
+      commands:
+        - echo "Post-build phase"
+  artifacts:
+    files:
+      - target/*.jar
+    discard-paths: no
