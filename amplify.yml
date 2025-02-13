@@ -7,7 +7,8 @@ applications:
           commands:
             - nvm use 16
             - node -v
-            - yum install -y maven
+            - sudo apt-get update
+            - sudo apt-get install -y maven
             - mvn -v
         build:
           commands:
