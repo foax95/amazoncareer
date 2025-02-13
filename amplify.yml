@@ -14,7 +14,9 @@ applications:
       phases:
         preBuild:
           commands:
-            - dnf install -y java-11-amazon-corretto maven
+            - sudo yum install -y java-11-amazon-corretto-headless maven
+            - java -version
+            - mvn -version
         build:
           commands:
             - mvn clean package
