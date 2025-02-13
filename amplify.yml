@@ -1,6 +1,7 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: .
+    frontend:
       phases:
         build:
           commands:
@@ -9,8 +10,7 @@ applications:
         baseDirectory: src/main/resources/static
         files:
           - '**/*'
-    appRoot: src/main/resources/static
-  - backend:
+    backend:
       phases:
         preBuild:
           commands:
