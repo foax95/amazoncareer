@@ -1,0 +1,25 @@
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: us-east-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.amazonaws.util.EC2MetadataUtils: error
+    org.springframework: INFO
+    com.amazon.career: DEBUG
+
+spring:
+  application:
+    name: career-adventure
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

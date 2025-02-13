@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Career Adventure</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Navigation Header -->
+<header class="nav-header">
+    <div class="nav-title">Amazon Career Adventure</div>
+    <div class="nav-score">Score: <span id="scoreDisplay">0</span></div>
+</header>
+
+<!-- Progress Bar -->
+<div class="progress-bar">
+    <div class="progress-fill" id="progressBar"></div>
+</div>
+
+<!-- Welcome Screen -->
+<div id="welcomeScreen" class="page active">
+    <div class="welcome-container">
+        <div class="floating-boxes"></div>
+        <div class="welcome-content">
+            <h1 class="welcome-title">Welcome to Your Amazon Journey</h1>
+            <form id="registrationForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="name" class="input-field" placeholder="Your Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" class="input-field" placeholder="Your Email" required>
+                </div>
+                <button type="submit" class="button-primary">Begin Your Adventure</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Main Menu -->
+<div id="mainMenu" class="page">
+    <div class="container">
+        <h2>Choose Your Path</h2>
+        <div class="menu-grid">
+            <div class="menu-item" onclick="showSection('applicationGuide')">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Application Guide</h3>
+                <p>Learn how to apply step by step</p>
+                <span class="completion-badge" id="applicationBadge">
+                        <i class="fas fa-lock"></i>
+                    </span>
+            </div>
+            <div class="menu-item" onclick="showSection('jobTypes')">
+                <i class="fas fa-building"></i>
+                <h3>Amazon Facilities</h3>
+                <p>Explore our different job opportunities</p>
+                <span class="completion-badge" id="facilitiesBadge">
+                        <i class="fas fa-lock"></i>
+                    </span>
+            </div>
+            <div class="menu-item" onclick="showSection('quiz')" id="quizMenuItem">
+                <i class="fas fa-question-circle"></i>
+                <h3>Knowledge Quiz</h3>
+                <p>Test your Amazon knowledge</p>
+                <span class="completion-badge" id="quizBadge">
+                        <i class="fas fa-lock"></i>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Application Guide -->
+<div id="applicationGuide" class="page">
+    <div class="container">
+        <button class="button-primary" onclick="showSection('mainMenu')">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+        </button>
+        <h2>Your Path to Amazon</h2>
+        <div id="guideSteps" class="steps-container"></div>
+    </div>
+</div>
+
+<!-- Job Types -->
+<div id="jobTypes" class="page">
+    <div class="container">
+        <button class="button-primary" onclick="showSection('mainMenu')">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+        </button>
+        <h2>Amazon Facilities</h2>
+        <div id="facilitiesGrid" class="facilities-grid"></div>
+    </div>
+</div>
+
+<!-- Quiz Section -->
+<div id="quiz" class="page">
+    <div class="container">
+        <button class="button-primary" onclick="showSection('mainMenu')">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+        </button>
+        <h2>Test Your Knowledge</h2>
+        <div class="quiz-categories" id="quizCategories"></div>
+        <div id="questionContainer" class="question-container" style="display: none;"></div>
+    </div>
+</div>
+
+<!-- Peccy Assistant -->
+<div class="assistant-container">
+    <div class="assistant" onclick="toggleAssistant()">
+        <i class="fas fa-robot"></i>
+    </div>
+    <div class="speech-bubble" id="assistantMessage"></div>
+</div>
+
+<!-- Reset Button -->
+<button class="button-primary reset-button" onclick="confirmReset()">
+    <i class="fas fa-redo"></i> Reset Progress
+</button>
+
+<!-- Scripts -->
+<script src="js/gameState.js"></script>
+<script src="js/applicationData.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

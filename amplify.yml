@@ -1,0 +1,27 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        build:
+          commands:
+            - echo "No frontend build required - static files"
+      artifacts:
+        baseDirectory: src/main/resources/static
+        files:
+          - '**/*'
+    appRoot: src/main/resources/static
+  - backend:
+      phases:
+        preBuild:
+          commands:
+            - yum install -y java-11-amazon-corretto
+            - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+            - export PATH=$PATH:$JAVA_HOME/bin
+            - java -version
+        build:
+          commands:
+            - mvn clean install
+      artifacts:
+        baseDirectory: target
+        files:
+          - '*.jar'

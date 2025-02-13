@@ -1,0 +1,386 @@
+:root {
+    --amazon-navy: #232F3E;
+    --amazon-orange: #FF9900;
+    --amazon-blue: #1768C9;
+    --amazon-white: #FFFFFF;
+    --amazon-grey: #8B96A3;
+    --amazon-light-grey: #D1D5DA;
+    --amazon-background: #F8F9FA;
+    --amazon-success: #4CAF50;
+    --amazon-warning: #FFC107;
+    --amazon-error: #F44336;
+    --text-primary: #232F3E;
+    --text-secondary: #56616C;
+    --text-white: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Amazon Ember", Arial, sans-serif;
+}
+
+body {
+    background-color: var(--amazon-background);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Core Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Basic Page Structure */
+.page {
+    display: none;
+    min-height: 100vh;
+    padding-top: 60px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.page.active {
+    display: block;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navigation Header */
+.nav-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--amazon-navy);
+    color: var(--text-white);
+    padding: 15px 20px;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.nav-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.nav-score {
+    background: var(--amazon-orange);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* Progress Bar */
+.progress-bar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--amazon-light-grey);
+    z-index: 999;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amazon-orange), var(--amazon-blue));
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+/* Welcome Screen */
+.welcome-container {
+    background: linear-gradient(135deg, var(--amazon-navy) 0%, var(--amazon-blue) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.floating-boxes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.floating-box {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    animation: float 15s infinite;
+}
+
+.welcome-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.welcome-content:hover {
+    transform: translateY(-5px);
+}
+
+.welcome-title {
+    color: var(--amazon-navy);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.welcome-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--amazon-orange);
+}
+
+/* Form Elements */
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-field {
+    width: 100%;
+    padding: 15px 15px 15px 40px;
+    border: 2px solid var(--amazon-grey);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: var(--amazon-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(23,104,201,0.1);
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--amazon-grey);
+}
+
+/* Buttons */
+.button-primary {
+    background: var(--amazmazon-orange);
+    color: var(--text-white);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.button-primary:hover {
+    background: #e88a00;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Cards */
+.card {
+    background: var(--amazon-white);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 15px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* Assistant (Peccy) */
+.assistant-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.assistant {
+    background: var(--amazon-orange);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    animation: float 3s infinite;
+}
+
+.assistant i {
+    color: var(--text-white);
+    font-size: 24px;
+}
+
+.assistant:hover {
+    transform: scale(1.1);
+}
+
+.speech-bubble {
+    position: absolute;
+    right: 80px;
+    bottom: 10px;
+    background: var(--amazon-white);
+    padding: 15px 20px;
+    border-radius: 10px;
+    max-width: 250px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.speech-bubble.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    bottom: 20px;
+    border-left: 10px solid var(--amazon-white);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+/* Main Menu Grid */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.menu-item {
+    background: var(--amazon-white);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.menu-item i {
+    font-size: 2.5em;
+    color: var(--amazon-orange);
+    margin-bottom: 15px;
+}
+
+/* Achievement Popup */
+.achievement-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--amazon-navy);
+    color: var(--text-white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.achievement-popup.show {
+    transform: translateX(0);
+}
+
+.achievement-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.achievement-content i {
+    font-size: 24px;
+    color: var(--amazon-orange);
+}
+
+.achievement-text {
+    flex: 1;
+}
+
+.achievement-points {
+    color: var(--amazon-orange);
+    font-weight: bold;
+}
+
+/* Reset Button */
+.reset-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 999;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+}
