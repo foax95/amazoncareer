@@ -1,15 +1,4 @@
 version: 1
-frontend:
-  phases:
-    build:
-      commands:
-        - echo "No frontend build required - static files"
-  artifacts:
-    baseDirectory: src/main/resources/static
-    files:
-      - '**/*'
-  cache:
-    paths: []
 applications:
   - appRoot: .
     frontend:
@@ -25,19 +14,17 @@ applications:
       phases:
         preBuild:
           commands:
-            - sudo amazon-linux-extras enable corretto8
-            - sudo yum install -y java-11-amazon-corretto-devel
-            - sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+            - nvm use 16
+            - node -v
+            - wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /tmp/epel-apache-maven.repo
+            - sudo mv /tmp/epel-apache-maven.repo /etc/yum.repos.d/epel-apache-maven.repo
             - sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
             - sudo yum install -y apache-maven
-            - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
-            - export PATH=$PATH:$JAVA_HOME/bin
+            -  - mvn -v
         build:
           commands:
-            - java -version
-            - mvn -version
             - mvn clean install
       artifacts:
         baseDirectory: target
         files:
-          - '*.jar'
+          - '**/*'
