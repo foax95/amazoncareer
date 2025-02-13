@@ -1,34 +1,21 @@
 version: 0.2
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - echo "No frontend pre-build required"
-    build:
-      commands:
-        - echo "No frontend build required"
-  artifacts:
-    baseDirectory: src/main/resources/static
-    files:
-      - '**/*'
-backend:
-  phases:
-    install:
-      runtime-versions:
-        java: corretto11
-    pre_build:
-      commands:
-        - echo "Pre-build phase"
-        - java -version
-        - mvn -version
-    build:
-      commands:
-        - echo "Build phase"
-        - mvn clean package
-    post_build:
-      commands:
-        - echo "Post-build phase"
-  artifacts:
-    files:
-      - target/*.jar
-    discard-paths: no
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+      nodejs: 16
+  pre_build:
+    commands:
+      - echo Nothing to do in the pre_build phase...
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean package
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - target/**/*
+    - src/main/resources/static/**/*
+  discard-paths: no
