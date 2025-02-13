@@ -23,11 +23,18 @@ applications:
           - '**/*'
     backend:
       phases:
+        preBuild:
+          commands:
+            - sudo amazon-linux-extras enable corretto8
+            - sudo yum install -y java-11-amazon-corretto-devel
+            - sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+            - sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+            - sudo yum install -y apache-maven
+            - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+            - export PATH=$PATH:$JAVA_HOME/bin
         build:
           commands:
-            - which java
             - java -version
-            - which mvn
             - mvn -version
             - mvn clean install
       artifacts:
