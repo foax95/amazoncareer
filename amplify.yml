@@ -5,7 +5,7 @@ applications:
       phases:
         build:
           commands:
-            - "echo 'No frontend build required - static files'"
+            - echo 'No frontend build required - static files'
       artifacts:
         baseDirectory: src/main/resources/static
         files:
@@ -14,21 +14,21 @@ applications:
       phases:
         preBuild:
           commands:
-            - "nvm use 16"
-            - "node -v"
-            - "sudo rpm --import https://yum.corretto.aws/corretto.key"
-            - "sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo"
-            - "sudo yum install -y java-11-amazon-corretto-devel"
-            - "sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo"
-            - "sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo"
-            - "sudo yum install -y apache-maven"
-            - "export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto"
-            - "export PATH=$PATH:$JAVA_HOME/bin"
-            - "java -version"
-            - "mvn -v"
+            - nvm use 16
+            - node -v
+            - sudo rpm --import https://yum.corretto.aws/corretto.key
+            - sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+            - sudo yum install -y java-11-amazon-corretto-devel
+            - sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+            - sudo sed -i 's/\$releasever/6/g' /etc/yum.repos.d/epel-apache-maven.repo
+            - sudo yum install -y apache-maven
+            - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+            - export PATH=$PATH:$JAVA_HOME/bin
+            - java -version
+            - mvn -v
         build:
           commands:
-            - "mvn clean package"
+            - mvn clean package
       artifacts:
         baseDirectory: target
         files:
