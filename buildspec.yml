@@ -1,22 +1,22 @@
 version: 0.2
-
 phases:
   install:
     runtime-versions:
       java: corretto11
   pre_build:
     commands:
-      - echo Nothing to do in the pre_build phase...
+      - echo "Pre-build phase"
+      - java -version
+      - mvn -version
   build:
     commands:
-      - echo Build started on `date`
+      - echo "Build phase"
       - mvn clean package
   post_build:
     commands:
-      - echo Build completed on `date`
-
+      - echo "Post-build phase"
 artifacts:
   files:
-    - target/career-adventure-1.0.0.jar
-    - appspec.yml
-  discard-paths: yes
+    - target/*.jar
+    - src/main/resources/static/**/*
+  discard-paths: no
