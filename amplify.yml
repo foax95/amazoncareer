@@ -7,22 +7,15 @@ applications:
           commands:
             - nvm use 16
             - node -v
-            - sudo apt-get update
-            - sudo apt-get install -y maven
+            - wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /tmp/epel-apache-maven.repo
+            - sudo mv /tmp/epel-apache-maven.repo /etc/yum.repos.d/epel-apache-maven.repo
+            - sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+            - sudo yum install -y apache-maven
             - mvn -v
         build:
           commands:
             - mvn clean install
       artifacts:
         baseDirectory: target
-        files:
-          - '**/*'
-    frontend:
-      phases:
-        build:
-          commands:
-            - echo "No frontend build required - static files"
-      artifacts:
-        baseDirectory: src/main/resources/static
         files:
           - '**/*'
