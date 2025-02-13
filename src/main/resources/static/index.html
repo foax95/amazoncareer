@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon Career Adventure</title>
+    <title>Day one hero</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Error handling
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
+            return false;
+        };
+    </script>
 </head>
 <body>
 <!-- Navigation Header -->
 <header class="nav-header">
-    <div class="nav-title">Amazon Career Adventure</div>
-    <div class="nav-score">Score: <span id="scoreDisplay">0</span></div>
+    <div class="nav-title">Day one hero</div>
+    <div class="nav-stats">
+        <div class="nav-score">Score: <span id="scoreDisplay">0</span></div>
+        <div class="nav-level">Level: <span id="levelDisplay">1</span></div>
+    </div>
 </header>
 
 <!-- Progress Bar -->
@@ -19,91 +29,377 @@
     <div class="progress-fill" id="progressBar"></div>
 </div>
 
-<!-- Welcome Screen -->
-<div id="welcomeScreen" class="page active">
-    <div class="welcome-container">
-        <div class="floating-boxes"></div>
-        <div class="welcome-content">
-            <h1 class="welcome-title">Welcome to Your Amazon Journey</h1>
-            <form id="registrationForm">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="name" class="input-field" placeholder="Your Name" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" class="input-field" placeholder="Your Email" required>
-                </div>
-                <button type="submit" class="button-primary">Begin Your Adventure</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Main Menu -->
-<div id="mainMenu" class="page">
-    <div class="container">
-        <h2>Choose Your Path</h2>
-        <div class="menu-grid">
-            <div class="menu-item" onclick="showSection('applicationGuide')">
-                <i class="fas fa-clipboard-list"></i>
-                <h3>Application Guide</h3>
-                <p>Learn how to apply step by step</p>
-                <span class="completion-badge" id="applicationBadge">
-                        <i class="fas fa-lock"></i>
-                    </span>
+<!-- Main Content Container -->
+<main class="main-content">
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="page active">
+        <div class="welcome-container">
+            <div class="floating-boxes">
+                <!-- Dynamic floating boxes will be added here via JavaScript -->
             </div>
-            <div class="menu-item" onclick="showSection('jobTypes')">
-                <i class="fas fa-building"></i>
-                <h3>Amazon Facilities</h3>
-                <p>Explore our different job opportunities</p>
-                <span class="completion-badge" id="facilitiesBadge">
-                        <i class="fas fa-lock"></i>
-                    </span>
-            </div>
-            <div class="menu-item" onclick="showSection('quiz')" id="quizMenuItem">
-                <i class="fas fa-question-circle"></i>
-                <h3>Knowledge Quiz</h3>
-                <p>Test your Amazon knowledge</p>
-                <span class="completion-badge" id="quizBadge">
-                        <i class="fas fa-lock"></i>
-                    </span>
+            <div class="welcome-content">
+                <h1 class="welcome-title">Welcome to Your Amazon Journey</h1>
+                <form id="registrationForm" onsubmit="handleRegistration(event)">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" class="input-field" placeholder="Your Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="input-field" placeholder="Your Email" required>
+                    </div>
+                    <button type="submit" class="button-primary">Begin Your Adventure</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Application Guide -->
-<div id="applicationGuide" class="page">
-    <div class="container">
-        <button class="button-primary" onclick="showSection('mainMenu')">
-            <i class="fas fa-arrow-left"></i> Back to Menu
-        </button>
-        <h2>Your Path to Amazon</h2>
-        <div id="guideSteps" class="steps-container"></div>
+    <!-- Main Menu -->
+    <div id="mainMenu" class="page">
+        <div class="container">
+            <h2>Choose Your Path</h2>
+            <div class="menu-grid">
+                <div class="menu-item" onclick="showSection('jobTypes')" data-section="jobTypes">
+                    <i class="fas fa-building"></i>
+                    <h3>Amazon Facilities</h3>
+                    <p>Explore different job opportunities</p>
+                    <span class="completion-badge" id="facilitiesBadge">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                </div>
+                <div class="menu-item" onclick="showSection('games')" data-section="games">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>Learning Games</h3>
+                    <p>Interactive learning challenges</p>
+                    <span class="completion-badge" id="gamesBadge">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                </div>
+                <div class="menu-item" onclick="showSection('quiz')" data-section="quiz">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Knowledge Quiz</h3>
+                    <p>Test your Amazon knowledge</p>
+                    <span class="completion-badge" id="quizBadge">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Games Section -->
+    <div id="games" class="page">
+        <div class="container">
+            <button class="button-primary return-button" onclick="showSection('mainMenu')" data-section="mainMenu">
+                <i class="fas fa-arrow-left"></i> Back to Menu
+            </button>
+
+            <!-- Games Menu -->
+            <div class="games-menu" id="gamesMenu">
+                <h2>Amazon Learning Games</h2>
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="startGame('weightSorting')" data-game="weightSorting">
+                        <i class="fas fa-weight-hanging"></i>
+                        <h3>Safety First</h3>
+                        <p>Learn proper package handling</p>
+                        <div class="game-stats">
+                            <span class="high-score">High Score: <span id="weightSortingHighScore">0</span></span>
+                        </div>
+                    </div>
+
+                    <div class="menu-item" onclick="startGame('pathFinding')" data-game="pathFinding">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>PACE Navigator</h3>
+                        <p>Find your way around Amazon</p>
+                        <div class="game-stats">
+                            <span class="high-score">Best Time: <span id="pathFindingBestTime">--:--</span></span>
+                        </div>
+                    </div>
+
+                    <div class="menu-item" onclick="startGame('matching')" data-game="matching">
+                        <i class="fas fa-th"></i>
+                        <h3>Benefits Match</h3>
+                        <p>Discover Amazon benefits</p>
+                        <div class="game-stats">
+                            <span class="high-score">High Score: <span id="matchingHighScore">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weight Sorting Game -->
+            <div id="weightSortingGame" class="game-container game-section" style="display: none;">
+                <div class="game-header">
+                    <button class="button-primary" onclick="returnToGamesMenu()">
+                        <i class="fas fa-arrow-left"></i> Back to Games
+                    </button>
+                    <div class="game-stats">
+                        <span class="score">Score: <span id="weightSortingScoreDisplay">0</span></span>
+                        <span class="timer">Time: <span id="weightSortingTimerDisplay">60</span>s</span>
+                        <span class="level">Level: <span id="weightSortingLevelDisplay">1</span></span>
+                    </div>
+                </div>
+
+                <div class="game-content">
+                    <div class="game-instructions">
+                        <h3>Sort packages by their weight:</h3>
+                        <ul>
+                            <li>Individual Lift: Up to 49 lbs</li>
+                            <li>Team Lift: 50-75 lbs</li>
+                            <li>Mechanical Aid: Over 75 lbs</li>
+                        </ul>
+                    </div>
+
+                    <div class="conveyor-belt" id="conveyorBelt">
+                        <!-- Packages will be generated here -->
+                    </div>
+
+                    <div class="sorting-zones">
+                        <div class="zone" data-type="individual">
+                            <div class="zone-header">
+                                <i class="fas fa-user"></i>
+                                <h3>Individual Lift</h3>
+                            </div>
+                            <p class="zone-description">Up to 49 lbs</p>
+                            <div class="zone-content" id="individualZone"></div>
+                        </div>
+
+                        <div class="zone" data-type="team">
+                            <div class="zone-header">
+                                <i class="fas fa-users"></i>
+                                <h3>Team Lift</h3>
+                            </div>
+                            <p class="zone-description">50-75 lbs</p>
+                            <div class="zone-content" id="teamZone"></div>
+                        </div>
+
+                        <div class="zone" data-type="mechanical">
+                            <div class="zone-header">
+                                <i class="fas fa-truck-loading"></i>
+                                <h3>Mechanical Aid</h3>
+                            </div>
+                            <p class="zone-description">Over 75 lbs</p>
+                            <div class="zone-content" id="mechanicalZone"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- PACE Navigator Game -->
+            <div id="pathFindingGame" class="game-container game-section" style="display: none;">
+                <div class="game-header">
+                    <button class="button-primary" onclick="returnToGamesMenu()">
+                        <i class="fas fa-arrow-left"></i> Back to Games
+                    </button>
+                    <div class="game-stats">
+                        <span class="score">Steps: <span id="pathFindingSteps">0</span></span>
+                        <span class="timer">Time: <span id="pathFindingTimerDisplay">60</span>s</span>
+                    </div>
+                </div>
+
+                <div class="game-content">
+                    <div class="game-instructions">
+                        <h3>Navigate to the correct location:</h3>
+                        <p id="pathFindingTask" class="current-task">Find the PACE terminal to check your schedule</p>
+                    </div>
+
+                    <div class="game-map" id="gameMap">
+                        <div id="player" class="player">
+                            <i class="fas fa-user"></i>
+                        </div>
+
+                        <div class="location-markers">
+                            <div class="location" data-type="pace">
+                                <i class="fas fa-laptop"></i>
+                                <span>PACE Terminal</span>
+                            </div>
+                            <div class="location" data-type="hr">
+                                <i class="fas fa-users"></i>
+                                <span>HR Office</span>
+                            </div>
+                            <div class="location" data-type="learning">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>Learning Center</span>
+                            </div>
+                            <div class="location" data-type="manager">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Manager's Office</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-controls">
+                        <button onclick="movePlayer('up')"><i class="fas fa-arrow-up"></i></button>
+                        <div class="horizontal-controls">
+                            <button onclick="movePlayer('left')"><i class="fas fa-arrow-left"></i></button>
+                            <button onclick="movePlayer('right')"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                        <button onclick="movePlayer('down')"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benefits Matching Game -->
+            <div id="matchingGame" class="game-container game-section" style="display: none;">
+                <div class="game-header">
+                    <button class="button-primary" onclick="returnToGamesMenu()">
+                        <i class="fas fa-arrow-left"></i> Back to Games
+                    </button>
+                    <div class="game-stats">
+                        <span class="matches">Matches: <span id="matchesFound">0</span>/<span id="totalPairs">8</span></span>
+                        <span class="timer">Time: <span id="matchingTimerDisplay">60</span>s</span>
+                        <span class="attempts">Attempts: <span id="attemptCounter">0</span></span>
+                    </div>
+                </div>
+
+                <div class="game-content">
+                    <div class="game-instructions">
+                        <h3>Match the Amazon benefits pairs:</h3>
+                        <div class="difficulty-selector">
+                            <label for="difficultyLevel">Difficulty:</label>
+                            <select id="difficultyLevel" onchange="changeDifficulty()">
+                                <option value="easy">Easy (4x4)</option>
+                                <option value="medium">Medium (6x4)</option>
+                                <option value="hard">Hard (6x6)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid" id="cardsGrid">
+                        <!-- Cards will be dynamically generated here -->
+                    </div>
+
+                    <div class="benefits-reference">
+                        <h3>Amazon Benefits to Match:</h3>
+                        <ul>
+                            <li><i class="fas fa-heart"></i> Health Insurance (Day 1)</li>
+                            <li><i class="fas fa-graduation-cap"></i> Career Choice Program</li>
+                            <li><i class="fas fa-piggy-bank"></i> 401(k) Savings Plan</li>
+                            <li><i class="fas fa-calendar"></i> Paid Time Off</li>
+                            <li><i class="fas fa-percentage"></i> Employee Discounts</li>
+                            <li><i class="fas fa-baby"></i> Parental Leave</li>
+                            <li><i class="fas fa-tooth"></i> Dental Coverage</li>
+                            <li><i class="fas fa-eye"></i> Vision Coverage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Quiz Section -->
+    <div id="quiz" class="page">
+        <div class="container">
+            <button class="button-primary return-button" onclick="showSection('mainMenu')">
+                <i class="fas fa-arrow-left"></i> Back to Menu
+            </button>
+
+            <div class="quiz-content">
+                <h2>Test Your Knowledge</h2>
+
+                <!-- Quiz Categories -->
+                <div id="quizCategories" class="quiz-categories">
+                    <div class="category-card" onclick="startQuiz('safety')" data-category="safety">
+                        <i class="fas fa-hard-hat"></i>
+                        <h3>Safety First</h3>
+                        <p>Test your knowledge of safety procedures</p>
+                    </div>
+
+                    <div class="category-card" onclick="startQuiz('benefits')" data-category="benefits">
+                        <i class="fas fa-gift"></i>
+                        <h3>Benefits</h3>
+                        <p>Learn about Amazon benefits</p>
+                    </div>
+
+                    <div class="category-card" onclick="startQuiz('workplace')" data-category="workplace">
+                        <i class="fas fa-building"></i>
+                        <h3>Workplace</h3>
+                        <p>Amazon workplace knowledge</p>
+                    </div>
+
+                    <div class="category-card" onclick="startQuiz('procedures')" data-category="procedures">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Procedures</h3>
+                        <p>Day 1 and general procedures</p>
+                    </div>
+                </div>
+
+                <!-- Quiz Question Container -->
+                <div id="questionContainer" class="question-container" style="display: none;">
+                    <div class="question-header">
+                        <h3 id="categoryTitle"></h3>
+                        <div class="quiz-progress">
+                            Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
+                        </div>
+                    </div>
+
+                    <div class="question-content">
+                        <p id="questionText" class="question-text"></p>
+                        <div id="optionsContainer" class="options-container">
+                            <!-- Options will be dynamically generated here -->
+                        </div>
+                    </div>
+
+                    <div class="feedback-container" id="feedbackContainer" style="display: none;">
+                        <div class="feedback-content">
+                            <p id="feedbackText"></p>
+                            <div id="explanationText" class="explanation-text"></div>
+                            <button class="button-primary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Results -->
+                <div id="quizResults" class="quiz-results" style="display: none;">
+                    <h3>Quiz Complete!</h3>
+                    <div class="results-content">
+                        <p>Your Score: <span id="finalScore">0</span>%</p>
+                        <div id="resultsBreakdown"></div>
+                        <div class="results-actions">
+                            <button class="button-primary" onclick="retakeQuiz()">Try Again</button>
+                            <button class="button-primary" onclick="returnToQuizCategories()">Choose Another Category</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Types / Facilities Section -->
+    <div id="jobTypes" class="page">
+        <div class="container">
+            <button class="button-primary return-button" onclick="showSection('mainMenu')">
+                <i class="fas fa-arrow-left"></i> Back to Menu
+            </button>
+
+            <h2>Amazon Facilities</h2>
+            <div id="facilitiesGrid" class="facilities-grid">
+                <!-- Facility cards will be dynamically generated here -->
+            </div>
+
+            <!-- Facility Details Modal -->
+            <div id="facilityModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeFacilityModal()">&times;</span>
+                    <h2 id="facilityName"></h2>
+                    <div id="facilityDetails"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Notifications and Modals -->
+<div id="achievementNotification" class="notification achievement-notification">
+    <i class="fas fa-trophy"></i>
+    <div class="notification-content">
+        <h3>Achievement Unlocked!</h3>
+        <p id="achievementMessage"></p>
     </div>
 </div>
 
-<!-- Job Types -->
-<div id="jobTypes" class="page">
-    <div class="container">
-        <button class="button-primary" onclick="showSection('mainMenu')">
-            <i class="fas fa-arrow-left"></i> Back to Menu
-        </button>
-        <h2>Amazon Facilities</h2>
-        <div id="facilitiesGrid" class="facilities-grid"></div>
-    </div>
-</div>
-
-<!-- Quiz Section -->
-<div id="quiz" class="page">
-    <div class="container">
-        <button class="button-primary" onclick="showSection('mainMenu')">
-            <i class="fas fa-arrow-left"></i> Back to Menu
-        </button>
-        <h2>Test Your Knowledge</h2>
-        <div class="quiz-categories" id="quizCategories"></div>
-        <div id="questionContainer" class="question-container" style="display: none;"></div>
+<div id="levelUpNotification" class="notification level-up-notification">
+    <i class="fas fa-arrow-up"></i>
+    <div class="notification-content">
+        <h3>Level Up!</h3>
+        <p>You've reached level <span id="newLevelDisplay">1</span>!</p>
     </div>
 </div>
 
@@ -112,20 +408,43 @@
     <div class="assistant" onclick="toggleAssistant()">
         <i class="fas fa-robot"></i>
     </div>
-    <div class="speech-bubble" id="assistantMessage"></div>
+    <div class="speech-bubble" id="assistantMessage">
+        <p id="assistantText"></p>
+    </div>
 </div>
 
-<!-- Reset Button -->
-<button class="button-primary reset-button" onclick="confirmReset()">
-    <i class="fas fa-redo"></i> Reset Progress
-</button>
+<!-- Reset Progress Modal -->
+<div id="resetModal" class="modal">
+    <div class="modal-content">
+        <h2>Reset Progress</h2>
+        <p>Are you sure you want to reset all your progress? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="button-primary" onclick="resetProgress()">Yes, Reset</button>
+            <button class="button-secondary" onclick="closeResetModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+</div>
 
 <!-- Scripts -->
+<script src="js/config.js"></script>
 <script src="js/gameState.js"></script>
-<script src="js/applicationData.js"></script>
-<script src="js/quiz.js"></script>
-<script src="js/achievements.js"></script>
 <script src="js/animations.js"></script>
+<script src="js/assistant.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/facilities.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/games/weightSorting.js"></script>
+<script src="js/games/pathFinding.js"></script>
+<script src="js/games/matching.js"></script>
 <script src="js/main.js"></script>
+
 </body>
 </html>
