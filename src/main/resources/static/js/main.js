@@ -1,334 +1,113 @@
-// Main Application Logic
+// main.js
 
-// Constants
-const ASSISTANT_MESSAGES = {
-    welcome: "Welcome to Amazon Career Adventure! I'm Peccy, your guide. Let's get started!",
-    mainMenu: "Choose a section to explore. Each one will help you learn about Amazon!",
-    jobTypes: "Discover the various Amazon facilities and job opportunities available!",
-    games: "Ready to test your skills? These games will teach you about Amazon operations!",
-    quiz: "Time to check your knowledge! Good luck with the quiz!",
-    weightSorting: "Remember, safety first! Sort packages based on their weight.",
-    pathFinding: "Navigate through an Amazon facility. Find the right locations quickly!",
-    matching: "Match Amazon benefits to learn about what we offer our employees.",
-    default: "Need help? Just ask! I'm here to assist you on your Amazon journey."
+// Game State Management
+const gameState = {
+    player: {
+        name: '',
+        email: '',
+        score: 0,
+        level: 1,
+        visitedSections: [],
+        completedSections: []
+    },
+    settings: {
+        soundEnabled: true,
+        musicEnabled: true
+    },
+    gameStats: {
+        weightSorting: {
+            highScore: 0,
+            perfectRounds: 0,
+            gamesPlayed: 0,
+            lastScore: 0
+        },
+        pathFinding: {
+            bestTime: null,
+            pathsCompleted: 0,
+            gamesPlayed: 0
+        },
+        matching: {
+            highScore: 0,
+            perfectMatches: 0,
+            gamesPlayed: 0
+        }
+    },
+    quizProgress: {
+        safety: { bestScore: 0, completed: 0 },
+        benefits: { bestScore: 0, completed: 0 },
+        workplace: { bestScore: 0, completed: 0 },
+        procedures: { bestScore: 0, completed: 0 }
+    }
 };
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
-});
-
-function initializeApp() {
-    createFloatingBoxes();
-    setupRegistrationForm();
-    initializeAssistant();
-    loadUserProgress();
+// Local Storage Management
+function saveGameState() {
+    localStorage.setItem('amazonGameState', JSON.stringify(gameState));
 }
 
-// Floating Boxes Animation
-function createFloatingBoxes() {
-    const container = document.querySelector('.floating-boxes');
-    if (!container) return;
+function loadGameState() {
+    const savedState = localStorage.getItem('amazonGameState');
+    if (savedState) {
+        Object.assign(gameState, JSON.parse(savedState));
+        updateUI();
+    }
+}
 
-    for (let i = 0; i < 20; i++) {
-        const box = document.createElement('div');
-        box.className = 'floating-box';
-        box.style.left = `${Math.random() * 100}%`;
-        box.style.top = `${Math.random() * 100}%`;
-        box.style.animationDelay = `${Math.random() * 5}s`;
-        container.appendChild(box);
+function resetGameState() {
+    localStorage.removeItem('amazonGameState');
+    location.reload();
+}
+
+// UI Management
+function updateUI() {
+    document.getElementById('scoreDisplay').textContent = gameState.player.score;
+    document.getElementById('levelDisplay').textContent = gameState.player.level;
+    updateProgress();
+    updateGameStats();
+}
+
+function updateProgress() {
+    const progressBar = document.getElementById('progressBar');
+    if (progressBar) {
+        const progress = (gameState.player.completedSections.length / 4) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+}
+
+function updateGameStats() {
+    document.getElementById('weightSortingHighScore').textContent =
+        gameState.gameStats.weightSorting.highScore;
+    document.getElementById('weightSortingPerfectRounds').textContent =
+        gameState.gameStats.weightSorting.perfectRounds;
+
+    const bestTime = gameState.gameStats.pathFinding.bestTime || '--:--';
+    document.getElementById('pathFindingBestTime').textContent = bestTime;
+    document.getElementById('pathFindingCompleted').textContent =
+        gameState.gameStats.pathFinding.pathsCompleted;
+
+    document.getElementById('matchingHighScore').textContent =
+        gameState.gameStats.matching.highScore;
+    document.getElementById('matchingPerfect').textContent =
+        gameState.gameStats.matching.perfectMatches;
+}
+
+// Navigation Management
+function showSection(sectionId) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.classList.add('active');
+        if (!gameState.player.visitedSections.includes(sectionId)) {
+            gameState.player.visitedSections.push(sectionId);
+            saveGameState();
+        }
     }
 }
 
 // Registration Form Handler
-function setupRegistrationForm() {
-    const form = document.getElementById('registrationForm');
-    if (!form) return;
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-
-        // Save user data
-        if (typeof gameState !== 'undefined') {
-            gameState.state.player.name = name;
-            gameState.state.player.email = email;
-            gameState.saveState();
-        } else {
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userEmail', email);
-        }
-
-        showSection('mainMenu');
-    });
-}
-
-// Navigation
-function showSection(sectionId) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-
-    // Show selected page
-    const selectedSection = document.getElementById(sectionId);
-    if (selectedSection) {
-        selectedSection.classList.add('active');
-        updateProgress(sectionId);
-        updateAssistantMessage(sectionId);
-    }
-}
-
-// Game Management
-function startGame(gameType) {
-    console.log('Starting game:', gameType);
-
-    // Hide all games and menu
-    document.querySelectorAll('.game-container').forEach(container => {
-        container.style.display = 'none';
-    });
-    document.querySelector('.games-menu').style.display = 'none';
-
-    // Show selected game
-    const gameContainer = document.getElementById(`${gameType}Game`);
-    if (gameContainer) {
-        gameContainer.style.display = 'block';
-
-        // Initialize specific game
-        switch(gameType) {
-            case 'weightSorting':
-                if (typeof weightSortingGame !== 'undefined') {
-                    weightSortingGame.initialize();
-                }
-                break;
-            case 'pathFinding':
-                // Initialize pathFinding game
-                break;
-            case 'matching':
-                // Initialize matching game
-                break;
-        }
-
-        updateAssistantMessage(gameType);
-    }
-}
-
-function returnToGamesMenu() {
-    // Hide all games
-    document.querySelectorAll('.game-container').forEach(container => {
-        container.style.display = 'none';
-    });
-
-    // Show games menu
-    document.querySelector('.games-menu').style.display = 'block';
-    updateAssistantMessage('games');
-}
-
-// Progress Management
-function updateProgress(sectionId) {
-    const progressBar = document.getElementById('progressBar');
-    if (!progressBar) return;
-
-    let progress = 0;
-    switch(sectionId) {
-        case 'mainMenu': progress = 20; break;
-        case 'jobTypes': progress = 40; break;
-        case 'games': progress = 60; break;
-        case 'quiz': progress = 80; break;
-        default: progress = 0;
-    }
-
-    progressBar.style.width = `${progress}%`;
-}
-
-// Notifications
-function showAchievement(message) {
-    const notification = document.getElementById('achievementNotification');
-    const messageElement = document.getElementById('achievementMessage');
-
-    if (notification && messageElement) {
-        messageElement.textContent = message;
-        notification.classList.add('show');
-        setTimeout(() => notification.classList.remove('show'), 3000);
-    }
-}
-
-function showLevelUp(level) {
-    const notification = document.getElementById('levelUpNotification');
-    const levelDisplay = document.getElementById('newLevelDisplay');
-
-    if (notification && levelDisplay) {
-        levelDisplay.textContent = level;
-        notification.classList.add('show');
-        setTimeout(() => notification.classList.remove('show'), 3000);
-    }
-}
-
-// Assistant Management
-function initializeAssistant() {
-    updateAssistantMessage('welcome');
-}
-
-function toggleAssistant() {
-    const bubble = document.getElementById('assistantMessage');
-    if (bubble) {
-        bubble.classList.toggle('active');
-    }
-}
-
-function updateAssistantMessage(sectionId) {
-    const textElement = document.getElementById('assistantText');
-    if (!textElement) return;
-
-    const message = ASSISTANT_MESSAGES[sectionId] || ASSISTANT_MESSAGES.default;
-    textElement.textContent = message;
-
-    const bubble = document.getElementById('assistantMessage');
-    if (bubble) {
-        bubble.classList.add('active');
-        setTimeout(() => bubble.classList.remove('active'), 5000);
-    }
-}
-
-// Progress Saving/Loading
-function loadUserProgress() {
-    const savedProgress = localStorage.getItem('amazonCareerAdventure');
-    if (!savedProgress) return null;
-
-    try {
-        const progress = JSON.parse(savedProgress);
-
-        // Update score display
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        if (scoreDisplay && progress.score) {
-            scoreDisplay.textContent = progress.score;
-        }
-
-        // Update level display
-        const levelDisplay = document.getElementById('levelDisplay');
-        if (levelDisplay && progress.level) {
-            levelDisplay.textContent = progress.level;
-        }
-
-        // Update completion badges
-        if (progress.completedSections) {
-            progress.completedSections.forEach(sectionId => {
-                const badge = document.getElementById(`${sectionId}Badge`);
-                if (badge) {
-                    badge.innerHTML = '<i class="fas fa-check"></i>';
-                }
-            });
-        }
-
-        return progress;
-    } catch (error) {
-        console.error('Error loading progress:', error);
-        return null;
-    }
-}
-
-// Reset Functions
-function openResetModal() {
-    // Implement reset modal logic
-    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-        resetProgress();
-    }
-}
-
-function resetProgress() {
-    localStorage.clear();
-    if (typeof gameState !== 'undefined') {
-        gameState.resetProgress();
-    }
-    location.reload();
-}
-    // Loading Screen Management
-    document.addEventListener('DOMContentLoaded', function() {
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const mainContent = document.querySelector('.main-content');
-    const loadingProgress = document.getElementById('loadingProgress');
-    const loadingProgressText = document.getElementById('loadingProgressText');
-    const loadingTip = document.getElementById('loadingTip');
-
-    // Array of loading tips
-    const loadingTips = [
-    "Did you know? Amazon's leadership principles help guide decision-making every day.",
-    "Amazon's first book order was shipped in 1995.",
-    "Amazon operates in over 100 fulfillment centers worldwide.",
-    "Safety is Amazon's top priority in all operations.",
-    "Amazon's robotics help make fulfillment centers more efficient."
-    ];
-
-    // Initially hide main content
-    if (mainContent) {
-    mainContent.style.visibility = 'hidden';
-}
-
-    let progress = 0;
-    const loadingDuration = 3000; // 3 seconds total loading time
-    const updateInterval = 30; // Update every 30ms
-
-    // Update loading tip periodically
-    function updateLoadingTip() {
-    const randomTip = loadingTips[Math.floor(Math.random() * loadingTips.length)];
-    if (loadingTip) {
-    loadingTip.textContent = randomTip;
-}
-}
-
-    // Progress animation
-    const progressInterval = setInterval(() => {
-    progress += 100 / (loadingDuration / updateInterval);
-
-    if (progress >= 100) {
-    progress = 100;
-    clearInterval(progressInterval);
-
-    // Hide loading overlay and show main content
-    setTimeout(() => {
-    loadingOverlay.style.opacity = '0';
-
-    setTimeout(() => {
-    loadingOverlay.style.display = 'none';
-    if (mainContent) {
-    mainContent.style.visibility = 'visible';
-    document.getElementById('welcomeScreen').classList.add('active');
-}
-}, 500);
-}, 500);
-}
-
-    // Update progress bar and text
-    if (loadingProgress) {
-    loadingProgress.style.width = `${progress}%`;
-}
-    if (loadingProgressText) {
-    loadingProgressText.textContent = `${Math.round(progress)}%`;
-}
-
-    // Update loading tip every 25% progress
-    if (progress % 25 < 100 / (loadingDuration / updateInterval)) {
-    updateLoadingTip();
-}
-}, updateInterval);
-});
-// Page Management Functions
-function showSection(sectionId) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-
-    // Show requested page
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
-}
-
-// Form submission handler
 function handleRegistration(event) {
     event.preventDefault();
 
@@ -336,83 +115,486 @@ function handleRegistration(event) {
     const email = document.getElementById('email').value;
 
     if (name && email) {
-        // Store user data if needed
-        localStorage.setItem('userName', name);
-        localStorage.setItem('userEmail', email);
-
-        // Hide welcome screen and show main menu
+        gameState.player.name = name;
+        gameState.player.email = email;
+        saveGameState();
         showSection('mainMenu');
     }
 }
 
-// Initialize event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Form submission
-    const registrationForm = document.getElementById('registrationForm');
-    if (registrationForm) {
-        registrationForm.addEventListener('submit', handleRegistration);
-    }
-
-    // Section navigation
-    document.querySelectorAll('[data-section]').forEach(element => {
-        element.addEventListener('click', (e) => {
-            const sectionId = e.currentTarget.getAttribute('data-section');
-            showSection(sectionId);
-        });
+// Game Management
+function startGame(gameType) {
+    document.querySelectorAll('.game-container').forEach(container => {
+        container.style.display = 'none';
     });
-});
-// Add this to your main.js or in a script tag before closing body
-document.addEventListener('DOMContentLoaded', function() {
-    // Hide Peccy's speech bubble by default
-    const speechBubble = document.getElementById('assistantMessage');
-    if (speechBubble) {
-        speechBubble.style.display = 'none';
+    document.getElementById('gamesMenu').style.display = 'none';
+
+    const gameContainer = document.getElementById(`${gameType}Game`);
+    if (gameContainer) {
+        gameContainer.style.display = 'block';
     }
 
-    // Function to toggle Peccy's speech bubble
-    window.toggleAssistant = function() {
-        const bubble = document.getElementById('assistantMessage');
-        if (bubble) {
-            bubble.classList.toggle('show');
-        }
+    switch(gameType) {
+        case 'weightSorting':
+            initializeWeightSortingGame();
+            break;
+        case 'pathFinding':
+            initializePathFindingGame();
+            break;
+        case 'matching':
+            initializeMatchingGame();
+            break;
     }
-
-    // Function to show notifications
-    window.showNotification = function(notificationId, duration = 3000) {
-        const notification = document.getElementById(notificationId);
-        if (notification) {
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, duration);
-        }
-    }
-
-    // Function to close notifications
-    window.closeNotification = function(notificationId) {
-        const notification = document.getElementById(notificationId);
-        if (notification) {
-            notification.classList.remove('show');
-        }
-    }
-});
-
-// Use these functions to show notifications
-function showAchievement(message) {
-    document.getElementById('achievementMessage').textContent = message;
-    showNotification('achievementNotification');
 }
 
-function showLevelUp(level) {
-    document.getElementById('newLevelDisplay').textContent = level;
-    showNotification('levelUpNotification');
+function returnToGamesMenu() {
+    document.querySelectorAll('.game-container').forEach(container => {
+        container.style.display = 'none';
+    });
+    document.getElementById('gamesMenu').style.display = 'block';
 }
 
+// Quiz System
+const quizData = {
+    safety: [
+        {
+            question: "What is the maximum weight for individual lifting?",
+            options: ["25 lbs", "35 lbs", "49 lbs", "55 lbs"],
+            correct: 2,
+            explanation: "The maximum weight for individual lifting is 49 lbs. Anything over requires team lift."
+        },
+        {
+            question: "What should you do if you see a safety hazard?",
+            options: ["Ignore it", "Report it immediately", "Wait for someone else to report it", "Fix it yourself"],
+            correct: 1,
+            explanation: "Always report safety hazards immediately to prevent accidents and injuries."
+        },
+        {
+            question: "How often should you take breaks when doing repetitive tasks?",
+            options: ["Never", "Every 4 hours", "Every 2 hours", "When you feel tired"],
+            correct: 2,
+            explanation: "It's recommended to take short breaks every 2 hours to prevent repetitive strain injuries."
+        }
+    ],
+    benefits: [
+        {
+            question: "When does health insurance coverage begin at Amazon?",
+            options: ["After 90 days", "After 30 days", "Day 1", "After 6 months"],
+            correct: 2,
+            explanation: "Amazon provides health insurance coverage starting from day one of employment."
+        },
+        {
+            question: "What is the Career Choice program?",
+            options: ["A job rotation program", "A leadership training program", "An education assistance program", "A mentorship program"],
+            correct: 2,
+            explanation: "Career Choice is an education assistance program that provides funding for employees to learn new skills for career success at Amazon or elsewhere."
+        },
+        {
+            question: "How much does Amazon match for 401(k) contributions?",
+            options: ["50% up to 2%", "100% up to 4%", "50% up to 4%", "100% up to 6%"],
+            correct: 1,
+            explanation: "Amazon matches 50% of employee contributions up to 4% of their eligible pay."
+        }
+    ],
+    workplace: [
+        {
+            question: "What is a fulfillment center?",
+            options: ["A customer service office", "A place where orders are packed and shipped", "A corporate office", "A data center"],
+            correct: 1,
+            explanation: "A fulfillment center is where customer orders are received, packed, and shipped."
+        },
+        {
+            question: "What does AMZL stand for?",
+            options: ["Amazon Marketplace", "Amazon Logistics", "Amazon Leadership", "Amazon Learning"],
+            correct: 1,
+            explanation: "AMZL stands for Amazon Logistics, which is Amazon's delivery service."
+        },
+        {
+            question: "What is the purpose of a sort center?",
+            options: ["To handle customer returns", "To sort packages by zip code for faster delivery", "To store inventory", "To process payments"],
+            correct: 1,
+            explanation: "Sort centers organize packages by zip code to streamline the delivery process."
+        }
+    ],
+    procedures: [
+        {
+            question: "What should you do if you're going to be late for your shift?",
+            options: ["Do nothing", "Call your manager", "Use the A to Z app to report it", "Come in when you can"],
+            correct: 2,
+            explanation: "Always use the A to Z app to report any tardiness or absence as soon as possible."
+        },
+        {
+            question: "How often are performance reviews conducted?",
+            options: ["Monthly", "Quarterly", "Bi-annually", "Annually"],
+            correct: 1,
+            explanation: "Amazon typically conducts performance reviews on a quarterly basis."
+        },
+        {
+            question: "What is the proper procedure for clocking in and out?",
+            options: ["Use your badge at the time clock", "Tell your manager when you arrive and leave", "Sign a paper timesheet", "Use the A to Z app"],
+            correct: 0,
+            explanation: "Employees should use their badge to clock in and out at designated time clocks."
+        }
+    ]
+};
 
-// Export necessary functions to window object
-window.startGame = startGame;
-window.returnToGamesMenu = returnToGamesMenu;
-window.showSection = showSection;
-window.openResetModal = openResetModal;
-window.resetProgress = resetProgress;
+let currentQuiz = {
+    category: null,
+    questions: [],
+    currentQuestion: 0,
+    score: 0
+};
+// Add after the currentQuiz object:
 
+let questionTimer = null;
+const QUESTION_TIME = 30; // 30 seconds per question
+
+function startQuestionTimer() {
+    clearInterval(questionTimer);
+    let timeLeft = QUESTION_TIME;
+    const timerDisplay = document.getElementById('questionTimer');
+
+    timerDisplay.textContent = timeLeft;
+
+    questionTimer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(questionTimer);
+            timeOut();
+        }
+    }, 1000);
+}
+
+function timeOut() {
+    const optionsContainer = document.getElementById('optionsContainer');
+    const buttons = optionsContainer.getElementsByClassName('quiz-option');
+    Array.from(buttons).forEach(button => button.disabled = true);
+
+    const currentQuestion = currentQuiz.questions[currentQuiz.currentQuestion];
+    buttons[currentQuestion.correct].classList.add('correct');
+
+    showFeedback(false, "Time's up! " + currentQuestion.explanation);
+}
+
+// Update checkAnswer function to track user answers:
+function checkAnswer(selectedIndex) {
+    clearInterval(questionTimer); // Clear timer when answer is selected
+
+    const question = currentQuiz.questions[currentQuiz.currentQuestion];
+    const optionsContainer = document.getElementById('optionsContainer');
+    const buttons = optionsContainer.getElementsByClassName('quiz-option');
+
+    // Track user's answer
+    if (!currentQuiz.userAnswers) {
+        currentQuiz.userAnswers = [];
+    }
+    currentQuiz.userAnswers[currentQuiz.currentQuestion] = selectedIndex;
+
+    Array.from(buttons).forEach(button => button.disabled = true);
+
+    if (selectedIndex === question.correct) {
+        buttons[selectedIndex].classList.add('correct');
+        currentQuiz.score++;
+    } else {
+        buttons[selectedIndex].classList.add('incorrect');
+        buttons[question.correct].classList.add('correct');
+    }
+
+    showFeedback(selectedIndex === question.correct, question.explanation);
+}
+
+// Add quiz progress update functions:
+function updateQuizCategoryProgress(category) {
+    const categoryCard = document.querySelector(`[data-category="${category}"]`);
+    if (categoryCard) {
+        const bestScore = document.querySelector(`#${category}BestScore`);
+        const completed = document.querySelector(`#${category}Completed`);
+        const progressRing = categoryCard.querySelector('.progress-ring');
+
+        if (bestScore) {
+            bestScore.textContent = `${gameState.quizProgress[category].bestScore}%`;
+        }
+        if (completed) {
+            completed.textContent = gameState.quizProgress[category].completed;
+        }
+        if (progressRing) {
+            progressRing.setAttribute('data-progress', gameState.quizProgress[category].bestScore);
+        }
+    }
+}
+
+function updateAllQuizProgress() {
+    Object.keys(gameState.quizProgress).forEach(category => {
+        updateQuizCategoryProgress(category);
+    });
+}
+
+// Add error handling:
+function handleError(error, context) {
+    console.error(`Error in ${context}:`, error);
+    // You could add user-facing error messages here
+}
+
+// Add score calculation function:
+function calculateQuizScore(correct, total, timeBonus = 0) {
+    const baseScore = (correct / total) * 100;
+    const finalScore = Math.round(baseScore + timeBonus);
+    return Math.min(100, finalScore); // Cap at 100%
+}
+
+// Update showQuizResults function to include more detailed breakdown:
+function showQuizResults() {
+    try {
+        const quizResults = document.getElementById('quizResults');
+        const finalScore = document.getElementById('finalScore');
+        const resultsBreakdown = document.getElementById('resultsBreakdown');
+
+        document.getElementById('questionContainer').style.display = 'none';
+        quizResults.style.display = 'block';
+
+        const scorePercentage = calculateQuizScore(currentQuiz.score, currentQuiz.questions.length);
+        finalScore.textContent = scorePercentage;
+
+        const breakdownHTML = currentQuiz.questions.map((question, index) => {
+            const userAnswer = currentQuiz.userAnswers[index];
+            const isCorrect = userAnswer === question.correct;
+
+            return `
+                <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                    <div class="question-text">${question.question}</div>
+                    <div class="answer-details">
+                        <div class="user-answer">
+                            Your answer: ${question.options[userAnswer]}
+                            <i class="fas ${isCorrect ? 'fa-check' : 'fa-times'}"></i>
+                        </div>
+                        ${!isCorrect ? `
+                            <div class="correct-answer">
+                                Correct answer: ${question.options[question.correct]}
+                            </div>
+                        ` : ''}
+                        <div class="explanation">${question.explanation}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        resultsBreakdown.innerHTML = breakdownHTML;
+        updateQuizProgress(currentQuiz.category, scorePercentage);
+    } catch (error) {
+        handleError(error, 'showQuizResults');
+    }
+}
+
+// Update initialization to include quiz progress:
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        loadGameState();
+        showLoadingScreen();
+
+        // Initialize quiz progress
+        updateAllQuizProgress();
+
+        setTimeout(() => {
+            hideLoadingScreen();
+            showSection('welcomeScreen');
+        }, 2000);
+
+        // Event listeners
+        document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
+
+        // Add quiz-specific event listeners
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+    } catch (error) {
+        handleError(error, 'initialization');
+    }
+});
+
+function startQuiz(category) {
+    currentQuiz = {
+        category: category,
+        questions: [...quizData[category]],
+        currentQuestion: 0,
+        score: 0
+    };
+
+    currentQuiz.questions.sort(() => Math.random() - 0.5);
+
+    document.getElementById('quizCategories').style.display = 'none';
+    document.getElementById('questionContainer').style.display = 'block';
+
+    showQuestion();
+}
+
+function showQuestion() {
+    const question = currentQuiz.questions[currentQuiz.currentQuestion];
+    const questionContainer = document.getElementById('questionContainer');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+
+    document.getElementById('currentQuestion').textContent = currentQuiz.currentQuestion + 1;
+    document.getElementById('totalQuestions').textContent = currentQuiz.questions.length;
+    document.getElementById('quizProgress').style.width =
+        `${((currentQuiz.currentQuestion + 1) / currentQuiz.questions.length) * 100}%`;
+
+    questionText.textContent = question.question;
+
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'quiz-option';
+        button.textContent = option;
+        button.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(button);
+    });
+
+    startQuestionTimer();
+}
+
+function checkAnswer(selectedIndex) {
+    const question = currentQuiz.questions[currentQuiz.currentQuestion];
+    const optionsContainer = document.getElementById('optionsContainer');
+    const buttons = optionsContainer.getElementsByClassName('quiz-option');
+
+    Array.from(buttons).forEach(button => button.disabled = true);
+
+    if (selectedIndex === question.correct) {
+        buttons[selectedIndex].classList.add('correct');
+        currentQuiz.score++;
+    } else {
+        buttons[selectedIndex].classList.add('incorrect');
+        buttons[question.correct].classList.add('correct');
+    }
+
+    showFeedback(selectedIndex === question.correct, question.explanation);
+}
+
+function showFeedback(isCorrect, explanation) {
+    const feedbackContainer = document.getElementById('feedbackContainer');
+    const feedbackIcon = document.getElementById('feedbackIcon');
+    const feedbackText = document.getElementById('feedbackText');
+    const explanationText = document.getElementById('explanationText');
+
+    feedbackIcon.className = `fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}`;
+    feedbackText.textContent = isCorrect ? 'Correct!' : 'Incorrect';
+    explanationText.textContent = explanation;
+
+    feedbackContainer.style.display = 'block';
+}
+
+function nextQuestion() {
+    currentQuiz.currentQuestion++;
+    if (currentQuiz.currentQuestion < currentQuiz.questions.length) {
+        showQuestion();
+    } else {
+        showQuizResults();
+    }
+}
+
+function showQuizResults() {
+    const quizResults = document.getElementById('quizResults');
+    const finalScore = document.getElementById('finalScore');
+    const resultsBreakdown = document.getElementById('resultsBreakdown');
+
+    document.getElementById('questionContainer').style.display = 'none';
+    quizResults.style.display = 'block';
+
+    const scorePercentage = (currentQuiz.score / currentQuiz.questions.length) * 100;
+    finalScore.textContent = Math.round(scorePercentage);
+
+    resultsBreakdown.innerHTML = currentQuiz.questions.map((question, index) => `
+        <div class="result-item">
+            <span class="question-number">Q${index + 1}:</span>
+            <span class="result-icon ${currentQuiz.questions[index].correct === currentQuiz.userAnswers[index] ? 'correct' : 'incorrect'}">
+                <i class="fas ${currentQuiz.questions[index].correct === currentQuiz.userAnswers[index] ? 'fa-check' : 'fa-times'}"></i>
+            </span>
+        </div>
+    `).join('');
+
+    updateQuizProgress(currentQuiz.category, scorePercentage);
+}
+
+function updateQuizProgress(category, score) {
+    gameState.quizProgress[category].completed++;
+    if (score > gameState.quizProgress[category].bestScore) {
+        gameState.quizProgress[category].bestScore = score;
+    }
+    saveGameState();
+    updateUI();
+}
+
+function retakeQuiz() {
+    startQuiz(currentQuiz.category);
+}
+
+function returnToQuizCategories() {
+    document.getElementById('quizResults').style.display = 'none';
+    document.getElementById('quizCategories').style.display = 'block';
+}
+
+// Animation System
+function animateElement(element, animation, duration = 300) {
+    element.style.animation = `${animation} ${duration}ms`;
+    setTimeout(() => {
+        element.style.animation = '';
+    }, duration);
+}
+
+// Modal Management
+function openResetModal() {
+    document.getElementById('resetModal').style.display = 'flex';
+}
+
+function closeResetModal() {
+    document.getElementById('resetModal').style.display = 'none';
+}
+
+// Loading Screen
+function showLoadingScreen() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+function hideLoadingScreen() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.opacity = '0';
+    setTimeout(() => {
+        loadingOverlay.style.display = 'none';
+        loadingOverlay.style.opacity = '1';
+    }, 500);
+}
+
+// Event Listeners and Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    loadGameState();
+    showLoadingScreen();
+
+    // Simulate loading time
+    setTimeout(() => {
+        hideLoadingScreen();
+        showSection('welcomeScreen');
+    }, 2000);
+
+    document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
+});
+
+// Initialize game functions (these will be defined in their respective game files)
+function initializeWeightSortingGame() {
+    console.log("Weight Sorting Game Initialized");
+    // This function will be implemented in weightSorting.js
+}
+
+function initializePathFindingGame() {
+    console.log("Path Finding Game Initialized");
+    // This function will be implemented in pathFinding.js
+}
+
+function initializeMatchingGame() {
+    console.log("Matching Game Initialized");
+    // This function will be implemented in matching.js
+}

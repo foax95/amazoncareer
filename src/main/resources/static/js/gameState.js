@@ -101,6 +101,14 @@ class GameState {
         this.updateUI();
     }
 
+    updateProgress(sectionId, percentage) {
+        const progressBar = document.querySelector(`#${sectionId}Progress .progress-fill`);
+        if (progressBar) {
+            window.animateProgress(progressBar, percentage);
+        }
+    }
+
+
     checkLevelUp() {
         const currentLevel = this.state.player.level;
         const currentScore = this.state.player.score;

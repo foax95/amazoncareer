@@ -7,7 +7,6 @@
 
     <!-- CSS Imports -->
     <link rel="stylesheet" href="css/main.css">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -92,22 +91,6 @@
         <div class="container animated" data-animation="fadeIn">
             <h2 class="animated" data-animation="slideIn">Choose Your Path</h2>
             <div class="menu-grid">
-                <!-- Facilities Card -->
-                <div class="menu-item animated hover-lift" data-animation="fadeIn"
-                     onclick="showSection('jobTypes')" data-section="jobTypes">
-                    <div class="menu-item-content">
-                        <i class="fas fa-building animated" data-animation="pulse"></i>
-                        <h3>Amazon Facilities</h3>
-                        <p>Explore different job opportunities</p>
-                        <div class="features-list">
-                            <span><i class="fas fa-check"></i> FC Types</span>
-                            <span><i class="fas fa-check"></i> Roles</span>
-                            <span><i class="fas fa-check"></i> Locations</span>
-                        </div>
-                        <span class="completion-badge animated" id="facilitiesBadge">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                    </div>
                     <div class="progress-indicator">
                         <div class="progress-bar-mini">
                             <div class="progress-fill" style="width: 0%"></div>
@@ -914,223 +897,6 @@
         </div>
     </section>
 
-    <!-- Facilities Section -->
-    <section id="jobTypes" class="page">
-        <div class="container">
-            <button class="button-primary return-button animated" data-animation="slideIn" onclick="showSection('mainMenu')">
-                <i class="fas fa-arrow-left"></i> Back to Menu
-            </button>
-
-            <h2 class="section-title animated" data-animation="fadeIn">Amazon Facilities</h2>
-
-            <div class="facility-filters animated" data-animation="fadeIn">
-                <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">
-                        <i class="fas fa-border-all"></i> All Facilities
-                    </button>
-                    <button class="filter-btn" data-filter="fulfillment">
-                        <i class="fas fa-warehouse"></i> Fulfillment Centers
-                    </button>
-                    <button class="filter-btn" data-filter="sort">
-                        <i class="fas fa-sort"></i> Sort Centers
-                    </button>
-                    <button class="filter-btn" data-filter="delivery">
-                        <i class="fas fa-truck"></i> Delivery Stations
-                    </button>
-                </div>
-
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search facilities..." id="facilitySearch">
-                </div>
-            </div>
-
-            <div id="facilitiesGrid" class="facilities-grid">
-                <!-- Fulfillment Centers -->
-                <div class="facility-card animated hover-lift" data-animation="fadeIn" data-type="fulfillment">
-                    <div class="facility-image">
-                        <img src="assets/images/fc-robotics.jpg" alt="Robotics Fulfillment Center">
-                        <div class="facility-badge">
-                            <i class="fas fa-robot"></i> AR FC
-                        </div>
-                    </div>
-                    <div class="facility-content">
-                        <h3>Robotics Fulfillment Center</h3>
-                        <p>Advanced facility with Amazon Robotics technology</p>
-                        <div class="facility-features">
-                            <span><i class="fas fa-robot"></i> Robotics</span>
-                            <span><i class="fas fa-box"></i> Large Items</span>
-                            <span><i class="fas fa-clock"></i> 24/7</span>
-                        </div>
-                        <button class="button-primary learn-more" onclick="showFacilityDetails('robotics-fc')">
-                            Learn More <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="facility-card animated hover-lift" data-animation="fadeIn" data-type="fulfillment">
-                    <div class="facility-image">
-                        <img src="assets/images/fc-traditional.jpg" alt="Traditional Fulfillment Center">
-                        <div class="facility-badge">
-                            <i class="fas fa-warehouse"></i> Traditional FC
-                        </div>
-                    </div>
-                    <div class="facility-content">
-                        <h3>Traditional Fulfillment Center</h3>
-                        <p>Classic fulfillment operations for various items</p>
-                        <div class="facility-features">
-                            <span><i class="fas fa-box"></i> Mixed Items</span>
-                            <span><i class="fas fa-people-carry"></i> Manual Pick</span>
-                            <span><i class="fas fa-clock"></i> 24/7</span>
-                        </div>
-                        <button class="button-primary learn-more" onclick="showFacilityDetails('traditional-fc')">
-                            Learn More <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sort Centers -->
-                <div class="facility-card animated hover-lift" data-animation="fadeIn" data-type="sort">
-                    <div class="facility-image">
-                        <img src="assets/images/sort-center.jpg" alt="Sort Center">
-                        <div class="facility-badge">
-                            <i class="fas fa-sort"></i> SC
-                        </div>
-                    </div>
-                    <div class="facility-content">
-                        <h3>Sort Center</h3>
-                        <p>Regional package sorting and distribution</p>
-                        <div class="facility-features">
-                            <span><i class="fas fa-sort"></i> Sorting</span>
-                            <span><i class="fas fa-truck-loading"></i> Distribution</span>
-                            <span><i class="fas fa-clock"></i> Multiple Shifts</span>
-                        </div>
-                        <button class="button-primary learn-more" onclick="showFacilityDetails('sort-center')">
-                            Learn More <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Delivery Stations -->
-                <div class="facility-card animated hover-lift" data-animation="fadeIn" data-type="delivery">
-                    <div class="facility-image">
-                        <img src="assets/images/delivery-station.jpg" alt="Delivery Station">
-                        <div class="facility-badge">
-                            <i class="fas fa-truck"></i> DS
-                        </div>
-                    </div>
-                    <div class="facility-content">
-                        <h3>Delivery Station</h3>
-                        <p>Last-mile delivery preparation and dispatch</p>
-                        <div class="facility-features">
-                            <span><i class="fas fa-box"></i> Last Mile</span>
-                            <span><i class="fas fa-truck"></i> Delivery</span>
-                            <span><i class="fas fa-sun"></i> Day Shift</span>
-                        </div>
-                        <button class="button-primary learn-more" onclick="showFacilityDetails('delivery-station')">
-                            Learn More <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Facility Details Modal -->
-            <div id="facilityModal" class="modal">
-                <div class="modal-content animated" data-animation="fadeIn">
-                    <button class="close-button" onclick="closeFacilityModal()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <div id="facilityDetails" class="facility-details">
-                        <!-- Facility details will be loaded here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-<!-- Enhanced Notifications System -->
-<div class="notifications-container">
-    <!-- Achievement Notification -->
-    <div id="achievementNotification" class="notification achievement-notification">
-        <div class="notification-icon animated" data-animation="pulse">
-            <i class="fas fa-trophy"></i>
-        </div>
-        <div class="notification-content">
-            <h3 class="animated" data-animation="fadeIn">Achievement Unlocked!</h3>
-            <p id="achievementMessage" class="animated" data-animation="fadeIn"></p>
-            <div class="achievement-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill animated" data-animation="slideIn"></div>
-                </div>
-                <span class="progress-text">Progress: <span id="achievementProgress">0</span>%</span>
-            </div>
-        </div>
-        <button class="notification-close" onclick="closeNotification('achievementNotification')">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-
-    <!-- Level Up Notification -->
-    <div id="levelUpNotification" class="notification level-up-notification">
-        <div class="notification-icon animated" data-animation="pulse">
-            <i class="fas fa-arrow-up"></i>
-        </div>
-        <div class="notification-content">
-            <h3 class="animated" data-animation="fadeIn">Level Up!</h3>
-            <p class="animated" data-animation="fadeIn">
-                You've reached level <span id="newLevelDisplay" class="animated" data-animation="pulse">1</span>!
-            </p>
-            <div class="level-rewards animated" data-animation="fadeIn">
-                <div class="reward-item">
-                    <i class="fas fa-unlock"></i>
-                    <span>New Content Unlocked</span>
-                </div>
-                <div class="reward-item">
-                    <i class="fas fa-star"></i>
-                    <span>Achievement Points +100</span>
-                </div>
-            </div>
-        </div>
-        <button class="notification-close" onclick="closeNotification('levelUpNotification')">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-</div>
-
-<!-- Enhanced Peccy Assistant -->
-<div class="assistant-container">
-    <div id="peccy" class="assistant animated hover-lift" data-animation="fadeIn" onclick="toggleAssistant()">
-        <div class="assistant-avatar">
-            <i class="fas fa-robot"></i>
-        </div>
-        <div class="assistant-status">
-            <span class="status-dot animated" data-animation="pulse"></span>
-        </div>
-    </div>
-
-    <div id="assistantMessage" class="speech-bubble animated" data-animation="fadeIn">
-        <div class="bubble-header">
-            <span class="assistant-name">Peccy</span>
-            <span class="assistant-title">Your Amazon Guide</span>
-        </div>
-        <div class="bubble-content">
-            <p id="assistantText" class="animated" data-animation="fadeIn"></p>
-        </div>
-        <div class="bubble-actions">
-            <button class="action-btn hint" onclick="getHint()">
-                <i class="fas fa-lightbulb"></i> Get Hint
-            </button>
-            <button class="action-btn help" onclick="getHelp()">
-                <i class="fas fa-question-circle"></i> Help
-            </button>
-        </div>
-        <div class="interaction-hints">
-            <span class="hint-text">Click for assistance</span>
-            <span class="hint-arrows">↑↑</span>
-        </div>
-    </div>
-</div>
 
 <!-- Reset Progress Modal -->
 <div id="resetModal" class="modal">
@@ -1216,14 +982,11 @@
 </script>
 
 <!-- External Scripts -->
+    <script src="js/main.js"></script>
 <script src="js/config.js"></script>
-<script src="js/gameState.js"></script>
-<script src="js/animations.js"></script>
-<script src="js/achievements.js"></script>
 <script src="js/games/weightSorting.js"></script>
 <script src="js/games/pathFinding.js"></script>
 <script src="js/games/matching.js"></script>
-<script src="js/main.js"></script>
-
+</main>
 </body>
 </html>
