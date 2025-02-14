@@ -1,0 +1,59 @@
+/* utilities.css */
+/* Display */
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-grid { display: grid !important; }
+
+/* Flex utilities */
+.flex-row { flex-direction: row !important; }
+.flex-column { flex-direction: column !important; }
+.justify-start { justify-content: flex-start !important; }
+.justify-center { justify-content: center !important; }
+.justify-end { justify-content: flex-end !important; }
+.justify-between { justify-content: space-between !important; }
+.align-start { align-items: flex-start !important; }
+.align-center { align-items: center !important; }
+.align-end { align-items: flex-end !important; }
+
+/* Spacing */
+.m-0 { margin: 0 !important; }
+.m-1 { margin: var(--spacing-sm) !important; }
+.m-2 { margin: var(--spacing-md) !important; }
+.m-3 { margin: var(--spacing-lg) !important; }
+.m-4 { margin: var(--spacing-xl) !important; }
+
+.mt-1 { margin-top: var(--spacing-sm) !important; }
+.mt-2 { margin-top: var(--spacing-md) !important; }
+.mt-3 { margin-top: var(--spacing-lg) !important; }
+.mt-4 { margin-top: var(--spacing-xl) !important; }
+
+/* Similar patterns for mb, ml, mr, mx, my */
+
+.p-0 { padding: 0 !important; }
+.p-1 { padding: var(--spacing-sm) !important; }
+.p-2 { padding: var(--spacing-md) !important; }
+.p-3 { padding: var(--spacing-lg) !important; }
+.p-4 { padding: var(--spacing-xl) !important; }
+
+/* Similar patterns for pt, pb, pl, pr, px, py */
+
+/* Text utilities */
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-white { color: var(--text-white) !important; }
+
+/* Background utilities */
+.bg-primary { background-color: var(--amazon-navy) !important; }
+.bg-secondary { background-color: var(--amazon-orange) !important; }
+.bg-white { background-color: var(--amazon-white) !important; }
+
+/* Border utilities */
+.rounded-sm { border-radius: var(--radius-sm) !important; }
+.rounded-md { border-radius: var(--radius-md) !important; }
+.rounded-lg { border-radius: var(--radius-lg) !important; }
+.rounded-full { border-radius: var(--radius-full) !important; }

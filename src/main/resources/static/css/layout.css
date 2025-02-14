@@ -1,0 +1,31 @@
+/* layout.css */
+.nav-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: var(--gradient-primary);
+    color: var(--text-white);
+    padding: 0 var(--spacing-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: var(--z-header);
+    box-shadow: var(--box-shadow-lg);
+    transition: all var(--transition-normal);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    position: relative;
+}
+
+.main-content {
+    padding-top: 74px;
+    min-height: calc(100vh - 74px);
+    background: var(--amazon-background);
+    position: relative;
+}

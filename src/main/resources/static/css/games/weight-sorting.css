@@ -1,0 +1,97 @@
+/* games/weight-sorting.css */
+.weight-sorting-game {
+    position: relative;
+    min-height: 600px;
+}
+
+.conveyor-belt {
+    background: linear-gradient(90deg, #2d2d2d, #4a4a4a);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-xl) 0;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    position: relative;
+}
+
+.package {
+    background: var(--gradient-secondary);
+    color: var(--text-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    cursor: grab;
+    user-select: none;
+    font-weight: 600;
+    box-shadow: var(--box-shadow-md);
+    transition: all var(--transition-normal);
+    z-index: 1;
+    min-width: 120px;
+    text-align: center;
+}
+
+.package.dragging {
+    opacity: 0.8;
+    transform: scale(1.1);
+    cursor: grabbing;
+}
+
+.zones-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+
+.zone {
+    background: var(--amazon-background);
+    border: 3px dashed var(--amazon-grey);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all var(--transition-normal);
+    min-height: 250px;
+}
+
+.zone.drag-over {
+    border-color: var(--amazon-orange);
+    background: rgba(255, 153, 0, 0.1);
+    transform: scale(1.02);
+}
+
+.zone-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.zone-title {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.zone-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.game-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.game-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.stat-item {
+    background: var(--amazon-background);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+}

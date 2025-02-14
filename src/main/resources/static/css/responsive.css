@@ -1,0 +1,81 @@
+/* responsive.css */
+/* Breakpoints:
+    xs: 0-575px
+    sm: 576px-767px
+    md: 768px-991px
+    lg: 992px-1199px
+    xl: 1200px+ */
+
+@media (max-width: 1200px) {
+    .container {
+        padding: var(--spacing-lg);
+    }
+
+    .zones-container {
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 992px) {
+    .zones-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .game-controls {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --spacing-xl: 24px;
+        --spacing-lg: 16px;
+    }
+
+    .zones-container {
+        grid-template-columns: 1fr;
+    }
+
+    .game-stats {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .modal-container {
+        width: 95%;
+        padding: var(--spacing-lg);
+    }
+
+    .notification {
+        min-width: auto;
+        width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        padding: var(--spacing-md);
+    }
+
+    .form-input {
+        padding: var(--spacing-sm);
+    }
+
+    .button-primary,
+    .button-secondary {
+        width: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+}

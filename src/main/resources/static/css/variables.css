@@ -1,0 +1,66 @@
+/* variables.css */
+:root {
+    /* Core Colors */
+    --amazon-navy: #232F3E;
+    --amazon-navy-light: #37475A;
+    --amazon-orange: #FF9900;
+    --amazon-orange-light: #FFB84D;
+    --amazon-blue: #1768C9;
+    --amazon-blue-light: #2196F3;
+    --amazon-white: #FFFFFF;
+    --amazon-grey: #8B96A3;
+    --amazon-light-grey: #D1D5DA;
+    --amazon-background: #F8F9FA;
+
+    /* Status Colors */
+    --amazon-success: #4CAF50;
+    --amazon-success-light: #66BB6A;
+    --amazon-warning: #FFC107;
+    --amazon-warning-light: #FFCA28;
+    --amazon-error: #F44336;
+    --amazon-error-light: #EF5350;
+
+    /* Text Colors */
+    --text-primary: #232F3E;
+    --text-secondary: #56616C;
+    --text-white: #FFFFFF;
+    --text-muted: #6C757D;
+
+    /* Effects */
+    --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+    --box-shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.2);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--amazon-navy) 0%, var(--amazon-blue) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--amazon-orange) 0%, var(--amazon-orange-light) 100%);
+    --gradient-success: linear-gradient(135deg, var(--amazon-success) 0%, var(--amazon-success-light) 100%);
+    --gradient-warning: linear-gradient(135deg, var(--amazon-warning) 0%, var(--amazon-warning-light) 100%);
+
+    /* Animation Speeds */
+    --transition-fast: 0.2s;
+    --transition-normal: 0.3s;
+    --transition-slow: 0.5s;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Z-index layers */
+    --z-drawer: 100;
+    --z-modal: 200;
+    --z-overlay: 300;
+    --z-header: 400;
+    --z-toast: 500;
+}
