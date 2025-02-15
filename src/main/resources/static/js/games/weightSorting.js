@@ -138,6 +138,9 @@ class WeightSortingGame {
         this.resetGame();
         this.isPlaying = true;
 
+        // Set initial time based on current difficulty
+        this.timeLeft = this.difficultySettings[this.difficulty].timeLimit;
+
         // Hide instructions panel and show game content
         const instructionsPanel = document.querySelector('.game-instructions-panel');
         const gameContent = document.querySelector('.game-content');
@@ -145,7 +148,7 @@ class WeightSortingGame {
         if (instructionsPanel) instructionsPanel.style.display = 'none';
         if (gameContent) gameContent.style.display = 'block';
 
-        // Start package generation and timer
+        // Start package generation and timer with current difficulty settings
         this.startPackageGeneration();
         this.startTimer();
         this.updateDisplay();
@@ -164,6 +167,7 @@ class WeightSortingGame {
         }, interval / this.speedSettings[this.gameSpeed]);
     }
     generatePackage() {
+
         if (!this.conveyorBelt || !this.isPlaying) return;
 
         const weight = this.generateWeight();
@@ -575,14 +579,29 @@ class WeightSortingGame {
     }
 
     setDifficulty(level) {
-        this.difficulty = level;
-        this.timeLeft = this.difficultySettings[level].timeLimit;
+        if (!this.difficultySettings[level]) {
+            console.error('Invalid difficulty level:', level);
+            return;
+        }
 
-        // Update UI
+        this.difficulty = level;
+
+        // Update game settings based on difficulty
+        const settings = this.difficultySettings[level];
+        this.timeLeft = settings.timeLimit;
+
+        // Update UI to reflect new difficulty
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.difficulty === level);
         });
 
+        // Update any display elements showing time limit
+        const timerDisplay = document.getElementById('weightSortingTimerDisplay');
+        if (timerDisplay) {
+            timerDisplay.textContent = settings.timeLimit;
+        }
+
+        console.log(`Difficulty set to ${level}:`, settings);
         this.updateDisplay();
     }
 
@@ -607,6 +626,38 @@ class WeightSortingGame {
             clearInterval(this.packageGenerationTimer);
             this.startPackageGeneration();
         }
+    }
+
+    setupDifficultyControls() {
+        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+        difficultyButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (!this.isPlaying) {
+                    // Remove active class from all buttons
+                    difficultyButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    e.target.classList.add('active');
+                    // Set difficulty
+                    this.setDifficulty(e.target.dataset.difficulty);
+                }
+            });
+        });
+    }
+
+    setupSpeedControls() {
+        const speedButtons = document.querySelectorAll('.speed-btn');
+        speedButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (this.isPlaying) {
+                    // Remove active class from all buttons
+                    speedButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    e.target.classList.add('active');
+                    // Set speed
+                    this.setGameSpeed(e.target.dataset.speed);
+                }
+            });
+        });
     }
 }
 

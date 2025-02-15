@@ -80,8 +80,7 @@ function updateGameStats() {
     document.getElementById('weightSortingPerfectRounds').textContent =
         gameState.gameStats.weightSorting.perfectRounds;
 
-    const bestTime = gameState.gameStats.pathFinding.bestTime || '--:--';
-    document.getElementById('pathFindingBestTime').textContent = bestTime;
+    document.getElementById('pathFindingBestTime').textContent = gameState.gameStats.pathFinding.bestTime || '--:--';
     document.getElementById('pathFindingCompleted').textContent =
         gameState.gameStats.pathFinding.pathsCompleted;
 
@@ -148,9 +147,32 @@ function startGame(gameType) {
 }
 
 function returnToGamesMenu() {
+    // Hide all game containers
     document.querySelectorAll('.game-container').forEach(container => {
         container.style.display = 'none';
     });
+
+    // For Weight Sorting Game specifically
+    const weightSortingGame = document.getElementById('weightSortingGame');
+    if (weightSortingGame) {
+        // Show instructions panel and hide game content
+        const instructionsPanel = weightSortingGame.querySelector('.game-instructions-panel');
+        const gameContent = weightSortingGame.querySelector('.game-content');
+
+        if (instructionsPanel) {
+            instructionsPanel.style.display = 'block';
+        }
+        if (gameContent) {
+            gameContent.style.display = 'none';
+        }
+
+        // Reset the game state
+        if (window.weightSortingGame && typeof window.weightSortingGame.resetGame === 'function') {
+            window.weightSortingGame.resetGame();
+        }
+    }
+
+    // Show games menu
     document.getElementById('gamesMenu').style.display = 'block';
 }
 
@@ -254,7 +276,7 @@ function startQuestionTimer() {
     let timeLeft = QUESTION_TIME;
     const timerDisplay = document.getElementById('questionTimer');
 
-    timerDisplay.textContent = timeLeft;
+    if (timerDisplay) timerDisplay.textContent = timeLeft;
 
     questionTimer = setInterval(() => {
         timeLeft--;
@@ -357,7 +379,7 @@ function showQuizResults() {
         const scorePercentage = calculateQuizScore(currentQuiz.score, currentQuiz.questions.length);
         finalScore.textContent = scorePercentage;
 
-        const breakdownHTML = currentQuiz.questions.map((question, index) => {
+        resultsBreakdown.innerHTML = currentQuiz.questions.map((question, index) => {
             const userAnswer = currentQuiz.userAnswers[index];
             const isCorrect = userAnswer === question.correct;
 
@@ -379,8 +401,6 @@ function showQuizResults() {
                 </div>
             `;
         }).join('');
-
-        resultsBreakdown.innerHTML = breakdownHTML;
         updateQuizProgress(currentQuiz.category, scorePercentage);
     } catch (error) {
         handleError(error, 'showQuizResults');
@@ -457,24 +477,6 @@ function showQuestion() {
     startQuestionTimer();
 }
 
-function checkAnswer(selectedIndex) {
-    const question = currentQuiz.questions[currentQuiz.currentQuestion];
-    const optionsContainer = document.getElementById('optionsContainer');
-    const buttons = optionsContainer.getElementsByClassName('quiz-option');
-
-    Array.from(buttons).forEach(button => button.disabled = true);
-
-    if (selectedIndex === question.correct) {
-        buttons[selectedIndex].classList.add('correct');
-        currentQuiz.score++;
-    } else {
-        buttons[selectedIndex].classList.add('incorrect');
-        buttons[question.correct].classList.add('correct');
-    }
-
-    showFeedback(selectedIndex === question.correct, question.explanation);
-}
-
 function showFeedback(isCorrect, explanation) {
     const feedbackContainer = document.getElementById('feedbackContainer');
     const feedbackIcon = document.getElementById('feedbackIcon');
@@ -495,29 +497,6 @@ function nextQuestion() {
     } else {
         showQuizResults();
     }
-}
-
-function showQuizResults() {
-    const quizResults = document.getElementById('quizResults');
-    const finalScore = document.getElementById('finalScore');
-    const resultsBreakdown = document.getElementById('resultsBreakdown');
-
-    document.getElementById('questionContainer').style.display = 'none';
-    quizResults.style.display = 'block';
-
-    const scorePercentage = (currentQuiz.score / currentQuiz.questions.length) * 100;
-    finalScore.textContent = Math.round(scorePercentage);
-
-    resultsBreakdown.innerHTML = currentQuiz.questions.map((question, index) => `
-        <div class="result-item">
-            <span class="question-number">Q${index + 1}:</span>
-            <span class="result-icon ${currentQuiz.questions[index].correct === currentQuiz.userAnswers[index] ? 'correct' : 'incorrect'}">
-                <i class="fas ${currentQuiz.questions[index].correct === currentQuiz.userAnswers[index] ? 'fa-check' : 'fa-times'}"></i>
-            </span>
-        </div>
-    `).join('');
-
-    updateQuizProgress(currentQuiz.category, scorePercentage);
 }
 
 function updateQuizProgress(category, score) {
