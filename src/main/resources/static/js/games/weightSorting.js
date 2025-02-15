@@ -321,12 +321,8 @@ class WeightSortingGame {
             packageElement.remove();
         }
 
-        // Update global score
-        if (window.gameState) {
-            gameState.player.score += points;
-            saveGameState();
-            document.getElementById('scoreDisplay').textContent = gameState.player.score;
-        }
+        // Update only the main score display
+        document.getElementById('scoreDisplay').textContent = this.score;
 
         if (this.levelProgress >= 8) {
             this.levelUp();
@@ -357,21 +353,17 @@ class WeightSortingGame {
         this.multiplier = 1;
         this.mistakesMade++;
 
-        // Update global score
-        if (window.gameState) {
-            gameState.player.score = Math.max(0, gameState.player.score - penalty);
-            saveGameState();
-            document.getElementById('scoreDisplay').textContent = gameState.player.score;
-        }
+        // Update only the main nav header score
+        document.getElementById('scoreDisplay').textContent = this.score;
 
         this.updateDisplay();
         this.showFeedback(false, `-${penalty}`);
 
-        // Check for game over due to mistakes
         if (this.mistakesMade >= this.difficultySettings[this.difficulty].mistakesAllowed) {
             this.endGame();
         }
     }
+
     levelUp() {
         this.level++;
         // Reduced time bonus for higher difficulty
@@ -464,9 +456,8 @@ class WeightSortingGame {
     }
 
     updateDisplay() {
-        // Update score and game stats
+        // Update game stats (remove weightSortingScoreDisplay from here)
         const displays = {
-            'weightSortingScoreDisplay': this.score,
             'weightSortingTimerDisplay': Math.ceil(this.timeLeft),
             'weightSortingLevelDisplay': this.level,
             'streakCount': this.streak,
@@ -507,6 +498,13 @@ class WeightSortingGame {
                 stats.perfectRounds++;
             }
             saveGameState();
+
+            // Save score using ScoreManager
+            scoreManager.addScore({
+                name: gameState.player.name,
+                email: gameState.player.email,
+                score: this.score
+            });
         }
 
         this.showGameOverModal();

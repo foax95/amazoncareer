@@ -1047,6 +1047,27 @@ p {
     text-align: center;
     padding: var(--space-xl);
 }
+.quiz-categories-preview {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.category-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+}
+
+.category-preview i {
+    font-size: 1.2rem;
+    color: #4CAF50;
+}
+
 
 .score-circle {
     width: 150px;
