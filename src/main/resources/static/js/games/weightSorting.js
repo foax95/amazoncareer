@@ -171,6 +171,7 @@ class WeightSortingGame {
         packageElement.className = 'package';
         packageElement.draggable = true;
         packageElement.dataset.weight = weight;
+        packageElement.id = 'package-' + Date.now(); // Add unique ID
 
         // Create weight display
         const weightDisplay = document.createElement('span');
@@ -189,7 +190,7 @@ class WeightSortingGame {
         packageElement.addEventListener('dragstart', (e) => this.handleDragStart(e));
         packageElement.addEventListener('dragend', (e) => this.handleDragEnd(e));
 
-        // Add animation end listener to remove unsorted packages
+        // Add animation end listener
         packageElement.addEventListener('animationend', () => {
             if (packageElement.parentNode === this.conveyorBelt) {
                 this.handleMissedPackage(packageElement);
@@ -240,19 +241,23 @@ class WeightSortingGame {
     handleDragStart(e) {
         e.target.classList.add('dragging');
         e.dataTransfer.setData('text/plain', e.target.dataset.weight);
+        // Store the dragged element ID or create one if it doesn't exist
+        if (!e.target.id) {
+            e.target.id = 'package-' + Date.now();
+        }
+        e.dataTransfer.setData('packageId', e.target.id);
         e.dataTransfer.effectAllowed = 'move';
-
-        // Pause the package animation
         e.target.style.animationPlayState = 'paused';
     }
 
     handleDragEnd(e) {
         e.target.classList.remove('dragging');
-
-        // Resume the package animation if not sorted
         if (e.target.parentNode === this.conveyorBelt) {
             e.target.style.animationPlayState = 'running';
         }
+        document.querySelectorAll('.drag-over').forEach(element => {
+            element.classList.remove('drag-over');
+        });
     }
 
     handleDragOver(e) {
@@ -274,21 +279,60 @@ class WeightSortingGame {
         const zone = e.currentTarget;
         zone.classList.remove('drag-over');
 
-        const weight = parseInt(e.dataTransfer.getData('text/plain'));
-        const packageElement = document.querySelector('.package.dragging');
+        const packageId = e.dataTransfer.getData('packageId');
+        const packageElement = document.getElementById(packageId);
 
+        if (!packageElement) return;
+
+        const weight = parseInt(packageElement.dataset.weight);
         const isCorrect = this.checkCorrectZone(weight, zone.dataset.type);
 
         if (isCorrect) {
+            // Remove from packageItems array
+            this.packageItems = this.packageItems.filter(item => item !== packageElement);
+            // Handle correct sort will remove the element
             this.handleCorrectSort(zone, packageElement);
         } else {
             this.handleIncorrectSort();
-            // Return package to belt if incorrect
-            if (packageElement) {
-                packageElement.style.animationPlayState = 'running';
-            }
+            // Resume animation if incorrect
+            packageElement.style.animationPlayState = 'running';
         }
     }
+
+    handleCorrectSort(zone, packageElement) {
+        const baseScore = this.difficultySettings[this.difficulty].baseScore;
+        const speedMultiplier = this.speedSettings[this.gameSpeed];
+        const points = Math.round(baseScore * this.multiplier * this.level * speedMultiplier);
+
+        // Update game state
+        this.score += points;
+        this.streak++;
+        this.multiplier = Math.min(8, 1 + Math.floor(this.streak / 2));
+        this.zoneCounts[zone.dataset.type]++;
+        this.levelProgress++;
+        this.totalPackagesSorted++;
+
+        // Remove the package element
+        if (packageElement && packageElement.parentNode) {
+            packageElement.remove();
+        }
+
+        // Update global score
+        if (window.gameState) {
+            gameState.player.score += points;
+            saveGameState();
+            document.getElementById('scoreDisplay').textContent = gameState.player.score;
+        }
+
+        if (this.levelProgress >= 8) {
+            this.levelUp();
+        }
+
+        this.updateDisplay();
+        this.showFeedback(true, `+${points} (x${this.multiplier})`);
+    }
+
+
 
     checkCorrectZone(weight, zoneType) {
         switch(zoneType) {
@@ -302,43 +346,6 @@ class WeightSortingGame {
                 return false;
         }
     }
-
-    handleCorrectSort(zone, packageElement) {
-        // Calculate points
-        const baseScore = this.difficultySettings[this.difficulty].baseScore;
-        const speedMultiplier = this.speedSettings[this.gameSpeed];
-        const points = Math.round(baseScore * this.multiplier * this.level * speedMultiplier);
-
-        // Update game state
-        this.score += points;
-        this.streak++;
-        this.multiplier = Math.min(8, 1 + Math.floor(this.streak / 2));
-        this.zoneCounts[zone.dataset.type]++;
-        this.levelProgress++;
-        this.totalPackagesSorted++;
-
-        // Remove sorted package
-        if (packageElement) {
-            packageElement.remove();
-            this.packageItems = this.packageItems.filter(item => item !== packageElement);
-        }
-
-        // Update global score
-        if (window.gameState) {
-            gameState.player.score += points;
-            saveGameState();
-            document.getElementById('scoreDisplay').textContent = gameState.player.score;
-        }
-
-        // Check for level up
-        if (this.levelProgress >= 8) {
-            this.levelUp();
-        }
-
-        this.updateDisplay();
-        this.showFeedback(true, `+${points} (x${this.multiplier})`);
-    }
-
     handleIncorrectSort() {
         const penalty = this.difficultySettings[this.difficulty].penaltyScore;
         this.score = Math.max(0, this.score - penalty);

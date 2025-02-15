@@ -677,51 +677,67 @@ p {
 /* Sorting Zones */
 .sorting-zones {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    flex-direction: row; /* explicitly set horizontal direction */
+    justify-content: center;
+    align-items: stretch;
     gap: 20px;
-    margin-top: 30px;
+    margin: 20px;
+    width: calc(100% - 40px);
+    height: 300px; /* fixed height for the container */
 }
 
 .zone {
-    background: var(--amazon-white);
-    border: 3px dashed var(--amazon-light-grey);
-    border-radius: 12px;
-    padding: 20px;
-    min-height: 200px;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    min-width: 250px;
+    margin: 0; /* remove any margins */
+    padding: 15px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
     transition: all 0.3s ease;
 }
 
-.zone.drag-over {
-    border-color: var(--amazon-blue);
-    background: rgba(23, 104, 201, 0.1);
-    transform: scale(1.02);
-}
-
+/* Zone header styling */
 .zone-header {
     text-align: center;
-    margin-bottom: 15px;
-}
-
-.zone-header i {
-    font-size: 24px;
-    color: var(--amazon-orange);
     margin-bottom: 10px;
 }
 
-.zone-description {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin-bottom: 10px;
+/* Zone content styling */
+.zone-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
+/* Zone counter styling */
 .zone-counter {
-    margin-top: auto;
-    font-size: 14px;
-    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 10px;
 }
+
+.zone.drag-over {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Ensure proper spacing for zone description */
+.zone-description {
+    text-align: center;
+    margin: 5px 0;
+}
+
+/* Make sure the zones container is full width */
+.game-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 
 /* Speed Controls */
 .speed-controls {
@@ -748,22 +764,6 @@ p {
 .speed-btn:hover {
     transform: translateY(-2px);
 }
-
-/* Feedback System */
-.feedback {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 15px 30px;
-    border-radius: 25px;
-    color: var(--amazon-white);
-    font-weight: bold;
-    animation: fadeInOut 1s ease-in-out;
-    pointer-events: none;
-    z-index: 1000;
-}
-
 .feedback.success {
     background: var(--amazon-success);
 }

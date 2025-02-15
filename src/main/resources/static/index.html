@@ -410,9 +410,14 @@
                     </div>
 
                     <!-- Sorting Zones -->
-                    <div class="sorting-zones animated" data-animation="fadeIn">
+                    <div class="sorting-zones animated" data-animation="fadeIn" style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
                         <!-- Individual Zone -->
-                        <div class="zone animated hover-lift" data-animation="fadeIn" data-type="individual">
+                        <div class="zone" data-type="individual"
+                             ondragover="weightSortingGame.handleDragOver(event)"
+                             ondrop="weightSortingGame.handleDrop(event)"
+                             ondragenter="weightSortingGame.handleDragEnter(event)"
+                             ondragleave="weightSortingGame.handleDragLeave(event)"
+                             style="flex: 1; margin: 0 10px;">
                             <div class="zone-header">
                                 <i class="fas fa-user"></i>
                                 <h3>Individual Lift</h3>
@@ -429,7 +434,12 @@
                         </div>
 
                         <!-- Team Zone -->
-                        <div class="zone animated hover-lift" data-animation="fadeIn" data-type="team">
+                        <div class="zone" data-type="team"
+                             ondragover="weightSortingGame.handleDragOver(event)"
+                             ondrop="weightSortingGame.handleDrop(event)"
+                             ondragenter="weightSortingGame.handleDragEnter(event)"
+                             ondragleave="weightSortingGame.handleDragLeave(event)"
+                             style="flex: 1; margin: 0 10px;">
                             <div class="zone-header">
                                 <i class="fas fa-users"></i>
                                 <h3>Team Lift</h3>
@@ -446,7 +456,12 @@
                         </div>
 
                         <!-- Mechanical Zone -->
-                        <div class="zone animated hover-lift" data-animation="fadeIn" data-type="mechanical">
+                        <div class="zone" data-type="mechanical"
+                             ondragover="weightSortingGame.handleDragOver(event)"
+                             ondrop="weightSortingGame.handleDrop(event)"
+                             ondragenter="weightSortingGame.handleDragEnter(event)"
+                             ondragleave="weightSortingGame.handleDragLeave(event)"
+                             style="flex: 1; margin: 0 10px;">
                             <div class="zone-header">
                                 <i class="fas fa-truck-loading"></i>
                                 <h3>Mechanical Aid</h3>
