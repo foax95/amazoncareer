@@ -23,15 +23,15 @@ public class DynamoDBConfig {
 
     @Bean
     public DynamoDBMapper dynamoDBMapper() {
-        return new DynamoDBMapper(buildAmazonDynamoDB());
+        return new DynamoDBMapper(amazonDynamoDB());
     }
 
-    private AmazonDynamoDB buildAmazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder
-                .standard()
-                .withRegion(region)
+    @Bean
+    public AmazonDynamoDB amazonDynamoDB() {
+        return AmazonDynamoDBClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(accessKey, secretKey)))
+                .withRegion(region)
                 .build();
     }
 }
