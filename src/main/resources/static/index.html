@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day One Hero</title>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="weightSortingGame" href="css/games/weight-sorting.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -37,7 +36,7 @@
 
 <!-- Navigation Header -->
 <header class="nav-header animated" data-animation="slideIn">
-    <div class="nav-title animated" data-animation="fadeIn">Day one hero</div>
+    <div class="nav-title animated" data-animation="fadeIn">Day One Hero</div>
     <div class="nav-stats animated" data-animation="fadeIn">
         <div class="nav-score animated" data-animation="fadeIn">
             Score: <span id="scoreDisplay" class="animated" data-animation="pulse">0</span>
@@ -50,6 +49,7 @@
     <!-- Welcome Screen -->
     <section id="welcomeScreen" class="page active">
         <div class="welcome-container animated" data-animation="fadeIn">
+            <div class="welcome-background"></div> <!-- Add this line -->
             <div class="floating-boxes" id="floatingBoxes"></div>
             <div class="welcome-content animated" data-animation="fadeIn">
                 <h1 class="welcome-title animated" data-animation="slideIn">Welcome to Your Amazon Journey</h1>
@@ -74,14 +74,11 @@
             </div>
         </div>
     </section>
+
     <!-- Weight Sorting Game -->
     <section id="weightSortingGame" class="page game-section">
         <div class="game-header animated" data-animation="slideIn">
             <div class="game-stats animated" data-animation="fadeIn">
-                <div class="stat-item">
-                    <i class="fas fa-star"></i>
-                    <span>Score: <span id="weightSortingScoreDisplay">0</span></span>
-                </div>
                 <div class="stat-item">
                     <i class="fas fa-clock"></i>
                     <span>Time: <span id="weightSortingTimerDisplay">60</span>s</span>
@@ -174,11 +171,7 @@
 
             <!-- Sorting Zones -->
             <div class="sorting-zones">
-                <div class="zone" data-type="individual"
-                     ondragover="weightSortingGame.handleDragOver(event)"
-                     ondrop="weightSortingGame.handleDrop(event)"
-                     ondragenter="weightSortingGame.handleDragEnter(event)"
-                     ondragleave="weightSortingGame.handleDragLeave(event)">
+                <div class="zone" data-type="individual">
                     <div class="zone-header">
                         <i class="fas fa-user"></i>
                         <h3>Individual Lift</h3>
@@ -189,11 +182,7 @@
                     </div>
                 </div>
 
-                <div class="zone" data-type="team"
-                     ondragover="weightSortingGame.handleDragOver(event)"
-                     ondrop="weightSortingGame.handleDrop(event)"
-                     ondragenter="weightSortingGame.handleDragEnter(event)"
-                     ondragleave="weightSortingGame.handleDragLeave(event)">
+                <div class="zone" data-type="team">
                     <div class="zone-header">
                         <i class="fas fa-users"></i>
                         <h3>Team Lift</h3>
@@ -204,11 +193,7 @@
                     </div>
                 </div>
 
-                <div class="zone" data-type="mechanical"
-                     ondragover="weightSortingGame.handleDragOver(event)"
-                     ondrop="weightSortingGame.handleDrop(event)"
-                     ondragenter="weightSortingGame.handleDragEnter(event)"
-                     ondragleave="weightSortingGame.handleDragLeave(event)">
+                <div class="zone" data-type="mechanical">
                     <div class="zone-header">
                         <i class="fas fa-truck-loading"></i>
                         <h3>Mechanical Aid</h3>
@@ -728,47 +713,6 @@
     </section>
 </main>
 
-<!-- Scripts -->
-<script>
-    // Initial loading script
-    document.addEventListener('DOMContentLoaded', function() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const mainContent = document.querySelector('.main-content');
-        let progress = 0;
-
-        // Hide main content initially
-        if (mainContent) {
-            mainContent.style.visibility = 'hidden';
-        }
-
-        const loadingInterval = setInterval(() => {
-            progress += 1;
-
-            if (document.getElementById('loadingProgress')) {
-                document.getElementById('loadingProgress').style.width = `${progress}%`;
-            }
-            if (document.getElementById('loadingProgressText')) {
-                document.getElementById('loadingProgressText').textContent = `${progress}%`;
-            }
-
-            if (progress >= 100) {
-                clearInterval(loadingInterval);
-                setTimeout(() => {
-                    loadingOverlay.style.opacity = '0';
-                    loadingOverlay.style.transition = 'opacity 0.5s ease-out';
-
-                    setTimeout(() => {
-                        loadingOverlay.style.display = 'none';
-                        if (mainContent) {
-                            mainContent.style.visibility = 'visible';
-                            document.getElementById('welcomeScreen').classList.add('active');
-                        }
-                    }, 500);
-                }, 500);
-            }
-        }, 30);
-    });
-</script>
 
 <!-- External Scripts -->
 <script src="js/config.js"></script>

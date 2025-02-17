@@ -121,7 +121,6 @@ class WeightSortingGame {
         const weight = this.generateWeight();
         const packageElement = document.createElement('div');
         packageElement.className = 'package';
-        packageElement.draggable = true;
         packageElement.dataset.weight = weight;
         packageElement.id = 'package-' + Date.now();
 
@@ -132,8 +131,8 @@ class WeightSortingGame {
 
         packageElement.style.animationDuration = `${this.packageSpeed}s`;
 
-        packageElement.addEventListener('dragstart', (e) => this.handleDragStart(e));
-        packageElement.addEventListener('dragend', (e) => this.handleDragEnd(e));
+        // Replace drag events with click event
+        packageElement.addEventListener('click', (e) => this.handlePackageClick(e));
         packageElement.addEventListener('animationend', () => {
             if (packageElement.parentNode === this.conveyorBelt) {
                 this.handleMissedPackage(packageElement);
@@ -143,6 +142,7 @@ class WeightSortingGame {
         this.conveyorBelt.appendChild(packageElement);
         this.packageItems.push(packageElement);
     }
+
 
     generateWeight() {
         const ranges = [
@@ -173,68 +173,41 @@ class WeightSortingGame {
 
         return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
     }
+    handlePackageClick(e) {
+        const packageElement = e.currentTarget;
+
+        // Remove selection from other packages
+        this.packageItems.forEach(item => item.classList.remove('selected'));
+
+        // Toggle selection on clicked package
+        packageElement.classList.add('selected');
+        packageElement.style.animationPlayState = 'paused';
+    }
+
+    // Add new method to handle zone clicks
+        handleZoneClick(e) {
+        const zone = e.currentTarget;
+        const selectedPackage = this.conveyorBelt.querySelector('.package.selected');
+
+        if (!selectedPackage) return;
+
+        const weight = parseInt(selectedPackage.dataset.weight);
+        const isCorrect = this.checkCorrectZone(weight, zone.dataset.type);
+
+        if (isCorrect) {
+            this.packageItems = this.packageItems.filter(item => item !== selectedPackage);
+            this.handleCorrectSort(zone, selectedPackage);
+        } else {
+            this.handleIncorrectSort();
+            selectedPackage.style.animationPlayState = 'running';
+            selectedPackage.classList.remove('selected');
+        }
+    }
 
     handleMissedPackage(packageElement) {
         this.handleIncorrectSort();
         packageElement.remove();
         this.packageItems = this.packageItems.filter(item => item !== packageElement);
-    }
-
-    handleDragStart(e) {
-        e.target.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', e.target.dataset.weight);
-        if (!e.target.id) {
-            e.target.id = 'package-' + Date.now();
-        }
-        e.dataTransfer.setData('packageId', e.target.id);
-        e.dataTransfer.effectAllowed = 'move';
-        e.target.style.animationPlayState = 'paused';
-    }
-
-    handleDragEnd(e) {
-        e.target.classList.remove('dragging');
-        if (e.target.parentNode === this.conveyorBelt) {
-            e.target.style.animationPlayState = 'running';
-        }
-        document.querySelectorAll('.drag-over').forEach(element => {
-            element.classList.remove('drag-over');
-        });
-    }
-
-    handleDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-    }
-
-    handleDragEnter(e) {
-        e.preventDefault();
-        e.currentTarget.classList.add('drag-over');
-    }
-
-    handleDragLeave(e) {
-        e.currentTarget.classList.remove('drag-over');
-    }
-
-    handleDrop(e) {
-        e.preventDefault();
-        const zone = e.currentTarget;
-        zone.classList.remove('drag-over');
-
-        const packageId = e.dataTransfer.getData('packageId');
-        const packageElement = document.getElementById(packageId);
-
-        if (!packageElement) return;
-
-        const weight = parseInt(packageElement.dataset.weight);
-        const isCorrect = this.checkCorrectZone(weight, zone.dataset.type);
-
-        if (isCorrect) {
-            this.packageItems = this.packageItems.filter(item => item !== packageElement);
-            this.handleCorrectSort(zone, packageElement);
-        } else {
-            this.handleIncorrectSort();
-            packageElement.style.animationPlayState = 'running';
-        }
     }
     handleCorrectSort(zone, packageElement) {
         const points = Math.round(this.baseScore * this.multiplier);
@@ -403,12 +376,10 @@ class WeightSortingGame {
     }
 
     setupEventListeners() {
+        // Replace drag-and-drop listeners with click listeners
         const zones = document.querySelectorAll('.zone');
         zones.forEach(zone => {
-            zone.addEventListener('dragover', (e) => this.handleDragOver(e));
-            zone.addEventListener('drop', (e) => this.handleDrop(e));
-            zone.addEventListener('dragenter', (e) => this.handleDragEnter(e));
-            zone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+            zone.addEventListener('click', (e) => this.handleZoneClick(e));
         });
     }
 }

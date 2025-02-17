@@ -212,22 +212,20 @@ function handleRegistration(event) {
             gameState.player.email = email;
             saveGameState();
 
-            // Transition directly to weight sorting game
-            showLoadingScreen().then(() => {
-                hideLoadingScreen().then(() => {
-                    showSection('weightSortingGame');
-                    if (window.weightSortingGame) {
-                        window.weightSortingGame.initialize();
-                    }
-                });
-            });
+            // Open the weight sorting game
+            showSection('weightSortingGame');
+            if (typeof initializeWeightSortingGame === 'function') {
+                initializeWeightSortingGame();
+            }
         }
     } catch (error) {
         console.error('Error handling registration:', error);
+        alert('Failed to register. Please try again.');
     }
 }
 
 
+//What happens after a game is done
 function completeGame(currentGame) {
     const gameSequence = {
         weightSortingGame: 'pathFindingGame',
@@ -238,31 +236,29 @@ function completeGame(currentGame) {
 
     const nextGame = gameSequence[currentGame];
     if (nextGame) {
-        showLoadingScreen().then(() => {
-            hideLoadingScreen().then(() => {
-                showSection(nextGame);
-                // Initialize next game if needed
-                switch(nextGame) {
-                    case 'pathFindingGame':
-                        if (window.pathFindingGame?.initialize) {
-                            window.pathFindingGame.initialize();
-                        }
-                        break;
-                    case 'matchingGame':
-                        if (window.matchingGame?.initialize) {
-                            window.matchingGame.initialize();
-                        }
-                        break;
-                    case 'quiz':
-                        if (window.quizGame?.initialize) {
-                            window.quizGame.initialize();
-                        }
-                        break;
+        // Transition directly to the next game without showing loading screen
+        showSection(nextGame);
+        // Initialize next game if needed
+        switch(nextGame) {
+            case 'pathFindingGame':
+                if (window.pathFindingGame?.initialize) {
+                    window.pathFindingGame.initialize();
                 }
-            });
-        });
+                break;
+            case 'matchingGame':
+                if (window.matchingGame?.initialize) {
+                    window.matchingGame.initialize();
+                }
+                break;
+            case 'quiz':
+                if (window.quizGame?.initialize) {
+                    window.quizGame.initialize();
+                }
+                break;
+        }
     }
 }
+
 
 
 // Game Management
