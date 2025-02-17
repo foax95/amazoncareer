@@ -172,6 +172,30 @@ function updateFinalStats() {
         if (element) element.textContent = value;
     });
 }
+//Loading Tips
+const loadingTips = [
+    "Did you know? Amazon's leadership principles help guide decision-making every day.",
+    "Safety First! Always follow proper lifting techniques.",
+    "Team lifting is required for packages over 49 lbs.",
+    "Take regular breaks during repetitive tasks.",
+    "Remember to maintain good posture while working.",
+    "Communication is key for team success.",
+    "Stay hydrated throughout your shift.",
+    "Report any safety concerns immediately.",
+    "Your well-being is our top priority."
+];
+
+// Update loading tip randomly
+function updateLoadingTip() {
+    const tipElement = document.getElementById('loadingTip');
+    if (tipElement) {
+        const randomTip = loadingTips[Math.floor(Math.random() * loadingTips.length)];
+        tipElement.textContent = randomTip;
+    }
+}
+
+// Call this during loading
+setInterval(updateLoadingTip, 1000); // Change tip every 3 seconds
 
 
 

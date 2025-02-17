@@ -226,116 +226,103 @@
         <div class="game-header animated" data-animation="slideIn">
             <div class="game-stats animated" data-animation="fadeIn">
                 <div class="stat-item">
-                    <i class="fas fa-steps"></i>
-                    <span>Steps: <span id="pathFindingSteps">0</span></span>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Items: <span id="pathFindingSteps">0</span>/5</span>
                 </div>
                 <div class="stat-item">
                     <i class="fas fa-clock"></i>
                     <span>Time: <span id="pathFindingTimer">60</span>s</span>
                 </div>
                 <div class="stat-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Location: <span id="currentLocation">Start</span></span>
+                    <i class="fas fa-star"></i>
+                    <span>Score: <span id="pathFindingScore">0</span></span>
                 </div>
             </div>
         </div>
 
-        <div class="game-content animated" data-animation="fadeIn">
-            <!-- Facility Map -->
-            <div class="facility-map" id="facilityMap">
-                <div class="map-grid" id="mapGrid"></div>
-
-                <div id="player" class="player animated" data-animation="pulse">
-                    <i class="fas fa-user"></i>
-                    <div class="player-shadow"></div>
-                </div>
-
-                <!-- Location Markers -->
-                <div class="location-markers">
-                    <div class="location-marker" data-location="pace">
-                        <i class="fas fa-laptop"></i>
-                        <span>PACE Terminal</span>
+        <!-- Game Instructions Panel -->
+        <div class="game-instructions-panel animated" data-animation="fadeIn">
+            <h2>PACE Navigator</h2>
+            <div class="instructions-content">
+                <div class="instruction-categories">
+                    <div class="instruction-category">
+                        <i class="fas fa-gamepad"></i>
+                        <h4>How to Play</h4>
+                        <p>Collect all PACE items before time runs out!</p>
                     </div>
-                    <div class="location-marker" data-location="hr">
-                        <i class="fas fa-users"></i>
-                        <span>HR Office</span>
+                    <div class="instruction-category">
+                        <i class="fas fa-keyboard"></i>
+                        <h4>Controls</h4>
+                        <p>Use arrow keys or touch controls to move</p>
                     </div>
-                    <div class="location-marker" data-location="learning">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span>Learning Center</span>
-                    </div>
-                    <div class="location-marker" data-location="break">
-                        <i class="fas fa-coffee"></i>
-                        <span>Break Room</span>
-                    </div>
-                    <div class="location-marker" data-location="safety">
-                        <i class="fas fa-first-aid"></i>
-                        <span>Safety Office</span>
+                    <div class="instruction-category">
+                        <i class="fas fa-clock"></i>
+                        <h4>Time Limit</h4>
+                        <p>Complete within 60 seconds</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Navigation Controls -->
-            <div class="game-controls">
-                <div class="control-pad">
-                    <button class="nav-button up" onclick="pathFindingGame.movePlayer('up')">
-                        <i class="fas fa-chevron-up"></i>
-                    </button>
-                    <div class="horizontal-controls">
-                        <button class="nav-button left" onclick="pathFindingGame.movePlayer('left')">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="nav-button right" onclick="pathFindingGame.movePlayer('right')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <button class="nav-button down" onclick="pathFindingGame.movePlayer('down')">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-
-                <!-- Current Task Panel -->
-                <div class="current-task animated" data-animation="fadeIn">
-                    <div class="task-header">
-                        <i class="fas fa-tasks"></i>
-                        <span>Current Task</span>
-                    </div>
-                    <div class="task-description">
-                        <p id="currentTask">Navigate to the PACE Terminal</p>
-                        <div class="task-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="taskProgress"></div>
-                            </div>
-                            <span class="progress-text">
-                                    Locations Found: <span id="locationsFound">0</span>/5
-                                </span>
+                <div class="items-preview">
+                    <h4>Items to Collect:</h4>
+                    <div class="items-grid">
+                        <div class="preview-item">
+                            <i class="fas fa-laptop"></i>
+                            <span>PACE Terminal</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-shoe-prints"></i>
+                            <span>Safety Shoes</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-file-signature"></i>
+                            <span>Paperwork</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-id-card"></i>
+                            <span>Photo ID</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Dress Code</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Mini-map -->
-            <div class="mini-map">
-                <div class="mini-map-header">
-                    <i class="fas fa-map"></i>
-                    <span>Facility Overview</span>
-                </div>
-                <div id="miniMap" class="mini-map-content"></div>
-            </div>
-
-            <!-- Location Information -->
-            <div id="locationInfo" class="location-info" style="display: none;">
-                <div class="info-header">
-                    <i id="locationIcon" class="fas"></i>
-                    <h3 id="locationName"></h3>
-                </div>
-                <p id="locationDescription"></p>
-                <button class="button-primary" onclick="pathFindingGame.confirmLocation()">
-                    Confirm Location
+                <button class="button-primary start-game-btn animated hover-lift"
+                        onclick="window.pathFindingGame.startGame()">
+                    <i class="fas fa-play"></i>
+                    Start Game
                 </button>
             </div>
         </div>
+
+        <!-- Game Content Area -->
+        <div class="game-content animated" data-animation="fadeIn" style="display: none;">
+            <!-- Game Area will be generated by JS -->
+            <div class="game-area-container">
+                <div class="game-area"></div>
+
+                <!-- Touch Controls -->
+                <div class="touch-controls">
+                    <button class="control-button" data-direction="up">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                    <div class="horizontal-controls">
+                        <button class="control-button" data-direction="left">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="control-button" data-direction="right">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <button class="control-button" data-direction="down">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </section>
+
     <!-- Benefits Matching Game -->
     <section id="matchingGame" class="page game-section">
         <div class="game-header animated" data-animation="slideIn">
