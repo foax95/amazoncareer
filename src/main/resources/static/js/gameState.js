@@ -27,10 +27,9 @@ class GameState {
                 weightSorting: {
                     highScore: 0,
                     gamesPlayed: 0,
-                    perfectLevels: 0,
+                    perfectRounds: 0, // Changed from perfectLevels to match current implementation
                     totalPackagesSorted: 0,
-                    longestStreak: 0,
-                    currentStreak: 0
+                    lastScore: 0 // Added to match current implementation
                 },
                 pathFinding: {
                     bestTime: null,
@@ -42,27 +41,20 @@ class GameState {
                 matching: {
                     highScore: 0,
                     matchesFound: 0,
-                    perfectGames: 0,
+                    perfectMatches: 0, // Changed from perfectGames to match current implementation
                     totalAttempts: 0,
                     bestMatchTime: null
                 }
             },
-            quizStats: {
-                completed: 0,
-                correctAnswers: 0,
-                totalQuestions: 0,
-                perfectScores: 0,
-                categoryProgress: {
-                    safety: 0,
-                    benefits: 0,
-                    workplace: 0,
-                    procedures: 0
-                }
+            quizProgress: { // Changed from quizStats to match current implementation
+                safety: { bestScore: 0, completed: 0 },
+                benefits: { bestScore: 0, completed: 0 },
+                workplace: { bestScore: 0, completed: 0 },
+                procedures: { bestScore: 0, completed: 0 }
             },
             settings: {
                 soundEnabled: true,
-                assistantEnabled: true,
-                difficulty: 'normal'
+                musicEnabled: true // Changed to match current implementation
             }
         };
     }
@@ -73,11 +65,12 @@ class GameState {
         }
         this.state.player.lastLogin = new Date().toISOString();
         this.saveState();
+        this.updateUI();
     }
 
     loadState() {
         try {
-            const savedState = localStorage.getItem('amazonCareerAdventure');
+            const savedState = localStorage.getItem('amazonGameState'); // Updated storage key
             return savedState ? JSON.parse(savedState) : null;
         } catch (error) {
             console.error('Error loading game state:', error);
@@ -87,7 +80,7 @@ class GameState {
 
     saveState() {
         try {
-            localStorage.setItem('amazonCareerAdventure', JSON.stringify(this.state));
+            localStorage.setItem('amazonGameState', JSON.stringify(this.state));
         } catch (error) {
             console.error('Error saving game state:', error);
         }
@@ -95,132 +88,108 @@ class GameState {
 
     updateScore(points) {
         this.state.player.score += points;
-        this.checkLevelUp();
-        this.checkAchievements();
         this.saveState();
         this.updateUI();
     }
 
-    updateProgress(sectionId, percentage) {
-        const progressBar = document.querySelector(`#${sectionId}Progress .progress-fill`);
-        if (progressBar) {
-            window.animateProgress(progressBar, percentage);
-        }
-    }
-
-
-    checkLevelUp() {
-        const currentLevel = this.state.player.level;
-        const currentScore = this.state.player.score;
-
-        for (const [level, data] of Object.entries(CONFIG.GAME_LEVELS)) {
-            if (currentScore >= data.pointsNeeded && currentLevel < level) {
-                this.levelUp(level);
-                break;
-            }
-        }
-    }
-
-    levelUp(newLevel) {
-        this.state.player.level = parseInt(newLevel);
-        showLevelUpNotification(newLevel);
-        this.saveState();
-    }
-
     updateUI() {
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const levelDisplay = document.getElementById('levelDisplay');
+        try {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const levelDisplay = document.getElementById('levelDisplay');
 
-        if (scoreDisplay) scoreDisplay.textContent = this.state.player.score;
-        if (levelDisplay) levelDisplay.textContent = this.state.player.level;
+            if (scoreDisplay) scoreDisplay.textContent = this.state.player.score;
+            if (levelDisplay) levelDisplay.textContent = this.state.player.level;
+
+            this.updateGameStats();
+        } catch (error) {
+            console.error('Error updating UI:', error);
+        }
     }
 
-    // Game Stats Methods
-    updateGameStats(game, stats) {
-        if (this.state.gameStats[game]) {
-            this.state.gameStats[game] = {
-                ...this.state.gameStats[game],
-                ...stats
+    updateGameStats() {
+        try {
+            // Weight Sorting Stats
+            const weightSortingStats = {
+                highScore: document.getElementById('weightSortingHighScore'),
+                perfectRounds: document.getElementById('weightSortingPerfectRounds')
             };
-            this.saveState();
-            this.checkAchievements();
+
+            if (weightSortingStats.highScore) {
+                weightSortingStats.highScore.textContent =
+                    this.state.gameStats.weightSorting.highScore;
+            }
+            if (weightSortingStats.perfectRounds) {
+                weightSortingStats.perfectRounds.textContent =
+                    this.state.gameStats.weightSorting.perfectRounds;
+            }
+
+            // Update other game stats as needed
+        } catch (error) {
+            console.error('Error updating game stats:', error);
         }
     }
 
-    // Section Tracking
-    trackSectionVisit(sectionId) {
-        if (!this.state.player.visitedSections.includes(sectionId)) {
-            this.state.player.visitedSections.push(sectionId);
-            this.saveState();
-            this.checkAchievements();
+    showSection(sectionId) {
+        try {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                selectedSection.style.display = 'block';
+
+                if (!this.state.player.visitedSections.includes(sectionId)) {
+                    this.state.player.visitedSections.push(sectionId);
+                    this.saveState();
+                }
+            }
+        } catch (error) {
+            console.error('Error showing section:', error);
         }
     }
 
-    completeSection(sectionId) {
-        if (!this.state.player.completedSections.includes(sectionId)) {
-            this.state.player.completedSections.push(sectionId);
-            this.updateScore(CONFIG.SECTION_COMPLETION_POINTS);
-            this.saveState();
-            this.checkAchievements();
+    async handleRegistration(event) {
+        try {
+            event.preventDefault();
+
+            const name = document.getElementById('name')?.value;
+            const email = document.getElementById('email')?.value;
+
+            if (name && email) {
+                this.state.player.name = name;
+                this.state.player.email = email;
+                this.saveState();
+
+                await showLoadingScreen();
+                await hideLoadingScreen();
+                this.showSection('games');
+            }
+        } catch (error) {
+            console.error('Error handling registration:', error);
         }
     }
 
-    // Quiz Methods
-    updateQuizProgress(categoryId, result) {
-        this.state.quizStats.completed++;
-        this.state.quizStats.correctAnswers += result.correct;
-        this.state.quizStats.totalQuestions += result.total;
-
-        if (result.correct === result.total) {
-            this.state.quizStats.perfectScores++;
-        }
-
-        if (this.state.quizStats.categoryProgress[categoryId] !== undefined) {
-            this.state.quizStats.categoryProgress[categoryId] =
-                Math.max(this.state.quizStats.categoryProgress[categoryId],
-                    (result.correct / result.total) * 100);
-        }
-
-        this.saveState();
-        this.checkAchievements();
-    }
-
-    // Achievement Methods
-    checkAchievements() {
-        if (window.achievementSystem) {
-            window.achievementSystem.checkAchievements();
-        }
-    }
-
-    unlockAchievement(achievementId) {
-        if (!this.state.progress.achievementsUnlocked.includes(achievementId)) {
-            this.state.progress.achievementsUnlocked.push(achievementId);
-            this.saveState();
-        }
-    }
-
-    // Settings Methods
-    updateSettings(settings) {
-        this.state.settings = {
-            ...this.state.settings,
-            ...settings
-        };
-        this.saveState();
-    }
-
-    // Reset Progress
     resetProgress() {
-        if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-            this.state = this.getInitialState();
-            this.initializeState();
-            this.saveState();
-            location.reload();
+        try {
+            const resetModal = document.getElementById('resetModal');
+            if (resetModal) {
+                resetModal.style.display = 'flex';
+            }
+        } catch (error) {
+            console.error('Error showing reset modal:', error);
         }
     }
 
-    // Debug Method
-    debugState() {
-        console.log('Current Game State:', this.state);
+    confirmReset() {
+        try {
+            localStorage.removeItem('amazonGameState');
+            location.reload();
+        } catch (error) {
+            console.error('Error resetting progress:', error);
+        }
     }
 }
 
@@ -229,3 +198,8 @@ const gameState = new GameState();
 
 // Export for other modules
 window.gameState = gameState;
+
+// Bind methods to window for HTML access
+window.handleRegistration = (event) => gameState.handleRegistration(event);
+window.resetProgress = () => gameState.resetProgress();
+window.confirmReset = () => gameState.confirmReset();

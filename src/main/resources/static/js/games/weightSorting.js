@@ -1,5 +1,3 @@
-// weightSorting.js
-
 class WeightSortingGame {
     constructor() {
         // Game state
@@ -9,12 +7,8 @@ class WeightSortingGame {
         this.packageItems = [];
         this.timer = null;
         this.packageGenerationTimer = null;
-        this.level = 1;
         this.streak = 0;
         this.multiplier = 1;
-        this.levelProgress = 0;
-        this.difficulty = 'normal';
-        this.gameSpeed = 'normal';
         this.mistakesMade = 0;
         this.totalPackagesSorted = 0;
         this.perfectRounds = 0;
@@ -22,41 +16,13 @@ class WeightSortingGame {
         // DOM Elements
         this.gameContainer = null;
         this.conveyorBelt = null;
-        this.progressBar = null;
 
-        // Game settings
-        this.difficultySettings = {
-            normal: {
-                timeLimit: 60,
-                baseScore: 10,
-                penaltyScore: 5,
-                packageInterval: 3000,
-                packageSpeed: 8,    // seconds to cross belt
-                mistakesAllowed: 3
-            },
-            hard: {
-                timeLimit: 45,
-                baseScore: 15,
-                penaltyScore: 10,
-                packageInterval: 2000,
-                packageSpeed: 6,
-                mistakesAllowed: 2
-            },
-            expert: {
-                timeLimit: 30,
-                baseScore: 20,
-                penaltyScore: 15,
-                packageInterval: 1500,
-                packageSpeed: 4,
-                mistakesAllowed: 1
-            }
-        };
-
-        this.speedSettings = {
-            slow: 1,
-            normal: 1.5,
-            fast: 2
-        };
+        // Fixed game settings
+        this.baseScore = 10;
+        this.penaltyScore = 5;
+        this.packageInterval = 3000;
+        this.packageSpeed = 8;    // seconds to cross belt
+        this.mistakesAllowed = 3;
 
         this.weightRanges = {
             individual: { min: 1, max: 49 },
@@ -75,14 +41,12 @@ class WeightSortingGame {
         console.log('Initializing Weight Sorting Game');
         this.gameContainer = document.getElementById('weightSortingGame');
         this.conveyorBelt = document.getElementById('conveyorBelt');
-        this.progressBar = document.getElementById('weightSortingProgress');
 
         if (!this.gameContainer || !this.conveyorBelt) {
             console.error('Required game elements not found');
             return;
         }
 
-        // Show instructions, hide game content
         const gameContent = document.querySelector('.game-content');
         const instructionsPanel = document.querySelector('.game-instructions-panel');
 
@@ -90,8 +54,6 @@ class WeightSortingGame {
         if (instructionsPanel) instructionsPanel.style.display = 'block';
 
         this.resetGame();
-        this.setupDifficultyControls();
-        this.setupSpeedControls();
         this.setupEventListeners();
         this.updateDisplay();
         this.loadGameStats();
@@ -106,20 +68,16 @@ class WeightSortingGame {
     }
 
     resetGame() {
-        // Clear any existing packages and timers
         if (this.conveyorBelt) {
             this.conveyorBelt.innerHTML = '';
         }
         if (this.timer) clearInterval(this.timer);
         if (this.packageGenerationTimer) clearInterval(this.packageGenerationTimer);
 
-        // Reset game state
         this.score = 0;
-        this.timeLeft = this.difficultySettings[this.difficulty].timeLimit;
-        this.level = 1;
+        this.timeLeft = 60;
         this.streak = 0;
         this.multiplier = 1;
-        this.levelProgress = 0;
         this.mistakesMade = 0;
         this.totalPackagesSorted = 0;
         this.zoneCounts = {
@@ -134,40 +92,30 @@ class WeightSortingGame {
     }
 
     startGame() {
-        // Reset and start new game
         this.resetGame();
         this.isPlaying = true;
+        this.timeLeft = 60;
 
-        // Set initial time based on current difficulty
-        this.timeLeft = this.difficultySettings[this.difficulty].timeLimit;
-
-        // Hide instructions panel and show game content
         const instructionsPanel = document.querySelector('.game-instructions-panel');
         const gameContent = document.querySelector('.game-content');
 
         if (instructionsPanel) instructionsPanel.style.display = 'none';
         if (gameContent) gameContent.style.display = 'block';
 
-        // Start package generation and timer with current difficulty settings
         this.startPackageGeneration();
         this.startTimer();
         this.updateDisplay();
     }
 
     startPackageGeneration() {
-        // Initial package
         this.generatePackage();
-
-        // Set up continuous package generation
-        const interval = this.difficultySettings[this.difficulty].packageInterval;
         this.packageGenerationTimer = setInterval(() => {
             if (this.isPlaying && this.packageItems.length < 5) {
                 this.generatePackage();
             }
-        }, interval / this.speedSettings[this.gameSpeed]);
+        }, this.packageInterval);
     }
     generatePackage() {
-
         if (!this.conveyorBelt || !this.isPlaying) return;
 
         const weight = this.generateWeight();
@@ -175,26 +123,17 @@ class WeightSortingGame {
         packageElement.className = 'package';
         packageElement.draggable = true;
         packageElement.dataset.weight = weight;
-        packageElement.id = 'package-' + Date.now(); // Add unique ID
+        packageElement.id = 'package-' + Date.now();
 
-        // Create weight display
         const weightDisplay = document.createElement('span');
         weightDisplay.className = 'weight-display';
         weightDisplay.textContent = `${weight} lbs`;
         packageElement.appendChild(weightDisplay);
 
-        // Set animation duration based on difficulty and speed
-        const baseDuration = this.difficultySettings[this.difficulty].packageSpeed;
-        const speedMultiplier = this.speedSettings[this.gameSpeed];
-        const duration = baseDuration / speedMultiplier;
+        packageElement.style.animationDuration = `${this.packageSpeed}s`;
 
-        packageElement.style.animationDuration = `${duration}s`;
-
-        // Add event listeners
         packageElement.addEventListener('dragstart', (e) => this.handleDragStart(e));
         packageElement.addEventListener('dragend', (e) => this.handleDragEnd(e));
-
-        // Add animation end listener
         packageElement.addEventListener('animationend', () => {
             if (packageElement.parentNode === this.conveyorBelt) {
                 this.handleMissedPackage(packageElement);
@@ -206,11 +145,10 @@ class WeightSortingGame {
     }
 
     generateWeight() {
-        const levelModifier = Math.min(0.1 * (this.level - 1), 0.5);
         const ranges = [
             {
                 weight: this.weightRanges.individual,
-                probability: 0.5 - levelModifier
+                probability: 0.5
             },
             {
                 weight: this.weightRanges.team,
@@ -218,7 +156,7 @@ class WeightSortingGame {
             },
             {
                 weight: this.weightRanges.mechanical,
-                probability: 0.2 + levelModifier
+                probability: 0.2
             }
         ];
 
@@ -245,7 +183,6 @@ class WeightSortingGame {
     handleDragStart(e) {
         e.target.classList.add('dragging');
         e.dataTransfer.setData('text/plain', e.target.dataset.weight);
-        // Store the dragged element ID or create one if it doesn't exist
         if (!e.target.id) {
             e.target.id = 'package-' + Date.now();
         }
@@ -292,47 +229,30 @@ class WeightSortingGame {
         const isCorrect = this.checkCorrectZone(weight, zone.dataset.type);
 
         if (isCorrect) {
-            // Remove from packageItems array
             this.packageItems = this.packageItems.filter(item => item !== packageElement);
-            // Handle correct sort will remove the element
             this.handleCorrectSort(zone, packageElement);
         } else {
             this.handleIncorrectSort();
-            // Resume animation if incorrect
             packageElement.style.animationPlayState = 'running';
         }
     }
-
     handleCorrectSort(zone, packageElement) {
-        const baseScore = this.difficultySettings[this.difficulty].baseScore;
-        const speedMultiplier = this.speedSettings[this.gameSpeed];
-        const points = Math.round(baseScore * this.multiplier * this.level * speedMultiplier);
+        const points = Math.round(this.baseScore * this.multiplier);
 
-        // Update game state
         this.score += points;
         this.streak++;
         this.multiplier = Math.min(8, 1 + Math.floor(this.streak / 2));
         this.zoneCounts[zone.dataset.type]++;
-        this.levelProgress++;
         this.totalPackagesSorted++;
 
-        // Remove the package element
         if (packageElement && packageElement.parentNode) {
             packageElement.remove();
         }
 
-        // Update only the main score display
         document.getElementById('scoreDisplay').textContent = this.score;
-
-        if (this.levelProgress >= 8) {
-            this.levelUp();
-        }
-
         this.updateDisplay();
         this.showFeedback(true, `+${points} (x${this.multiplier})`);
     }
-
-
 
     checkCorrectZone(weight, zoneType) {
         switch(zoneType) {
@@ -346,60 +266,19 @@ class WeightSortingGame {
                 return false;
         }
     }
+
     handleIncorrectSort() {
-        const penalty = this.difficultySettings[this.difficulty].penaltyScore;
-        this.score = Math.max(0, this.score - penalty);
+        this.score = Math.max(0, this.score - this.penaltyScore);
         this.streak = 0;
         this.multiplier = 1;
         this.mistakesMade++;
 
-        // Update only the main nav header score
         document.getElementById('scoreDisplay').textContent = this.score;
-
         this.updateDisplay();
-        this.showFeedback(false, `-${penalty}`);
+        this.showFeedback(false, `-${this.penaltyScore}`);
 
-        if (this.mistakesMade >= this.difficultySettings[this.difficulty].mistakesAllowed) {
+        if (this.mistakesMade >= this.mistakesAllowed) {
             this.endGame();
-        }
-    }
-
-    levelUp() {
-        this.level++;
-        // Reduced time bonus for higher difficulty
-        const timeBonus = Math.max(10, 30 - (this.level * 2));
-        this.timeLeft += timeBonus;
-        this.levelProgress = 0;
-
-        // Increase difficulty
-        this.adjustDifficulty();
-
-        this.updateDisplay();
-        this.showFeedback(true, `Level ${this.level}! +${timeBonus}s`);
-
-        // Play level up animation
-        this.playLevelUpAnimation();
-    }
-
-    adjustDifficulty() {
-        // Decrease package interval with each level
-        Object.keys(this.difficultySettings).forEach(difficulty => {
-            this.difficultySettings[difficulty].packageInterval *= 0.95;
-            this.difficultySettings[difficulty].packageSpeed *= 0.95;
-        });
-
-        // Restart package generation with new timing
-        if (this.packageGenerationTimer) {
-            clearInterval(this.packageGenerationTimer);
-            this.startPackageGeneration();
-        }
-    }
-
-    playLevelUpAnimation() {
-        const levelDisplay = document.getElementById('weightSortingLevelDisplay');
-        if (levelDisplay) {
-            levelDisplay.classList.add('level-up-animation');
-            setTimeout(() => levelDisplay.classList.remove('level-up-animation'), 1000);
         }
     }
 
@@ -409,25 +288,17 @@ class WeightSortingGame {
         this.timer = setInterval(() => {
             if (!this.isPlaying) return;
 
-            // Decrease time
             this.timeLeft -= 0.1;
 
-            // Add time pressure at higher levels
-            if (this.level > 5) {
-                this.timeLeft -= 0.05;
-            }
-
-            // Update display
             const timerDisplay = document.getElementById('weightSortingTimerDisplay');
             if (timerDisplay) {
                 timerDisplay.textContent = Math.ceil(this.timeLeft);
             }
 
-            // Check for game end
             if (this.timeLeft <= 0) {
                 this.endGame();
             }
-        }, 100); // Update every 0.1 seconds for smoother countdown
+        }, 100);
     }
 
     showFeedback(isSuccess, message) {
@@ -435,7 +306,6 @@ class WeightSortingGame {
         feedback.className = `game-feedback ${isSuccess ? 'success' : 'error'}`;
         feedback.textContent = message;
 
-        // Position feedback near the score display
         const scoreDisplay = document.getElementById('weightSortingScoreDisplay');
         if (scoreDisplay) {
             const rect = scoreDisplay.getBoundingClientRect();
@@ -445,7 +315,6 @@ class WeightSortingGame {
 
         this.gameContainer.appendChild(feedback);
 
-        // Animate and remove
         requestAnimationFrame(() => {
             feedback.classList.add('show');
             setTimeout(() => {
@@ -456,13 +325,10 @@ class WeightSortingGame {
     }
 
     updateDisplay() {
-        // Update game stats (remove weightSortingScoreDisplay from here)
         const displays = {
             'weightSortingTimerDisplay': Math.ceil(this.timeLeft),
-            'weightSortingLevelDisplay': this.level,
             'streakCount': this.streak,
-            'multiplier': `${this.multiplier}x`,
-            'levelProgress': `${this.levelProgress}/8`
+            'multiplier': `${this.multiplier}x`
         };
 
         Object.entries(displays).forEach(([id, value]) => {
@@ -470,25 +336,17 @@ class WeightSortingGame {
             if (element) element.textContent = value;
         });
 
-        // Update zone counts
         Object.entries(this.zoneCounts).forEach(([zone, count]) => {
             const countElement = document.getElementById(`${zone}Count`);
             if (countElement) countElement.textContent = count;
         });
-
-        // Update progress bar
-        if (this.progressBar) {
-            const progress = (this.levelProgress / 8) * 100;
-            this.progressBar.style.width = `${progress}%`;
-        }
     }
-
     endGame() {
         this.isPlaying = false;
         clearInterval(this.timer);
         clearInterval(this.packageGenerationTimer);
 
-        // Update high score and stats
+        // Update stats
         if (window.gameState) {
             const stats = gameState.gameStats.weightSorting;
             stats.highScore = Math.max(this.score, stats.highScore);
@@ -498,17 +356,17 @@ class WeightSortingGame {
                 stats.perfectRounds++;
             }
             saveGameState();
-
-            // Save score using ScoreManager
-            scoreManager.addScore({
-                name: gameState.player.name,
-                email: gameState.player.email,
-                score: this.score
-            });
         }
 
+        // Show game over modal briefly
         this.showGameOverModal();
+
+        // Automatically transition to next game after delay
+        setTimeout(() => {
+            completeGame('weightSortingGame');
+        }, 3000); // Show results for 3 seconds before transitioning
     }
+
 
     showGameOverModal() {
         const modalHTML = `
@@ -516,7 +374,6 @@ class WeightSortingGame {
                 <h2>Game Over!</h2>
                 <div class="score-breakdown">
                     <p class="final-score">Final Score: ${this.score}</p>
-                    <p>Level Reached: ${this.level}</p>
                     <p>Packages Sorted: ${this.totalPackagesSorted}</p>
                     <p>Highest Streak: ${this.streak}x</p>
                     <p>Mistakes: ${this.mistakesMade}</p>
@@ -546,115 +403,12 @@ class WeightSortingGame {
     }
 
     setupEventListeners() {
-        // Set up drop zones
         const zones = document.querySelectorAll('.zone');
         zones.forEach(zone => {
             zone.addEventListener('dragover', (e) => this.handleDragOver(e));
             zone.addEventListener('drop', (e) => this.handleDrop(e));
             zone.addEventListener('dragenter', (e) => this.handleDragEnter(e));
             zone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-        });
-
-        // Set up difficulty controls
-        const difficultyButtons = document.querySelectorAll('[data-difficulty]');
-        difficultyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (!this.isPlaying) {
-                    this.setDifficulty(button.dataset.difficulty);
-                }
-            });
-        });
-
-        // Set up speed controls
-        const speedButtons = document.querySelectorAll('[data-speed]');
-        speedButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (this.isPlaying) {
-                    this.setGameSpeed(button.dataset.speed);
-                }
-            });
-        });
-    }
-
-    setDifficulty(level) {
-        if (!this.difficultySettings[level]) {
-            console.error('Invalid difficulty level:', level);
-            return;
-        }
-
-        this.difficulty = level;
-
-        // Update game settings based on difficulty
-        const settings = this.difficultySettings[level];
-        this.timeLeft = settings.timeLimit;
-
-        // Update UI to reflect new difficulty
-        document.querySelectorAll('.difficulty-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.difficulty === level);
-        });
-
-        // Update any display elements showing time limit
-        const timerDisplay = document.getElementById('weightSortingTimerDisplay');
-        if (timerDisplay) {
-            timerDisplay.textContent = settings.timeLimit;
-        }
-
-        console.log(`Difficulty set to ${level}:`, settings);
-        this.updateDisplay();
-    }
-
-    setGameSpeed(speed) {
-        this.gameSpeed = speed;
-
-        // Update UI
-        document.querySelectorAll('.speed-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.speed === speed);
-        });
-
-        // Update existing packages
-        const packages = document.querySelectorAll('.package');
-        packages.forEach(pkg => {
-            const baseDuration = this.difficultySettings[this.difficulty].packageSpeed;
-            const duration = baseDuration / this.speedSettings[speed];
-            pkg.style.animationDuration = `${duration}s`;
-        });
-
-        // Restart package generation with new speed
-        if (this.packageGenerationTimer) {
-            clearInterval(this.packageGenerationTimer);
-            this.startPackageGeneration();
-        }
-    }
-
-    setupDifficultyControls() {
-        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
-        difficultyButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                if (!this.isPlaying) {
-                    // Remove active class from all buttons
-                    difficultyButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
-                    e.target.classList.add('active');
-                    // Set difficulty
-                    this.setDifficulty(e.target.dataset.difficulty);
-                }
-            });
-        });
-    }
-
-    setupSpeedControls() {
-        const speedButtons = document.querySelectorAll('.speed-btn');
-        speedButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                if (this.isPlaying) {
-                    // Remove active class from all buttons
-                    speedButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
-                    e.target.classList.add('active');
-                    // Set speed
-                    this.setGameSpeed(e.target.dataset.speed);
-                }
-            });
         });
     }
 }
