@@ -263,7 +263,7 @@ class WeightSortingGame {
 
             this.timeLeft -= 0.1;
 
-            const timerDisplay = document.getElementById('weightSortingTimerDisplay');
+            const timerDisplay = document.getElementById('timeDisplay');
             if (timerDisplay) {
                 timerDisplay.textContent = Math.ceil(this.timeLeft);
             }
@@ -319,6 +319,62 @@ class WeightSortingGame {
         clearInterval(this.timer);
         clearInterval(this.packageGenerationTimer);
 
+        // Store final score for next game
+        localStorage.setItem('weightSortingScore', this.score.toString());
+
+        // Show completion message with navigation options
+        this.showCompletionMessage();
+    }
+
+
+    showCompletionMessage() {
+        const messageEl = document.createElement('div');
+        messageEl.className = 'completion-message';
+
+        messageEl.innerHTML = `
+        <div class="message-content success">
+            <div class="message-header">
+                <i class="fas fa-trophy"></i>
+                <h3>Game Complete!</h3>
+            </div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span class="label">Packages Sorted:</span>
+                    <span class="value">${this.totalPackagesSorted}</span>
+                </div>
+                <div class="score-item">
+                    <span class="label">Highest Streak:</span>
+                    <span class="value">${this.streak}x</span>
+                </div>
+                <div class="score-item">
+                    <span class="label">Mistakes:</span>
+                    <span class="value">${this.mistakesMade}</span>
+                </div>
+                ${this.mistakesMade === 0 ? `
+                    <div class="score-item">
+                        <span class="label">Perfect Round!</span>
+                        <span class="value">+100</span>
+                    </div>
+                ` : ''}
+                <div class="score-item total">
+                    <span class="label">Final Score:</span>
+                    <span class="value">${this.score}</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="continue-button button-primary" onclick="completeGame('weightSortingGame')">
+                    <i class="fas fa-arrow-right"></i> Continue to PACE Navigator
+                </button>
+                <button class="replay-button button-secondary" onclick="window.weightSortingGame.restart()">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        </div>
+    `;
+
+        this.gameContainer.appendChild(messageEl);
+        requestAnimationFrame(() => messageEl.classList.add('show'));
+
         // Update stats
         if (window.gameState) {
             const stats = gameState.gameStats.weightSorting;
@@ -330,48 +386,11 @@ class WeightSortingGame {
             }
             saveGameState();
         }
-
-        // Show game over modal briefly
-        this.showGameOverModal();
-
-        // Automatically transition to next game after delay
-        setTimeout(() => {
-            completeGame('weightSortingGame');
-        }, 3000); // Show results for 3 seconds before transitioning
-    }
-
-
-    showGameOverModal() {
-        const modalHTML = `
-            <div class="game-over-modal">
-                <h2>Game Over!</h2>
-                <div class="score-breakdown">
-                    <p class="final-score">Final Score: ${this.score}</p>
-                    <p>Packages Sorted: ${this.totalPackagesSorted}</p>
-                    <p>Highest Streak: ${this.streak}x</p>
-                    <p>Mistakes: ${this.mistakesMade}</p>
-                    ${this.mistakesMade === 0 ? '<p class="perfect-round">Perfect Round!</p>' : ''}
-                </div>
-                <div class="modal-buttons">
-                    <button class="button-primary" onclick="weightSortingGame.restart()">
-                        <i class="fas fa-redo"></i> Play Again
-                    </button>
-                    <button class="button-secondary" onclick="returnToGamesMenu()">
-                        <i class="fas fa-times"></i> Back to Games
-                    </button>
-                </div>
-            </div>
-        `;
-
-        const existingModal = this.gameContainer.querySelector('.game-over-modal');
-        if (existingModal) existingModal.remove();
-
-        this.gameContainer.insertAdjacentHTML('beforeend', modalHTML);
     }
 
     restart() {
-        const modal = this.gameContainer.querySelector('.game-over-modal');
-        if (modal) modal.remove();
+        const messageEl = this.gameContainer.querySelector('.completion-message');
+        if (messageEl) messageEl.remove();
         this.startGame();
     }
 

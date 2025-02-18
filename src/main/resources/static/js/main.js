@@ -116,6 +116,24 @@ function updateGameStats() {
     }
 }
 // Section and Navigation Management
+function navigateToMatchingGame() {
+    // Update game state
+    if (!gameState.player.completedSections.includes('pathFindingGame')) {
+        gameState.player.completedSections.push('pathFindingGame');
+    }
+
+    // Save the current state
+    saveGameState();
+
+    // Show matching game section
+    showSection('matchingGame');
+
+    // Initialize matching game if it exists
+    if (window.matchingGame && typeof window.matchingGame.initialize === 'function') {
+        window.matchingGame.initialize();
+    }
+}
+
 function showSection(sectionId) {
     try {
         // Hide all pages first

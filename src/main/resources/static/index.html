@@ -6,6 +6,8 @@
     <title>Day One Hero</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/path-finding.css">
+    <link rel="stylesheet" href="css/weight-sorting.css">
+    <link rel="stylesheet" href="css/benefit-matching.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -42,13 +44,9 @@
         <div class="nav-score animated" data-animation="fadeIn">
             Score: <span id="scoreDisplay" class="animated" data-animation="pulse">0</span>
         </div>
-        <div class="nav-streak animated" data-animation="fadeIn">
-            Streak: <span id="streakDisplay" class="animated" data-animation="pulse">0</span>
+        <div class="nav-time animated" data-animation="fadeIn">
+            Time: <span id="timeDisplay" class="animated" data-animation="pulse">0</span>
     </div>
-    <div class="nav-progress animated" data-animation="fadeIn">
-        Progress: <span id="progressDisplay" class="animated" data-animation="pulse">0%</span>
-    </div>
-
     </div>
 </header>
 
@@ -227,10 +225,6 @@
                 <div class="stat-item">
                     <i class="fas fa-clock"></i>
                     <span>Time: <span id="pathFindingTimer">60</span>s</span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-star"></i>
-                    <span>Score: <span id="pathFindingScore">0</span></span>
                 </div>
             </div>
         </div>
@@ -549,162 +543,280 @@
 
     <!-- Benefits Matching Game -->
     <section id="matchingGame" class="page game-section">
-        <div class="game-header animated" data-animation="slideIn">
-            <button class="button-primary return-button" onclick="returnToMainMenu()">
-                <i class="fas fa-arrow-left"></i> Back to Menu
-            </button>
-            <div class="game-stats animated" data-animation="fadeIn">
-                <div class="stat-item">
-                    <i class="fas fa-puzzle-piece"></i>
-                    <span>Matches: <span id="matchesFound">0</span>/<span id="totalPairs">8</span></span>
+        <!-- Game Instructions Panel -->
+        <div class="game-instructions-panel">
+            <div class="instructions-content">
+                <h2><i class="fas fa-puzzle-piece"></i> Benefits Matching Game</h2>
+                <p>Test your knowledge of Amazon benefits by finding matching pairs!</p>
+
+                <div class="instruction-steps">
+                    <div class="step">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <p>Click cards to flip them and reveal Amazon benefits</p>
+                    </div>
+                    <div class="step">
+                        <i class="fas fa-sync-alt"></i>
+                        <p>Find matching benefit pairs to score points</p>
+                    </div>
+                    <div class="step">
+                        <i class="fas fa-clock"></i>
+                        <p>Complete the game before time runs out (60 seconds)</p>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Time: <span id="matchingTimer">60</span>s</span>
+
+                <div class="additional-instructions">
+                    <h3>How to Play:</h3>
+                    <ol>
+                        <li>Click on any card to flip it and reveal an Amazon benefit.</li>
+                        <li>Click on a second card to try and find its match.</li>
+                        <li>If the cards match, they will remain face up and you'll earn points.</li>
+                        <li>If they don't match, both cards will flip back over.</li>
+                        <li>Remember the locations of cards to make matches more quickly.</li>
+                        <li>Match all 8 pairs before time runs out to win!</li>
+                    </ol>
+                    <p><strong>Tip:</strong> The faster you complete the game, the higher your score will be!</p>
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-sync-alt"></i>
-                    <span>Attempts: <span id="attemptCounter">0</span></span>
-                </div>
+
+                <button class="start-game-btn button-primary">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
             </div>
         </div>
 
-        <div class="game-content animated" data-animation="fadeIn">
-            <!-- Benefits Grid -->
-            <div class="cards-grid" id="cardsGrid">
-                <div class="benefit-card" data-benefit="health">
-                    <div class="card-front">
-                        <i class="fas fa-heart"></i>
-                        <span>Health Insurance</span>
+        <!-- Main Game Content -->
+        <div class="game-content">
+            <div class="game-header">
+                <!-- Game Stats -->
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Matches: <span id="matchesFound">0</span>/<span id="totalPairs">8</span></span>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Time: <span id="matchingTimer">60</span>s</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Attempts: <span id="attemptCounter">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="cards-grid">
+                <!-- Health Insurance Pair -->
+                <div class="benefit-card" data-benefit="health">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-heart"></i>
+                            <span>Health Insurance</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="benefit-card" data-benefit="health">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-heart"></i>
+                            <span>Health Insurance</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dental Coverage Pair -->
+                <div class="benefit-card" data-benefit="dental">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-tooth"></i>
+                            <span>Dental Coverage</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="dental">
-                    <div class="card-front">
-                        <i class="fas fa-tooth"></i>
-                        <span>Dental Coverage</span>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-tooth"></i>
+                            <span>Dental Coverage</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                </div>
+
+                <!-- Vision Care Pair -->
+                <div class="benefit-card" data-benefit="vision">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-eye"></i>
+                            <span>Vision Care</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="vision">
-                    <div class="card-front">
-                        <i class="fas fa-eye"></i>
-                        <span>Vision Care</span>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-eye"></i>
+                            <span>Vision Care</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                </div>
+
+                <!-- 401(k) Plan Pair -->
+                <div class="benefit-card" data-benefit="401k">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span>401(k) Plan</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="401k">
-                    <div class="card-front">
-                        <i class="fas fa-piggy-bank"></i>
-                        <span>401(k) Plan</span>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span>401(k) Plan</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                </div>
+
+                <!-- Career Choice Pair -->
+                <div class="benefit-card" data-benefit="career">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Career Choice</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="career">
-                    <div class="card-front">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span>Career Choice</span>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Career Choice</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                </div>
+
+                <!-- PTO Pair -->
+                <div class="benefit-card" data-benefit="pto">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>Paid Time Off</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="pto">
-                    <div class="card-front">
-                        <i class="fas fa-umbrella-beach"></i>
-                        <span>Paid Time Off</span>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>Paid Time Off</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                </div>
+
+                <!-- Parental Leave Pair -->
+                <div class="benefit-card" data-benefit="parental">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-baby"></i>
+                            <span>Parental Leave</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="parental">
-                    <div class="card-front">
-                        <i class="fas fa-baby"></i>
-                        <span>Parental Leave</span>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-baby"></i>
+                            <span>Parental Leave</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
+                </div>
+
+                <!-- Employee Discount Pair -->
+                <div class="benefit-card" data-benefit="discount">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-tags"></i>
+                            <span>Employee Discount</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="benefit-card" data-benefit="discount">
-                    <div class="card-front">
-                        <i class="fas fa-tags"></i>
-                        <span>Employee Discount</span>
-                    </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Benefits Information Panel -->
-            <div class="benefits-info-panel">
-                <div class="info-header">
-                    <i class="fas fa-info-circle"></i>
-                    <h3>Benefits Guide</h3>
-                </div>
-                <div class="benefits-list">
-                    <div class="benefit-info" data-benefit="health">
-                        <i class="fas fa-heart"></i>
-                        <h4>Health Insurance</h4>
-                        <p>Comprehensive medical coverage starting day one</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="dental">
-                        <i class="fas fa-tooth"></i>
-                        <h4>Dental Coverage</h4>
-                        <p>Complete dental care including preventive services</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="vision">
-                        <i class="fas fa-eye"></i>
-                        <h4>Vision Care</h4>
-                        <p>Eye exams, glasses, and contact lens coverage</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="401k">
-                        <i class="fas fa-piggy-bank"></i>
-                        <h4>401(k) Plan</h4>
-                        <p>Retirement savings with company match</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="career">
-                        <i class="fas fa-graduation-cap"></i>
-                        <h4>Career Choice</h4>
-                        <p>Education funding for in-demand careers</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="pto">
-                        <i class="fas fa-umbrella-beach"></i>
-                        <h4>Paid Time Off</h4>
-                        <p>Flexible vacation and personal time</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="parental">
-                        <i class="fas fa-baby"></i>
-                        <h4>Parental Leave</h4>
-                        <p>Paid leave for new parents</p>
-                    </div>
-                    <div class="benefit-info" data-benefit="discount">
-                        <i class="fas fa-tags"></i>
-                        <h4>Employee Discount</h4>
-                        <p>Special savings on Amazon purchases</p>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <i class="fas fa-tags"></i>
+                            <span>Employee Discount</span>
+                        </div>
+                        <div class="card-back">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Match Feedback -->
-            <div id="matchFeedback" class="match-feedback" style="display: none;">
-                <div class="feedback-content">
-                    <i class="feedback-icon"></i>
-                    <span class="feedback-text"></span>
+            <!-- Benefit Information Modal -->
+            <div class="benefit-info-modal">
+                <div class="modal-content">
+                    <button class="modal-close"><i class="fas fa-times"></i></button>
+                    <div class="modal-header">
+                        <i class="modal-icon fas"></i>
+                        <h3 class="modal-title"></h3>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-description"></p>
+                        <p class="modal-details"></p>
+                        <div class="points-earned"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+
     <!-- Quiz Section -->
     <section id="quiz" class="page game-section">
         <div class="game-header animated" data-animation="slideIn">

@@ -1,5 +1,7 @@
+
 class PathFindingGame {
     constructor() {
+
         // Game state with pause functionality
         this.state = {
             isPlaying: false,
@@ -450,7 +452,7 @@ class PathFindingGame {
     }
 
 
-    showPaceItemPopup(item, points) {
+    showPaceItemPopup(item, points, isLastItem) {
         const modal = this.gameContainer.querySelector('.pace-item-modal');
         if (!modal) return;
 
@@ -463,6 +465,7 @@ class PathFindingGame {
         const itemContent = modal.querySelector(`.modal-item-content[data-item="${item.id}"]`);
         const pointsDisplay = modal.querySelector('.points-earned .points');
         const comboDisplay = modal.querySelector('.points-earned .combo');
+        const continueButton = modal.querySelector('.continue-button');
 
         if (modalIcon) modalIcon.className = `modal-icon fas ${item.icon}`;
         if (modalTitle) modalTitle.textContent = item.name;
@@ -478,11 +481,19 @@ class PathFindingGame {
             comboDisplay.textContent = this.state.combo > 1 ? `Combo x${this.state.combo}!` : '';
         }
 
+        // Update continue button for last item
+        if (isLastItem && continueButton) {
+            continueButton.innerHTML = 'Complete Game <i class="fas fa-check"></i>';
+        }
+
         // Show modal with animation
         modal.style.display = 'flex';
         requestAnimationFrame(() => {
             modal.classList.add('show');
         });
+
+        // Store isLastItem state
+        this.state.isLastItem = isLastItem;
     }
 
 
@@ -528,17 +539,16 @@ class PathFindingGame {
             setTimeout(() => cell.removeChild(paceItem), this.config.animationDuration);
         }
 
+        // Check if this is the last item
+        const isLastItem = this.state.collectedItems === this.paceItems.length;
+
         // Show popup with information
-        this.showPaceItemPopup(item, points);
+        this.showPaceItemPopup(item, points, isLastItem);
 
         // Update progress
-        this.addInfoCard(item);
         this.updateProgressBar();
-
-        if (this.state.collectedItems === this.paceItems.length) {
-            this.completeGame();
-        }
     }
+
 
 
     closePaceItemPopup() {
@@ -549,7 +559,15 @@ class PathFindingGame {
         setTimeout(() => {
             modal.style.display = 'none';
             this.state.modalVisible = false;
-            this.resumeGame();
+
+            // If this was the last item, complete the game after closing the popup
+            if (this.state.isLastItem) {
+                const timeBonus = this.state.timeLeft * 10;
+                this.state.score += timeBonus;
+                this.endGame(true);
+            } else {
+                this.resumeGame();
+            }
         }, this.config.modalTransitionTime);
     }
 
@@ -605,14 +623,14 @@ class PathFindingGame {
 
     updateUI() {
         // Update timer
-        const timerElement = document.getElementById('pathFindingTimer');
+        const timerElement = document.getElementById('timeDisplay');
         if (timerElement) {
             timerElement.textContent = this.state.timeLeft;
             timerElement.classList.toggle('warning', this.state.timeLeft <= 10);
         }
 
         // Update score
-        const scoreElement = document.getElementById('pathFindingScore');
+        const scoreElement = document.getElementById('scoreDisplay');
         if (scoreElement) {
             scoreElement.textContent = this.state.score;
         }
@@ -625,18 +643,12 @@ class PathFindingGame {
     }
 
     completeGame() {
-        const timeBonus = this.state.timeLeft * 10;
-        this.state.score += timeBonus;
-
-        // Ensure modal is closed before showing completion
         if (this.state.modalVisible) {
             this.closePaceItemPopup();
             setTimeout(() => {
-                this.showCompletionMessage(true, timeBonus);
                 this.endGame(true);
             }, this.config.modalTransitionTime);
         } else {
-            this.showCompletionMessage(true, timeBonus);
             this.endGame(true);
         }
     }
@@ -646,36 +658,41 @@ class PathFindingGame {
         messageEl.className = 'completion-message';
 
         messageEl.innerHTML = `
-            <div class="message-content ${completed ? 'success' : 'timeout'}">
-                <div class="message-header">
-                    <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
-                    <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+        <div class="message-content ${completed ? 'success' : 'timeout'}">
+            <div class="message-header">
+                <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
+                <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+            </div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span class="label">Items Collected:</span>
+                    <span class="value">${this.state.collectedItems}/5</span>
                 </div>
-                <div class="score-breakdown">
+                ${completed ? `
                     <div class="score-item">
-                        <span class="label">Items Collected:</span>
-                        <span class="value">${this.state.collectedItems}/5</span>
+                        <span class="label">Time Bonus:</span>
+                        <span class="value">+${timeBonus}</span>
                     </div>
-                    ${completed ? `
-                        <div class="score-item">
-                            <span class="label">Time Bonus:</span>
-                            <span class="value">+${timeBonus}</span>
-                        </div>
-                        <div class="score-item">
-                            <span class="label">Time Remaining:</span>
-                            <span class="value">${this.state.timeLeft}s</span>
-                        </div>
-                    ` : ''}
-                    <div class="score-item total">
-                        <span class="label">Final Score:</span>
-                        <span class="value">${this.state.score}</span>
+                    <div class="score-item">
+                        <span class="label">Time Remaining:</span>
+                        <span class="value">${this.state.timeLeft}s</span>
                     </div>
+                ` : ''}
+                <div class="score-item total">
+                    <span class="label">Final Score:</span>
+                    <span class="value">${this.state.score}</span>
                 </div>
-                <button class="replay-button" onclick="window.pathFindingGame.initialize()">
+            </div>
+            <div class="modal-buttons">
+                <button class="continue-button button-primary" onclick="navigateToMatchingGame()">
+                    <i class="fas fa-arrow-right"></i> Continue to Benefits
+                </button>
+                <button class="replay-button button-secondary" onclick="window.pathFindingGame.initialize()">
                     <i class="fas fa-redo"></i> Play Again
                 </button>
             </div>
-        `;
+        </div>
+    `;
 
         this.gameContainer.appendChild(messageEl);
         requestAnimationFrame(() => messageEl.classList.add('show'));
@@ -690,26 +707,33 @@ class PathFindingGame {
             this.timer = null;
         }
 
-        // Store high score
-        if (completed) {
-            const currentHighScore = localStorage.getItem('paceNavigatorHighScore') || 0;
-            if (this.state.score > currentHighScore) {
-                localStorage.setItem('paceNavigatorHighScore', this.state.score);
+        // Store final score for next game
+        localStorage.setItem('pathFindingScore', this.state.score.toString());
+
+        // Update gameState if completion was successful
+        if (completed && window.gameState) {
+            gameState.gameStats.pathFinding.pathsCompleted++;
+            gameState.gameStats.pathFinding.gamesPlayed++;
+            if (!gameState.player.completedSections.includes('pathFindingGame')) {
+                gameState.player.completedSections.push('pathFindingGame');
             }
+            saveGameState();
         }
 
-        // Remove completion message after delay
-        setTimeout(() => {
-            const messageEl = this.gameContainer.querySelector('.completion-message');
-            if (messageEl) {
-                messageEl.classList.remove('show');
-                setTimeout(() => {
-                    messageEl.remove();
-                    this.showInstructions();
-                }, this.config.animationDuration);
-            }
-        }, 5000);
+        // Show completion message with navigation options
+        this.showCompletionMessage(completed);
+
+        // After a delay, transition to matching game if completed successfully
+        if (completed) {
+            setTimeout(() => {
+                showSection('matchingGame');
+                if (window.matchingGame && typeof window.matchingGame.initialize === 'function') {
+                    window.matchingGame.initialize();
+                }
+            }, 5000); // 5-second delay before transition
+        }
     }
+
 }
 
 // Initialize the game when the DOM is loaded
