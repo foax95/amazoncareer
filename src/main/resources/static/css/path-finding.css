@@ -1,0 +1,527 @@
+#pathFindingGame {
+    min-height: 100vh;
+    padding: 20px;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Game Stats */
+#pathFindingGame .game-stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+#pathFindingGame .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1em;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+#pathFindingGame .stat-item i {
+    font-size: 1.3em;
+}
+
+#pathFindingGame .stat-item span {
+    color: #232f3e; /* Added this to color the text "Items:", "Time:", "Score:" */
+}
+
+/* Specific stat colors */
+#pathFindingGame .stat-item:nth-child(1) i {
+    color: #2d8c3c;
+}
+
+#pathFindingGame .stat-item:nth-child(2) i {
+    color: #ff9900;
+}
+
+#pathFindingGame .stat-item:nth-child(3) i {
+    color: #0066c0;
+}
+
+/* Game Stats - Number Values */
+#pathFindingGame .stat-item span span {
+    color: #232f3e;
+    font-weight: 600;
+}
+
+#pathFindingGame #pathFindingSteps {
+    color: #2d8c3c;
+    font-weight: 600;
+}
+
+#pathFindingGame #pathFindingTimer {
+    color: #ff9900;
+    font-weight: 600;
+}
+
+#pathFindingGame #pathFindingScore {
+    color: #0066c0;
+    font-weight: 600;
+}
+
+
+/* Timer warning state */
+#pathFindingGame #pathFindingTimer.warning {
+    color: #d13212;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Instructions Panel */
+#pathFindingGame .game-instructions-panel {
+    max-width: 800px;
+    margin: 0 auto 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#pathFindingGame .instruction-categories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+#pathFindingGame .instruction-category {
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+#pathFindingGame .instruction-category i {
+    color: #ff9900;
+    font-size: 24px;
+}
+
+/* Items Preview */
+#pathFindingGame .items-preview {
+    margin-top: 30px;
+}
+
+#pathFindingGame .items-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+}
+
+#pathFindingGame .preview-item {
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s;
+    position: relative;
+}
+
+#pathFindingGame .preview-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#pathFindingGame .preview-item i {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+#pathFindingGame .item-name {
+    display: block;
+    margin: 8px 0;
+    font-weight: bold;
+}
+
+#pathFindingGame .item-hint {
+    display: block;
+    color: #666;
+    font-size: 0.9em;
+}
+
+#pathFindingGame .item-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #232f3e;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+#pathFindingGame .preview-item:hover .item-tooltip {
+    display: block;
+}
+
+/* Game Content */
+#pathFindingGame .game-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#pathFindingGame .game-content.show {
+    opacity: 1;
+}
+
+/* Game Area */
+#pathFindingGame .game-area-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#pathFindingGame .game-area {
+    width: 100%;
+    aspect-ratio: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 4px;
+    position: relative;
+}
+
+#pathFindingGame .game-cell {
+    background: #f5f5f8;
+    border-radius: 4px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Player */
+#pathFindingGame #player {
+    position: absolute;
+    width: calc(20% - 4px);
+    height: calc(20% - 4px);
+    background: #232f3e;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: transform 0.3s ease;
+    z-index: 2;
+}
+
+#pathFindingGame #player i {
+    font-size: 20px;
+}
+
+/* PACE Items */
+#pathFindingGame .pace-item {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#pathFindingGame .item-icon {
+    width: 80%;
+    height: 80%;
+    background: #f8f8f8;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Specific icons styling */
+#pathFindingGame .pace-item[data-id="application"] i {
+    color: #0066c0;
+}
+
+#pathFindingGame .pace-item[data-id="shoes"] i {
+    color: #ff9900;
+}
+
+#pathFindingGame .pace-item[data-id="paperwork"] i {
+    color: #008296;
+}
+
+#pathFindingGame .pace-item[data-id="id"] i {
+    color: #e31f64;
+}
+
+#pathFindingGame .pace-item[data-id="dress_code"] i {
+    color: #2d8c3c;
+}
+
+/* Modal Styles */
+#pathFindingGame .pace-item-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+#pathFindingGame .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+}
+
+#pathFindingGame .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#pathFindingGame .modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+#pathFindingGame .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+#pathFindingGame .modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* Controls */
+#pathFindingGame .touch-controls {
+    width: 100%;
+    max-width: 200px;
+    margin: 40px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#pathFindingGame .horizontal-controls {
+    display: flex;
+    gap: 20px;
+}
+
+#pathFindingGame .control-button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #232f3e;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#pathFindingGame .control-button:hover {
+    background: #374357;
+    transform: scale(1.05);
+}
+
+/* Start Game Button */
+#pathFindingGame .start-game-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto 0;
+    padding: 12px 24px;
+    background: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#pathFindingGame .start-game-btn:hover {
+    background: #ff8400;
+    transform: translateY(-2px);
+}
+
+/* Completion Message */
+#pathFindingGame .completion-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+#pathFindingGame .completion-message.show {
+    display: block;
+}
+
+#pathFindingGame .message-header {
+    margin-bottom: 20px;
+}
+
+#pathFindingGame .score-breakdown {
+    margin: 20px 0;
+}
+
+/* Animations */
+#pathFindingGame .animated {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+#pathFindingGame [data-animation="fadeIn"] {
+    animation-name: fadeIn;
+}
+
+#pathFindingGame [data-animation="slideIn"] {
+    animation-name: slideIn;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #pathFindingGame {
+        padding: 10px;
+    }
+
+    #pathFindingGame .game-stats {
+        padding: 12px 20px;
+    }
+
+    #pathFindingGame .stat-item {
+        font-size: 1em;
+        padding: 6px 12px;
+    }
+
+    #pathFindingGame .instruction-categories {
+        grid-template-columns: 1fr;
+    }
+
+    #pathFindingGame .items-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #pathFindingGame .game-area-container {
+        max-width: 90vw;
+    }
+
+    #pathFindingGame .game-area {
+        gap: 3px;
+        padding: 8px;
+    }
+
+    #pathFindingGame #player i,
+    #pathFindingGame .pace-item i {
+        font-size: 16px;
+    }
+
+    #pathFindingGame .control-button {
+        width: 45px;
+        height: 45px;
+    }
+
+    #pathFindingGame .touch-controls {
+        margin-top: 20px;
+    }
+
+    #pathFindingGame .modal-content {
+        width: 95%;
+        max-height: 80vh;
+    }
+}
+
+@media (max-width: 480px) {
+    #pathFindingGame .game-stats {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    #pathFindingGame .stat-item {
+        padding: 5px 10px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+    #pathFindingGame .game-stats {
+        font-size: 14px;
+    }
+
+    #pathFindingGame #player i,
+    #pathFindingGame .pace-item i {
+        font-size: 14px;
+    }
+
+    #pathFindingGame .control-button {
+        width: 40px;
+        height: 40px;
+    }
+}

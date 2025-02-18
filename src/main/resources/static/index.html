@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day One Hero</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/path-finding.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -41,6 +42,13 @@
         <div class="nav-score animated" data-animation="fadeIn">
             Score: <span id="scoreDisplay" class="animated" data-animation="pulse">0</span>
         </div>
+        <div class="nav-streak animated" data-animation="fadeIn">
+            Streak: <span id="streakDisplay" class="animated" data-animation="pulse">0</span>
+    </div>
+    <div class="nav-progress animated" data-animation="fadeIn">
+        Progress: <span id="progressDisplay" class="animated" data-animation="pulse">0%</span>
+    </div>
+
     </div>
 </header>
 
@@ -206,8 +214,10 @@
             </div>
         </div>
     </section>
-    <!-- PACE Navigator Game -->
+    <!-- Path Finding Game -->
+    <!-- Path Finding Game -->
     <section id="pathFindingGame" class="page game-section">
+        <!-- Game Header -->
         <div class="game-header animated" data-animation="slideIn">
             <div class="game-stats animated" data-animation="fadeIn">
                 <div class="stat-item">
@@ -225,6 +235,137 @@
             </div>
         </div>
 
+        <!-- PACE Item Modal -->
+        <div class="pace-item-modal" id="paceItemModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="modal-icon fas"></i>
+                    <h3 class="modal-title"></h3>
+                    <button class="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Application Status Content -->
+                    <div class="modal-item-content" data-item="application">
+                        <div class="item-details">
+                            <h4>Check Your Application Status</h4>
+                            <p>Track your pre-employment progress on hiring.amazon.com</p>
+                            <div class="steps-section">
+                                <h5>Required Steps:</h5>
+                                <ol>
+                                    <li>Log in to hiring.amazon.com</li>
+                                    <li>Click on "My Jobs"</li>
+                                    <li>Select your active application</li>
+                                    <li>View application status and screening results</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Safety Shoes Content -->
+                    <div class="modal-item-content" data-item="shoes">
+                        <div class="item-details">
+                            <h4>Order Safety Shoes</h4>
+                            <p>Required for entering Amazon worksites</p>
+                            <div class="steps-section">
+                                <h5>Ordering Process:</h5>
+                                <ol>
+                                    <li>Complete pre-employment screenings</li>
+                                    <li>Receive $110 Zappos.com credit</li>
+                                    <li>Access credit through hiring.amazon.com</li>
+                                    <li>Use the blue button to visit Zappos</li>
+                                    <li>Click "Accept & Shop" for approved shoes</li>
+                                </ol>
+                            </div>
+                            <div class="important-notes">
+                                <h5>Important Information:</h5>
+                                <ul>
+                                    <li>Safety shoes are mandatory for work</li>
+                                    <li>Temporary covers provided if shoes don't arrive by Day 1</li>
+                                    <li>Many options under $110</li>
+                                    <li>Use remaining credit for insoles</li>
+                                    <li>Contact Zappos Customer Care for questions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Paperwork Content -->
+                    <div class="modal-item-content" data-item="paperwork">
+                        <div class="item-details">
+                            <h4>Complete Pre-hire Documentation</h4>
+                            <p>Essential employment forms must be completed before Day 1</p>
+                            <div class="required-forms">
+                                <h5>Required Forms:</h5>
+                                <ul>
+                                    <li>Payroll Direct Deposit</li>
+                                    <li>Terms of Employment</li>
+                                    <li>Non-Disclosure Agreement</li>
+                                    <li>Additional employment documents</li>
+                                </ul>
+                            </div>
+                            <div class="steps-section">
+                                <h5>Completion Steps:</h5>
+                                <ol>
+                                    <li>Access hiring.amazon.com</li>
+                                    <li>Click "Start employment paperwork"</li>
+                                    <li>Complete all required forms</li>
+                                    <li>Submit before Day 1</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo ID Content -->
+                    <div class="modal-item-content" data-item="id">
+                        <div class="item-details">
+                            <h4>Photo ID Requirements</h4>
+                            <p>Essential for badge access and identity verification</p>
+                            <div class="important-notes">
+                                <h5>Critical Information:</h5>
+                                <ul>
+                                    <li>Must bring valid photo ID on Day 1</li>
+                                    <li>Required for badge issuance</li>
+                                    <li>No badge access without proper ID</li>
+                                    <li>Government-issued ID required</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dress Code Content -->
+                    <div class="modal-item-content" data-item="dress_code">
+                        <div class="item-details">
+                            <h4>Day 1 Dress Code Guidelines</h4>
+                            <p>Appropriate attire for your first day</p>
+                            <div class="requirements">
+                                <h5>Dress Requirements:</h5>
+                                <ul>
+                                    <li>Comfortable clothing suitable for work</li>
+                                    <li>Closed toe and heel shoes</li>
+                                    <li>Weather-appropriate attire</li>
+                                    <li>No interview attire needed</li>
+                                </ul>
+                            </div>
+                            <div class="important-notes">
+                                <p class="note">You will be working in an active facility. Dress accordingly for safety and comfort.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="points-earned">
+                        <span class="points">+0</span>
+                        <span class="combo"></span>
+                    </div>
+                    <button class="continue-button">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Game Instructions Panel -->
         <div class="game-instructions-panel animated" data-animation="fadeIn">
             <h2>PACE Navigator</h2>
@@ -233,48 +374,93 @@
                     <div class="instruction-category">
                         <i class="fas fa-gamepad"></i>
                         <h4>How to Play</h4>
-                        <p>Collect all PACE items before time runs out!</p>
+                        <p>Navigate through the grid to collect all PACE items before time runs out!</p>
+                        <ul class="instruction-list">
+                            <li>Move to items to collect them</li>
+                            <li>Quick collections earn combo points</li>
+                            <li>Read item information carefully</li>
+                        </ul>
                     </div>
                     <div class="instruction-category">
                         <i class="fas fa-keyboard"></i>
                         <h4>Controls</h4>
-                        <p>Use arrow keys or touch controls to move</p>
+                        <div class="controls-guide">
+                            <div class="keyboard-controls">
+                                <p>Keyboard:</p>
+                                <ul>
+                                    <li><span class="key">↑</span> or <span class="key">W</span> - Move Up</li>
+                                    <li><span class="key">↓</span> or <span class="key">S</span> - Move Down</li>
+                                    <li><span class="key">←</span> or <span class="key">A</span> - Move Left</li>
+                                    <li><span class="key">→</span> or <span class="key">D</span> - Move Right</li>
+                                </ul>
+                            </div>
+                            <div class="touch-guide">
+                                <p>Touch Controls:</p>
+                                <p>Use on-screen arrows on mobile devices</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="instruction-category">
                         <i class="fas fa-clock"></i>
                         <h4>Time Limit</h4>
-                        <p>Complete within 60 seconds</p>
+                        <div class="time-info">
+                            <p>Complete within 60 seconds</p>
+                            <ul class="time-bonuses">
+                                <li>Quick collections earn combo points</li>
+                                <li>Remaining time adds bonus points</li>
+                                <li>Plan your route efficiently</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
                 <div class="items-preview">
-                    <h4>Items to Collect:</h4>
+                    <h4>Required PACE Items:</h4>
                     <div class="items-grid">
-                        <div class="preview-item">
+                        <div class="preview-item" data-item="application">
                             <i class="fas fa-laptop"></i>
-                            <span>PACE Terminal</span>
+                            <span class="item-name">Application Status</span>
+                            <small class="item-hint">Check hiring.amazon.com</small>
+                            <div class="item-tooltip">
+                                Track your application and screening results
+                            </div>
                         </div>
-                        <div class="preview-item">
+                        <div class="preview-item" data-item="shoes">
                             <i class="fas fa-shoe-prints"></i>
-                            <span>Safety Shoes</span>
+                            <span class="item-name">Safety Shoes</span>
+                            <small class="item-hint">$110 Zappos credit</small>
+                            <div class="item-tooltip">
+                                Required safety equipment for Day 1
+                            </div>
                         </div>
-                        <div class="preview-item">
+                        <div class="preview-item" data-item="paperwork">
                             <i class="fas fa-file-signature"></i>
-                            <span>Paperwork</span>
+                            <span class="item-name">Pre-hire Paperwork</span>
+                            <small class="item-hint">Complete employment forms</small>
+                            <div class="item-tooltip">
+                                Essential documentation for employment
+                            </div>
                         </div>
-                        <div class="preview-item">
+                        <div class="preview-item" data-item="id">
                             <i class="fas fa-id-card"></i>
-                            <span>Photo ID</span>
+                            <span class="item-name">Photo ID</span>
+                            <small class="item-hint">Required for Day 1</small>
+                            <div class="item-tooltip">
+                                Needed for badge access
+                            </div>
                         </div>
-                        <div class="preview-item">
+                        <div class="preview-item" data-item="dress_code">
                             <i class="fas fa-tshirt"></i>
-                            <span>Dress Code</span>
+                            <span class="item-name">Dress Code</span>
+                            <small class="item-hint">Appropriate work attire</small>
+                            <div class="item-tooltip">
+                                Guidelines for workplace clothing
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <button class="button-primary start-game-btn animated hover-lift"
-                        onclick="window.pathFindingGame.startGame()">
+                <button class="button-primary start-game-btn animated hover-lift" onclick="window.pathFindingGame.startGame()">
                     <i class="fas fa-play"></i>
                     Start Game
                 </button>
@@ -283,30 +469,83 @@
 
         <!-- Game Content Area -->
         <div class="game-content animated" data-animation="fadeIn" style="display: none;">
-            <!-- Game Area will be generated by JS -->
             <div class="game-area-container">
+                <!-- Main game grid -->
                 <div class="game-area"></div>
+
+                <!-- Info Button -->
+                <button class="info-button" aria-label="Show Progress">
+                    <i class="fas fa-info-circle"></i>
+                </button>
 
                 <!-- Touch Controls -->
                 <div class="touch-controls">
-                    <button class="control-button" data-direction="up">
+                    <button class="control-button" data-direction="up" aria-label="Move Up">
                         <i class="fas fa-chevron-up"></i>
                     </button>
                     <div class="horizontal-controls">
-                        <button class="control-button" data-direction="left">
+                        <button class="control-button" data-direction="left" aria-label="Move Left">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <button class="control-button" data-direction="right">
+                        <button class="control-button" data-direction="right" aria-label="Move Right">
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
-                    <button class="control-button" data-direction="down">
+                    <button class="control-button" data-direction="down" aria-label="Move Down">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
             </div>
+
+            <!-- Info Popup -->
+            <div class="pace-info-popup" style="display: none;">
+                <div class="popup-content">
+                    <div class="popup-header">
+                        <h3>PACE Checklist Progress</h3>
+                        <button class="close-popup">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                        <span class="progress-text">0/5 Items</span>
+                    </div>
+                    <div class="collected-items-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Completion Message Container -->
+        <div class="completion-message" style="display: none;">
+            <div class="message-content">
+                <div class="message-header">
+                    <i class="fas fa-trophy success-icon"></i>
+                    <h3></h3>
+                </div>
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="label">Items Collected:</span>
+                        <span class="value items-collected">0/5</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">Time Bonus:</span>
+                        <span class="value time-bonus">0</span>
+                    </div>
+                    <div class="score-item total-score">
+                        <span class="label">Final Score:</span>
+                        <span class="value final-score">0</span>
+                    </div>
+                </div>
+                <button class="replay-button">
+                    <i class="fas fa-redo"></i>
+                    Play Again
+                </button>
+            </div>
         </div>
     </section>
+
 
     <!-- Benefits Matching Game -->
     <section id="matchingGame" class="page game-section">
