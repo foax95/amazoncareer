@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/path-finding.css">
     <link rel="stylesheet" href="css/weight-sorting.css">
     <link rel="stylesheet" href="css/benefit-matching.css">
+    <link rel="stylesheet" href="css/quiz.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -82,7 +83,7 @@
     </section>
 
     <!-- Weight Sorting Game -->
-    <section id="weightSortingGame" class="page game-section">
+    <section id="weightSortingGame" class="page sorting-zones-section">
         <div class="game-header animated" data-animation="slideIn">
             <div class="game-stats animated" data-animation="fadeIn">
                 <div class="stat-item">
@@ -212,9 +213,9 @@
             </div>
         </div>
     </section>
+
     <!-- Path Finding Game -->
-    <!-- Path Finding Game -->
-    <section id="pathFindingGame" class="page game-section">
+    <section id="pathFindingGame" class="page pace-section">
         <!-- Game Header -->
         <div class="game-header animated" data-animation="slideIn">
             <div class="game-stats animated" data-animation="fadeIn">
@@ -542,7 +543,7 @@
 
 
     <!-- Benefits Matching Game -->
-    <section id="matchingGame" class="page game-section">
+    <section id="matchingGame" class="page matching-section">
         <!-- Game Instructions Panel -->
         <div class="game-instructions-panel">
             <div class="instructions-content">
@@ -569,7 +570,7 @@
                     <ol>
                         <li>Click on any card to flip it and reveal an Amazon benefit.</li>
                         <li>Click on a second card to try and find its match.</li>
-                        <li>If the cards match, they will remain face up and you'll earn points.</li>
+                        <li>If the cards match, they will remain face up, and you'll earn points.</li>
                         <li>If they don't match, both cards will flip back over.</li>
                         <li>Remember the locations of cards to make matches more quickly.</li>
                         <li>Match all 8 pairs before time runs out to win!</li>
@@ -818,136 +819,136 @@
 
 
     <!-- Quiz Section -->
-    <section id="quiz" class="page game-section">
-        <div class="game-header animated" data-animation="slideIn">
-            <button class="button-primary return-button" onclick="returnToMainMenu()">
-                <i class="fas fa-arrow-left"></i> Back to Menu
-            </button>
-            <div class="quiz-stats animated" data-animation="fadeIn">
-                <div class="stat-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Score: <span id="quizScore">0</span></span>
+    <section id="quizSection" class="page quiz-section">
+        <!-- Quiz Instructions Panel -->
+        <div class="quiz-instructions">
+            <h2><i class="fas fa-question-circle"></i> Benefits Knowledge Check</h2>
+            <p>Test your understanding of Amazon's benefits package!</p>
+
+            <div class="instruction-details">
+                <div class="instruction-item">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Answer questions about Amazon benefits</p>
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Question: <span id="questionNumber">0</span>/10</span>
-                </div>
-                <div class="stat-item">
+                <div class="instruction-item">
                     <i class="fas fa-clock"></i>
-                    <span>Time: <span id="quizTimer">30</span>s</span>
+                    <p>30 seconds per question</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-star"></i>
+                    <p>Earn points for correct answers</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-check-double"></i>
+                    <p>Review your answers at the end</p>
+                </div>
+            </div>
+
+            <div class="quiz-rules">
+                <h3>Quiz Rules:</h3>
+                <ul>
+                    <li>Choose the best answer for each question</li>
+                    <li>Questions are timed - answer before time runs out</li>
+                    <li>No going back to previous questions</li>
+                    <li>Score based on correct answers and completion time</li>
+                </ul>
+            </div>
+
+            <button class="start-quiz-btn button-primary">
+                <i class="fas fa-play"></i> Start Quiz
+            </button>
+        </div>
+
+        <!-- Quiz Question Container -->
+        <div class="quiz-content" style="display: none;">
+            <div class="quiz-header">
+                <div class="quiz-progress">
+                    <div class="progress-info">
+                        <span class="question-counter">Question <span id="currentQuestion">1</span>/<span id="totalQuestions">5</span></span>
+                        <span class="score-display">Score: <span id="currentScore">0</span></span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="timer-container">
+                    <i class="fas fa-clock"></i>
+                    <span id="questionTimer">30</span>s
+                </div>
+            </div>
+
+            <!-- Question Area -->
+            <div class="question-area">
+                <div class="question-container">
+                    <p class="question-text"></p>
+                    <div class="options-grid">
+                        <!-- Options will be dynamically inserted here -->
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="quiz-content animated" data-animation="fadeIn">
-            <!-- Quiz Categories -->
-            <div id="quizCategories" class="quiz-categories">
-                <div class="category-card animated hover-lift" data-animation="fadeIn" onclick="startQuiz('safety')">
-                    <div class="category-icon">
-                        <i class="fas fa-hard-hat"></i>
-                    </div>
-                    <h3>Safety First</h3>
-                    <p>Test your knowledge of workplace safety</p>
-                    <div class="category-stats">
-                        <span class="best-score">Best: <span id="safetyBestScore">0%</span></span>
-                        <span class="completed">Complete: <span id="safetyCompleted">0/10</span></span>
-                    </div>
+        <!-- Answer Feedback Modal -->
+        <div class="feedback-modal" style="display: none;">
+            <div class="feedback-content">
+                <div class="feedback-header">
+                    <i class="feedback-icon fas"></i>
+                    <h3 class="feedback-title"></h3>
                 </div>
-
-                <div class="category-card animated hover-lift" data-animation="fadeIn" onclick="startQuiz('benefits')">
-                    <div class="category-icon">
-                        <i class="fas fa-gift"></i>
-                    </div>
-                    <h3>Benefits & Resources</h3>
-                    <p>Learn about your Amazon benefits</p>
-                    <div class="category-stats">
-                        <span class="best-score">Best: <span id="benefitsBestScore">0%</span></span>
-                        <span class="completed">Complete: <span id="benefitsCompleted">0/10</span></span>
-                    </div>
-                </div>
-
-                <div class="category-card animated hover-lift" data-animation="fadeIn" onclick="startQuiz('procedures')">
-                    <div class="category-icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <h3>Work Procedures</h3>
-                    <p>Standard operating procedures</p>
-                    <div class="category-stats">
-                        <span class="best-score">Best: <span id="proceduresBestScore">0%</span></span>
-                        <span class="completed">Complete: <span id="proceduresCompleted">0/10</span></span>
-                    </div>
-                </div>
+                <p class="feedback-explanation"></p>
+                <button class="continue-btn button-primary">
+                    <i class="fas fa-arrow-right"></i> Continue
+                </button>
             </div>
+        </div>
 
-            <!-- Quiz Question Area -->
-            <div id="questionContainer" class="question-container" style="display: none;">
-                <div class="question-header">
-                    <h3 id="categoryTitle"></h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="quizProgress"></div>
+        <!-- Quiz Summary -->
+        <div class="quiz-summary" style="display: none;">
+            <div class="summary-content">
+                <div class="summary-header">
+                    <i class="fas fa-trophy"></i>
+                    <h2>Quiz Complete!</h2>
+                </div>
+
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="label">Correct Answers:</span>
+                        <span class="value" id="correctAnswers">0/5</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">Completion Time:</span>
+                        <span class="value" id="completionTime">0:00</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">Final Score:</span>
+                        <span class="value" id="finalScore">0</span>
                     </div>
                 </div>
 
-                <div class="question-content">
-                    <p id="questionText" class="question-text"></p>
-                    <div id="optionsContainer" class="options-container">
-                        <button class="option-button" onclick="submitAnswer(0)"></button>
-                        <button class="option-button" onclick="submitAnswer(1)"></button>
-                        <button class="option-button" onclick="submitAnswer(2)"></button>
-                        <button class="option-button" onclick="submitAnswer(3)"></button>
+                <div class="performance-feedback">
+                    <h3>Performance Summary</h3>
+                    <div class="performance-message"></div>
+                </div>
+
+                <div class="answer-review">
+                    <h3>Question Review</h3>
+                    <div class="review-list">
+                        <!-- Question review items will be dynamically inserted here -->
                     </div>
                 </div>
 
-                <!-- Answer Feedback -->
-                <div id="answerFeedback" class="answer-feedback" style="display: none;">
-                    <div class="feedback-content">
-                        <i class="feedback-icon"></i>
-                        <p class="feedback-text"></p>
-                        <p class="explanation"></p>
-                        <button class="button-primary" onclick="nextQuestion()">
-                            Next Question <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quiz Results -->
-            <div id="quizResults" class="quiz-results" style="display: none;">
-                <div class="results-content animated" data-animation="fadeIn">
-                    <div class="results-header">
-                        <div class="score-circle">
-                            <span id="finalScore">0%</span>
-                        </div>
-                        <h3>Quiz Complete!</h3>
-                    </div>
-
-                    <div class="results-breakdown">
-                        <div class="breakdown-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Correct Answers: <span id="correctAnswers">0</span>/10</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Time Taken: <span id="timeTaken">0:00</span></span>
-                        </div>
-                        <div class="breakdown-item">
-                            <i class="fas fa-star"></i>
-                            <span>New Best Score: <span id="newBestScore">No</span></span>
-                        </div>
-                    </div>
-
-                    <div class="results-actions">
-                        <button class="button-primary" onclick="retakeQuiz()">
-                            <i class="fas fa-redo"></i> Try Again
-                        </button>
-                        <button class="button-secondary" onclick="returnToQuizCategories()">
-                            <i class="fas fa-th"></i> Other Categories
-                        </button>
-                    </div>
+                <div class="summary-buttons">
+                    <button class="retry-btn button-secondary" onclick="window.amazonQuiz.initialize()">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                    <button class="complete-btn button-primary" onclick="window.amazonQuiz.completeTraining()">
+                        <i class="fas fa-check"></i> Complete Training
+                    </button>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- Game Complete/Reset Section -->
     <section id="gameComplete" class="page game-section">
         <div class="completion-content animated" data-animation="fadeIn">

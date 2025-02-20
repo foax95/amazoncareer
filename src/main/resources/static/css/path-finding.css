@@ -1,81 +1,108 @@
-#pathFindingGame {
+/* PACE Game Base Styles */
+.pace-section {
+    /* Variables */
+    --amazon-blue: #232F3E;
+    --amazon-orange: #FF9900;
+    --amazon-orange-dark: #e88b00;
+    --amazon-background: rgba(255, 255, 255, 0.95);
+    --amazon-white: #FFFFFF;
+    --amazon-grey: #333333;
+    --amazon-grey-light: rgba(200, 200, 200, 0.9);
+    --amazon-success: #2d8c01;
+    --amazon-error: #cc1c1c;
+    --text-color: #111111;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Base styles */
+    display: none;
+    background-image: url('/static/css/src/main/resources/static/assets/images/CXO.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     min-height: 100vh;
-    padding: 20px;
-    background: #f5f5f5;
+    width: 100%;
+    position: relative;
+    padding: 2rem;
+}
+
+.pace-section.active {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Game Stats */
-#pathFindingGame .game-stats {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 30px;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 500px;
+/* Background Overlay */
+.pace-section::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
 }
 
-#pathFindingGame .stat-item {
+.pace-section > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Game Header and Stats */
+.pace-section .game-header {
+    background: var(--amazon-background);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pace-section .game-stats {
+    background: var(--amazon-background);
+    padding: 15px 30px;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 20px;
+}
+
+.pace-section .stat-item {
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 1.1em;
     padding: 8px 15px;
     border-radius: 6px;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
+    color: var(--text-color);
 }
 
-#pathFindingGame .stat-item i {
+.pace-section .stat-item i {
     font-size: 1.3em;
+    color: var(--amazon-orange);
 }
 
-#pathFindingGame .stat-item span {
-    color: #232f3e; /* Added this to color the text "Items:", "Time:", "Score:" */
-}
-
-/* Specific stat colors */
-#pathFindingGame .stat-item:nth-child(1) i {
-    color: #2d8c3c;
-}
-
-#pathFindingGame .stat-item:nth-child(2) i {
-    color: #ff9900;
-}
-
-#pathFindingGame .stat-item:nth-child(3) i {
-    color: #0066c0;
-}
-
-/* Game Stats - Number Values */
-#pathFindingGame .stat-item span span {
-    color: #232f3e;
+.pace-section .stat-item span span {
+    color: var(--amazon-blue);
     font-weight: 600;
 }
 
-#pathFindingGame #pathFindingSteps {
-    color: #2d8c3c;
-    font-weight: 600;
-}
-
-#pathFindingGame #pathFindingTimer {
-    color: #ff9900;
-    font-weight: 600;
-}
-
-#pathFindingGame #pathFindingScore {
-    color: #0066c0;
-    font-weight: 600;
-}
-
-
-/* Timer warning state */
-#pathFindingGame #pathFindingTimer.warning {
-    color: #d13212;
+.pace-section #pathFindingTimer.warning {
+    color: var(--amazon-error);
     animation: pulse 1s infinite;
 }
 
@@ -86,83 +113,112 @@
 }
 
 /* Instructions Panel */
-#pathFindingGame .game-instructions-panel {
+.pace-section .game-instructions-panel {
+    background: var(--amazon-background);
+    border-radius: 20px;
+    padding: 2.5rem;
     max-width: 800px;
-    margin: 0 auto 30px;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 90%;
+    box-shadow: var(--shadow-lg);
+    margin: auto;
 }
 
-#pathFindingGame .instruction-categories {
+.pace-section .game-instructions-panel h2 {
+    color: var(--amazon-blue);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.pace-section .instructions-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.pace-section .instruction-categories {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-bottom: 30px;
 }
 
-#pathFindingGame .instruction-category {
+.pace-section .instruction-category {
     padding: 20px;
-    background: #f8f8f8;
-    border-radius: 8px;
+    background: var(--amazon-white);
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-normal);
 }
 
-#pathFindingGame .instruction-category i {
-    color: #ff9900;
+.pace-section .instruction-category:hover {
+    transform: translateY(-5px);
+}
+
+.pace-section .instruction-category i {
+    color: var(--amazon-orange);
     font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.pace-section .instruction-category h4 {
+    color: var(--amazon-blue);
+    margin-bottom: 10px;
 }
 
 /* Items Preview */
-#pathFindingGame .items-preview {
+.pace-section .items-preview {
     margin-top: 30px;
 }
 
-#pathFindingGame .items-grid {
+.pace-section .items-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 15px;
 }
 
-#pathFindingGame .preview-item {
+.pace-section .preview-item {
     padding: 15px;
-    background: #f8f8f8;
-    border-radius: 8px;
+    background: var(--amazon-white);
+    border-radius: 15px;
     text-align: center;
     transition: transform 0.2s;
     position: relative;
+    box-shadow: var(--shadow-sm);
 }
 
-#pathFindingGame .preview-item:hover {
+.pace-section .preview-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
 }
 
-#pathFindingGame .preview-item i {
+.pace-section .preview-item i {
     font-size: 24px;
     margin-bottom: 8px;
+    color: var(--amazon-orange);
 }
 
-#pathFindingGame .item-name {
+.pace-section .item-name {
     display: block;
     margin: 8px 0;
     font-weight: bold;
+    color: var(--amazon-blue);
 }
 
-#pathFindingGame .item-hint {
+.pace-section .item-hint {
     display: block;
-    color: #666;
+    color: var(--amazon-grey);
     font-size: 0.9em;
 }
 
-#pathFindingGame .item-tooltip {
+.pace-section .item-tooltip {
     display: none;
     position: absolute;
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: #232f3e;
-    color: white;
+    background: var(--amazon-blue);
+    color: var(--amazon-white);
     padding: 8px 12px;
     border-radius: 4px;
     font-size: 0.9em;
@@ -170,12 +226,12 @@
     z-index: 10;
 }
 
-#pathFindingGame .preview-item:hover .item-tooltip {
+.pace-section .preview-item:hover .item-tooltip {
     display: block;
 }
 
 /* Game Content */
-#pathFindingGame .game-content {
+.pace-section .game-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -184,24 +240,24 @@
     transition: opacity 0.3s ease;
 }
 
-#pathFindingGame .game-content.show {
+.pace-section .game-content.show {
     opacity: 1;
 }
 
 /* Game Area */
-#pathFindingGame .game-area-container {
+.pace-section .game-area-container {
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
     position: relative;
 }
 
-#pathFindingGame .game-area {
+.pace-section .game-area {
     width: 100%;
     aspect-ratio: 1;
-    background: white;
+    background: var(--amazon-white);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
     padding: 10px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -210,7 +266,7 @@
     position: relative;
 }
 
-#pathFindingGame .game-cell {
+.pace-section .game-cell {
     background: #f5f5f8;
     border-radius: 4px;
     position: relative;
@@ -219,26 +275,26 @@
 }
 
 /* Player */
-#pathFindingGame #player {
+.pace-section #player {
     position: absolute;
-    width: calc(20% - 4px);
-    height: calc(20% - 4px);
-    background: #232f3e;
-    border-radius: 4px;
+    width: calc(20% - 5px);
+    height: calc(20% - 5px);
+    background: var(--amazon-orange);
+    border-radius: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--amazon-white);
     transition: transform 0.3s ease;
     z-index: 2;
 }
 
-#pathFindingGame #player i {
+.pace-section #player i {
     font-size: 20px;
 }
 
 /* PACE Items */
-#pathFindingGame .pace-item {
+.pace-section .pace-item {
     position: relative;
     width: 100%;
     height: 100%;
@@ -248,7 +304,7 @@
     transition: all 0.3s ease;
 }
 
-#pathFindingGame .item-icon {
+.pace-section .item-icon {
     width: 80%;
     height: 80%;
     background: #f8f8f8;
@@ -256,87 +312,83 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Specific icons styling */
-#pathFindingGame .pace-item[data-id="application"] i {
-    color: #0066c0;
-}
-
-#pathFindingGame .pace-item[data-id="shoes"] i {
-    color: #ff9900;
-}
-
-#pathFindingGame .pace-item[data-id="paperwork"] i {
-    color: #008296;
-}
-
-#pathFindingGame .pace-item[data-id="id"] i {
-    color: #e31f64;
-}
-
-#pathFindingGame .pace-item[data-id="dress_code"] i {
-    color: #2d8c3c;
-}
+.pace-section .pace-item[data-id="application"] i { color: #0066c0; }
+.pace-section .pace-item[data-id="shoes"] i { color: var(--amazon-orange); }
+.pace-section .pace-item[data-id="paperwork"] i { color: #008296; }
+.pace-section .pace-item[data-id="id"] i { color: #e31f64; }
+.pace-section .pace-item[data-id="dress_code"] i { color: #2d8c3c; }
 
 /* Modal Styles */
-#pathFindingGame .pace-item-modal {
+.pace-section .pace-item-modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 1000;
 }
 
-#pathFindingGame .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
+.pace-section .pace-item-modal.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#pathFindingGame .modal-header {
+.pace-section .modal-content {
+    background: var(--amazon-background);
+    padding: 2rem;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.pace-section .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--amazon-grey-light);
 }
 
-#pathFindingGame .modal-close {
+.pace-section .modal-close {
     background: none;
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: #666;
+    color: var(--amazon-grey);
+    transition: color var(--transition-normal);
 }
 
-#pathFindingGame .modal-body {
+.pace-section .modal-close:hover {
+    color: var(--amazon-blue);
+}
+
+.pace-section .modal-body {
     max-height: 60vh;
     overflow-y: auto;
 }
 
-#pathFindingGame .modal-footer {
+.pace-section .modal-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
     padding-top: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--amazon-grey-light);
 }
 
 /* Controls */
-#pathFindingGame .touch-controls {
+.pace-section .touch-controls {
     width: 100%;
     max-width: 200px;
     margin: 40px auto 0;
@@ -346,18 +398,18 @@
     gap: 10px;
 }
 
-#pathFindingGame .horizontal-controls {
+.pace-section .horizontal-controls {
     display: flex;
     gap: 20px;
 }
 
-#pathFindingGame .control-button {
+.pace-section .control-button {
     width: 50px;
     height: 50px;
     border: none;
     border-radius: 50%;
-    background: #232f3e;
-    color: white;
+    background: var(--amazon-blue);
+    color: var(--amazon-white);
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -365,62 +417,63 @@
     justify-content: center;
 }
 
-#pathFindingGame .control-button:hover {
-    background: #374357;
+.pace-section .control-button:hover {
+    background: var(--amazon-orange);
     transform: scale(1.05);
 }
 
 /* Start Game Button */
-#pathFindingGame .start-game-btn {
+.pace-section .start-game-btn {
     display: block;
     width: 200px;
     margin: 20px auto 0;
     padding: 12px 24px;
-    background: #ff9900;
-    color: white;
+    background: var(--amazon-orange);
+    color: var(--amazon-white);
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all var(--transition-normal);
 }
 
-#pathFindingGame .start-game-btn:hover {
-    background: #ff8400;
+.pace-section .start-game-btn:hover {
+    background: var(--amazon-orange-dark);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 /* Completion Message */
-#pathFindingGame .completion-message {
+.pace-section .completion-message {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
+    background: var(--amazon-background);
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
     z-index: 1000;
     max-width: 400px;
     width: 90%;
     text-align: center;
 }
 
-#pathFindingGame .completion-message.show {
+.pace-section .completion-message.show {
     display: block;
 }
 
-#pathFindingGame .message-header {
+.pace-section .message-header {
     margin-bottom: 20px;
 }
 
-#pathFindingGame .score-breakdown {
+.pace-section .score-breakdown {
     margin: 20px 0;
 }
 
 /* Animations */
-#pathFindingGame .animated {
+.pace-section .animated {
     animation-duration: 0.3s;
     animation-fill-mode: both;
 }
@@ -435,93 +488,102 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
-#pathFindingGame [data-animation="fadeIn"] {
+.pace-section [data-animation="fadeIn"] {
     animation-name: fadeIn;
 }
 
-#pathFindingGame [data-animation="slideIn"] {
+.pace-section [data-animation="slideIn"] {
     animation-name: slideIn;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    #pathFindingGame {
-        padding: 10px;
+    .pace-section {
+        padding: 1rem;
     }
 
-    #pathFindingGame .game-stats {
+    .pace-section .game-stats {
         padding: 12px 20px;
     }
 
-    #pathFindingGame .stat-item {
+    .pace-section .stat-item {
         font-size: 1em;
         padding: 6px 12px;
     }
 
-    #pathFindingGame .instruction-categories {
+    .pace-section .instruction-categories {
         grid-template-columns: 1fr;
     }
 
-    #pathFindingGame .items-grid {
+    .pace-section .items-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    #pathFindingGame .game-area-container {
+    .pace-section .game-area-container {
         max-width: 90vw;
     }
 
-    #pathFindingGame .game-area {
+    .pace-section .game-area {
         gap: 3px;
         padding: 8px;
     }
 
-    #pathFindingGame #player i,
-    #pathFindingGame .pace-item i {
-        font-size: 16px;
+    .pace-section #player i,
+    .pace-section .pace-item i {
+        font-size:  16px;
     }
 
-    #pathFindingGame .control-button {
+    .pace-section .control-button {
         width: 45px;
         height: 45px;
     }
 
-    #pathFindingGame .touch-controls {
+    .pace-section .touch-controls {
         margin-top: 20px;
     }
 
-    #pathFindingGame .modal-content {
+    .pace-section .modal-content {
         width: 95%;
         max-height: 80vh;
     }
 }
 
 @media (max-width: 480px) {
-    #pathFindingGame .game-stats {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
+    .pace-section .game-stats {
+        flex-direction: column;
+        align-items: stretch;
         gap: 10px;
         padding: 10px;
     }
 
-    #pathFindingGame .stat-item {
+    .pace-section .stat-item {
         padding: 5px 10px;
     }
 }
 
 /* Very small screens */
 @media (max-width: 320px) {
-    #pathFindingGame .game-stats {
+    .pace-section .game-stats {
         font-size: 14px;
     }
 
-    #pathFindingGame #player i,
-    #pathFindingGame .pace-item i {
+    .pace-section #player i,
+    .pace-section .pace-item i {
         font-size: 14px;
     }
 
-    #pathFindingGame .control-button {
+    .pace-section .control-button {
         width: 40px;
         height: 40px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .pace-section * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
     }
 }

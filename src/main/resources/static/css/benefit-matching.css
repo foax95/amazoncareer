@@ -1,276 +1,384 @@
-/* Benefits Matching Game Styles */
-#matchingGame {
-    --card-width: 140px;
-    --card-height: 160px;
+/* Matching Game Base Styles */
+.matching-section {
+    /* Variables */
+    --card-width: 150px;
+    --card-height: 200px;
     --card-padding: 15px;
     --flip-duration: 0.6s;
+    --amazon-blue: #232F3E;
+    --amazon-orange: #FF9900;
+    --amazon-orange-dark: #e88b00;
+    --amazon-background: rgba(255, 255, 255, 0.95);
+    --amazon-white: #FFFFFF;
+    --amazon-grey: #333333;
+    --amazon-grey-light: rgba(200, 200, 200, 0.9);
+    --amazon-success: #2d8c01;
+    --amazon-error: #cc1c1c;
+    --text-color: #111111;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Base styles */
     display: none;
-    background: var(--amazon-background);
+    background-image: url('/static/css/src/main/resources/static/assets/images/HAZFC.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     min-height: 100vh;
-    padding: var(--space-xl);
+    width: 100%;
     position: relative;
 }
 
-#matchingGame.active {
+.matching-section.active {
     display: block;
 }
 
-/* Instructions Panel */
-#matchingGame .game-instructions-panel {
-    position: absolute;
+/* Background Overlay */
+.matching-section::before {
+    content: '';
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--amazon-background);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-    z-index: 10;
-    padding: var(--space-xl);
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
 }
 
-#matchingGame .instructions-content {
-    background: var(--amazon-white);
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
+.matching-section > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Instructions Panel */
+.matching-section .game-instructions-panel {
+        border-radius: 20px;
+        padding: 2.5rem;
+        max-width: 800px;
+        width: 90%;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: quiz-slideUp 0.6s ease 0.2s forwards;
+        margin: auto;
+}
+
+.matching-section .instructions-content {
+    background: var(--amazon-background);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: var(--shadow-lg);
 }
 
-#matchingGame .instructions-content h2 {
-    color: var(--amazon-navy);
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-lg);
+.matching-section .instructions-content h2 {
+    color: var(--amazon-blue);
+    font-size: 28px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-md);
+    gap: 10px;
 }
 
-#matchingGame .instructions-content h2 i {
+.matching-section .instructions-content h2 i {
     color: var(--amazon-orange);
 }
 
-#matchingGame .instructions-content > p {
-    font-size: var(--font-size-lg);
-    color: var(--amazon-grey-dark);
-    margin-bottom: var(--space-xl);
+.matching-section .instructions-content > p {
+    font-size: 18px;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-#matchingGame .instruction-steps {
+/* Instruction Steps */
+.matching-section .instruction-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-lg);
-    margin: var(--space-xl) 0;
+    gap: 20px;
+    margin: 30px 0;
 }
 
-#matchingGame .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-sm);
+.matching-section .step {
+    background: var(--amazon-white);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-normal);
 }
 
-#matchingGame .step i {
-    font-size: var(--font-size-2xl);
+.matching-section .step:hover {
+    transform: translateY(-5px);
+}
+
+.matching-section .step i {
+    font-size: 32px;
     color: var(--amazon-orange);
-    margin-bottom: var(--space-sm);
+    margin-bottom: 15px;
 }
 
-#matchingGame .step p {
-    font-size: var(--font-size-md);
-    color: var(--amazon-grey-dark);
+.matching-section .step p {
+    color: var(--text-color);
     line-height: 1.4;
 }
 
-#matchingGame .additional-instructions {
-    text-align: left;
-    margin-top: var(--space-xl);
-    padding: var(--space-lg);
-    background: var(--amazon-background);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+/* Additional Instructions */
+.matching-section .additional-instructions {
+    background: var(--amazon-white);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    box-shadow: var(--shadow-md);
 }
 
-#matchingGame .additional-instructions h3 {
-    color: var(--amazon-navy);
-    margin-bottom: var(--space-md);
-    font-size: var(--font-size-lg);
+.matching-section .additional-instructions h3 {
+    color: var(--amazon-blue);
+    margin-bottom: 15px;
+    font-size: 20px;
 }
 
-#matchingGame .additional-instructions ol {
-    padding-left: var(--space-xl);
-    margin-bottom: var(--space-md);
+.matching-section .additional-instructions ol {
+    padding-left: 20px;
+    margin-bottom: 15px;
 }
 
-#matchingGame .additional-instructions li {
-    margin-bottom: var(--space-sm);
-    color: var(--amazon-grey-dark);
+.matching-section .additional-instructions li {
+    color: var(--text-color);
+    margin-bottom: 10px;
     line-height: 1.5;
 }
 
-#matchingGame .additional-instructions p {
+.matching-section .additional-instructions p {
+    color: var(--amazon-blue);
     font-style: italic;
-    color: var(--amazon-grey-dark);
-    margin-top: var(--space-md);
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 153, 0, 0.1);
+    border-radius: 10px;
 }
 
-#matchingGame .start-game-btn {
-    margin-top: var(--space-xl);
-    padding: var(--space-md) var(--space-xl);
-    font-size: var(--font-size-lg);
+/* Start Game Button */
+.matching-section .start-game-btn {
     background: var(--amazon-orange);
     color: var(--amazon-white);
     border: none;
-    border-radius: var(--radius-md);
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color var(--transition-normal);
+    transition: all var(--transition-normal);
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#matchingGame .start-game-btn:hover {
-    background: var(--amazon-orange-dark);
-}
-/* Game Content and Header */
-#matchingGame .game-content {
-    display: none;
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-}
-
-#matchingGame .game-header {
-    display: flex;
     justify-content: center;
+    gap: 10px;
+    margin: 30px auto 0;
+    width: auto;
+    min-width: 200px;
+}
+
+.matching-section .start-game-btn:hover {
+    background: var(--amazon-orange-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+/* Game Content - Initially Hidden */
+.matching-section .game-content {
+    display: none; /* Explicitly hide */
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: var(--space-xl);
+    opacity: 0;
 }
 
-#matchingGame .game-stats {
+/* Game Content - When Active */
+.matching-section .game-content.show {
     display: flex;
-    gap: var(--space-xl);
-    background: var(--amazon-navy);
-    padding: var(--space-md) var(--space-xl);
-    border-radius: var(--radius-lg);
-    color: var(--amazon-white);
+    opacity: 1;
 }
 
-#matchingGame .stat-item {
+/* Instructions Panel - When Hidden */
+.matching-section .game-instructions-panel.hide {
+    display: none;
+}
+
+
+/* Game Header */
+.matching-section .game-header {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.matching-section .game-stats {
+    background: var(--amazon-background);
+    padding: 15px 20px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+}
+
+.matching-section .stat-item {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: 10px;
+    font-size: 16px;
+    color: var(--text-color);
 }
 
-#matchingGame .stat-item i {
+.matching-section .stat-item i {
     color: var(--amazon-orange);
+    font-size: 20px;
 }
 
 /* Cards Grid */
-#matchingGame .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-md);
-    perspective: 1000px;
+.matching-section .cards-grid {
+    display: inline-grid;
+    grid-template-columns: repeat(4, minmax(100px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    width: 100%;
     margin: 0 auto;
-    max-width: 900px;
 }
 
 /* Card Styles */
-#matchingGame .benefit-card {
-    width: 100%;
-    height: var(--card-height);
+.matching-section .benefit-card {
+    aspect-ratio: 1.5;
     perspective: 1000px;
     cursor: pointer;
 }
 
-#matchingGame .card-inner {
+.matching-section .card-inner {
     position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform var(--flip-duration);
+    transition: transform 0.6s;
     transform-style: preserve-3d;
 }
 
-#matchingGame .benefit-card.flipped .card-inner {
+.matching-section .benefit-card.flipped .card-inner {
     transform: rotateY(180deg);
 }
 
-#matchingGame .card-front,
-#matchingGame .card-back {
+.matching-section .card-front,
+.matching-section .card-back {
     position: absolute;
     width: 100%;
     height: 100%;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border-radius: var(--radius-lg);
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--card-padding);
-    box-shadow: var(--shadow-md);
+    padding: 15px;
 }
 
-#matchingGame .card-front {
-    background: var(--amazon-white);
+.matching-section .card-front {
+    background-color: var(--amazon-background);
+    color: var(--text-color);
     transform: rotateY(180deg);
 }
 
-#matchingGame .card-back {
-    background: linear-gradient(135deg,
-    var(--amazon-navy) 0%,
-    var(--amazon-navy-light) 100%);
-    color: var(--amazon-white);
+.matching-section .card-back {
+    background-color: var(--amazon-orange);
+    color: white;
 }
 
-#matchingGame .card-front i {
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-sm);
-    color: var(--amazon-orange);
+.matching-section .card-front i,
+.matching-section .card-back i {
+    font-size: 40px;
+    margin-bottom: 10px;
 }
 
-#matchingGame .card-back i {
-    font-size: var(--font-size-2xl);
-    color: var(--amazon-white);
+.matching-section .card-front span {
+    font-size: 14px;
+    font-weight: bold;
 }
 
-#matchingGame .card-front span {
-    text-align: center;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-}
 /* Matched Card State */
-#matchingGame .benefit-card.matched .card-front {
-    background: var(--amazon-success-light);
-    border: 2px solid var(--amazon-success);
+.matching-section .benefit-card.matched .card-front {
+    background-color: var(--amazon-success);
+    color: white;
 }
 
-#matchingGame .benefit-card.matched .card-front i,
-#matchingGame .benefit-card.matched .card-front span {
-    color: var(--amazon-success);
+/* Card Hover Effect */
+.matching-section .benefit-card:hover .card-inner {
+    box-shadow: var(--shadow-md);
 }
 
-/* Hover Effects */
-#matchingGame .benefit-card:hover .card-inner {
-    box-shadow: var(--shadow-lg);
+/* Animations */
+@keyframes flipIn {
+    from { transform: rotateY(180deg); }
+    to { transform: rotateY(0deg); }
 }
 
-/* Disable pointer events when matched */
-#matchingGame .benefit-card.matched {
-    cursor: default;
-    pointer-events: none;
+@keyframes flipOut {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(180deg); }
 }
 
+.matching-section .benefit-card.flip-in .card-inner {
+    animation: flipIn 0.6s ease-out;
+}
+
+.matching-section .benefit-card.flip-out .card-inner {
+    animation: flipOut 0.6s ease-in;
+}
+
+/* Responsive adjustments for game content */
+@media (max-width: 900px) {
+    .matching-section .cards-grid {
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .matching-section .cards-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+
+    .matching-section .game-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .matching-section .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .matching-section .card-front i,
+    .matching-section .card-back i {
+        font-size: 30px;
+    }
+
+    .matching-section .card-front span {
+        font-size: 12px;
+    }
+}
 /* Benefit Information Modal */
-#matchingGame .benefit-info-modal {
+.matching-section .benefit-info-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -285,191 +393,221 @@
     transition: opacity var(--transition-normal);
 }
 
-#matchingGame .benefit-info-modal.show {
+.matching-section .benefit-info-modal.show {
+    display: flex;
     opacity: 1;
 }
 
-#matchingGame .modal-content {
-    background: var(--amazon-white);
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
+.matching-section .modal-content {
+    background: var(--amazon-background);
+    padding: 30px;
+    border-radius: 20px;
     max-width: 500px;
     width: 90%;
     position: relative;
-    transform: translateY(20px);
+    transform: scale(0.9);
     transition: transform var(--transition-normal);
+    box-shadow: var(--shadow-lg);
 }
 
-#matchingGame .benefit-info-modal.show .modal-content {
+.matching-section .benefit-info-modal.show .modal-content {
+    transform: scale(1);
+}
+
+.matching-section .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--amazon-grey);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-normal);
+}
+
+.matching-section .modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--amazon-blue);
+    transform: rotate(90deg);
+}
+
+.matching-section .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-right: 40px;
+}
+
+.matching-section .modal-icon {
+    font-size: 32px;
+    color: var(--amazon-orange);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 153, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.matching-section .modal-title {
+    font-size: 24px;
+    color: var(--amazon-blue);
+    font-weight: bold;
+    margin: 0;
+}
+
+.matching-section .modal-body {
+    color: var(--text-color);
+}
+
+.matching-section .modal-description {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.matching-section .modal-details {
+    font-size: 14px;
+    color: var(--amazon-grey);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.matching-section .points-earned {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--amazon-success);
+    background: rgba(45, 140, 1, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    animation: bounceIn 0.6s ease;
+}
+
+/* Additional Animations */
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Global Animation Classes */
+.matching-section .fade-in {
+    animation: fadeIn var(--transition-normal) forwards;
+}
+
+.matching-section .fade-out {
+    animation: fadeOut var(--transition-normal) forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
+}
+
+/* Timer Warning State */
+.matching-section #matchingTimer.warning {
+    color: var(--amazon-error);
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Button States */
+.matching-section button {
+    transition: all var(--transition-normal);
+}
+
+.matching-section button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.matching-section button:active {
     transform: translateY(0);
 }
 
-#matchingGame .modal-close {
-    position: absolute;
-    top: var(--space-md);
-    right: var(--space-md);
-    background: none;
-    border: none;
-    font-size: var(--font-size-lg);
-    cursor: pointer;
-    color: var(--amazon-grey);
-    transition: color var(--transition-normal);
+/* Accessibility */
+.matching-section button:focus-visible,
+.matching-section .benefit-card:focus-visible {
+    outline: 3px solid var(--amazon-orange);
+    outline-offset: 2px;
 }
 
-#matchingGame .modal-close:hover {
-    color: var(--amazon-navy);
-}
-
-#matchingGame .modal-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-}
-
-#matchingGame .modal-icon {
-    font-size: var(--font-size-2xl);
-    color: var(--amazon-orange);
-}
-
-#matchingGame .modal-title {
-    font-size: var(--font-size-xl);
-    color: var(--amazon-navy);
-}
-
-#matchingGame .modal-description {
-    font-size: var(--font-size-md);
-    color: var(--amazon-grey-dark);
-    margin-bottom: var(--space-md);
-}
-
-#matchingGame .modal-details {
-    font-size: var(--font-size-sm);
-    color: var(--amazon-grey);
-    margin-bottom: var(--space-lg);
-}
-
-#matchingGame .points-earned {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    color: var(--amazon-success);
-    text-align: center;
-}
-
-/* Completion Message */
-#matchingGame .completion-message {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-}
-
-#matchingGame .completion-message.show {
-    opacity: 1;
-}
-
-#matchingGame .message-content {
-    background: var(--amazon-white);
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-}
-
-#matchingGame .message-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-}
-
-#matchingGame .message-header i {
-    font-size: var(--font-size-2xl);
-    color: var(--amazon-orange);
-}
-
-#matchingGame .message-header h3 {
-    font-size: var(--font-size-xl);
-    color: var(--amazon-navy);
-}
-
-#matchingGame .score-breakdown {
-    margin-bottom: var(--space-xl);
-}
-
-#matchingGame .score-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--space-sm);
-}
-
-#matchingGame .score-item.total {
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-lg);
-    margin-top: var(--space-md);
-    border-top: 1px solid var(--amazon-grey-light);
-    padding-top: var(--space-md);
-}
-
-#matchingGame .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-md);
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    #matchingGame .cards-grid {
-        grid-template-columns: repeat(3, 1fr);
+@media (prefers-reduced-motion: reduce) {
+    .matching-section * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
     }
 }
 
+/* Additional Responsive Adjustments */
 @media (max-width: 768px) {
-    #matchingGame .game-header {
-        flex-direction: column;
-        gap: var(--space-md);
+    .matching-section .modal-content {
+        padding: 20px;
     }
 
-    #matchingGame .game-stats {
-        width: 100%;
-        justify-content: center;
+    .matching-section .modal-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
     }
 
-    #matchingGame .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .matching-section .modal-title {
+        font-size: 20px;
     }
 
-    #matchingGame .instruction-steps {
-        grid-template-columns: 1fr;
+    .matching-section .points-earned {
+        font-size: 18px;
     }
 }
 
 @media (max-width: 480px) {
-    #matchingGame {
-        padding: var(--space-md);
+    .matching-section .modal-content {
+        padding: 15px;
     }
 
-    #matchingGame .benefit-card {
-        height: 140px;
-    }
-
-    #matchingGame .game-stats {
+    .matching-section .modal-header {
         flex-direction: column;
-        align-items: center;
-        padding: var(--space-md);
+        text-align: center;
+        gap: 10px;
     }
 
-    #matchingGame .modal-content {
-        padding: var(--space-lg);
+    .matching-section .points-earned {
+        font-size: 16px;
     }
+}
+
+/* Performance Optimizations */
+.matching-section {
+    will-change: transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.matching-section .card-inner {
+    will-change: transform;
 }

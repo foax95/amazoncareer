@@ -1,99 +1,273 @@
-#weightSortingGame {
+/* Sorting Game Base Styles */
+.sorting-zones-section {
+    /* Variables */
+    --amazon-blue: #232F3E;
+    --amazon-orange: #FF9900;
+    --amazon-orange-dark: #e88b00;
+    --amazon-background: rgba(255, 255, 255, 0.95);
+    --amazon-white: #FFFFFF;
+    --amazon-grey: #333333;
+    --amazon-grey-light: rgba(200, 200, 200, 0.9);
+    --amazon-success: #2d8c01;
+    --amazon-error: #cc1c1c;
+    --text-color: #111111;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Base styles */
     display: none;
+    background-image: url('/static/css/src/main/resources/static/assets/images/sorting.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     min-height: 100vh;
-    position: relative;
     width: 100%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    background-color: #f8f8f8;
+    position: relative;
+    color: var(--text-color);
+    padding: 2rem;
+    font-family: Arial, sans-serif;
 }
 
-#weightSortingGame.active {
+.sorting-zones-section.active {
     display: block;
-    opacity: 1;
 }
 
-#weightSortingGame .game-header {
-    background: #232f3e;
-    padding: 15px;
+/* Background Overlay */
+.sorting-zones-section::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+}
+
+.sorting-zones-section > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Game Header */
+.sorting-zones-section .game-header {
+    background: var(--amazon-background);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sorting-zones-section .game-stats {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    color: #ffffff;
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 20px;
+    gap: 2rem;
 }
 
-#weightSortingGame .game-stats {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-}
-
-#weightSortingGame .stat-item {
+.sorting-zones-section .stat-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-color); /* Updated to dark color */
 }
 
-#weightSortingGame .stat-item i {
-    color: #ff9900;
+.sorting-zones-section .stat-item i {
+    color: var(--amazon-orange);
+    font-size: 1.3rem;
 }
 
-#weightSortingGame .game-instructions-panel {
-    background: #ffffff;
-    padding: 30px;
-    margin-bottom: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Instructions Panel */
+.sorting-zones-section .game-instructions-panel {
+    background: var(--amazon-background);
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 1000px;
+    margin: 0 auto 2rem;
+    box-shadow: var(--shadow-lg);
 }
 
-#weightSortingGame .instruction-categories {
+.sorting-zones-section .game-instructions-panel h2 {
+    color: var(--amazon-blue);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.sorting-zones-section .instructions-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Instruction Categories */
+.sorting-zones-section .instruction-categories {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
-#weightSortingGame .instruction-category {
+.sorting-zones-section .instruction-category {
+    background: var(--amazon-white);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
     text-align: center;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 6px;
-    transition: transform 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform var(--transition-normal);
 }
 
-#weightSortingGame .instruction-category:hover {
+.sorting-zones-section .instruction-category:hover {
     transform: translateY(-5px);
 }
 
-#weightSortingGame .game-content {
-    position: relative;
-    min-height: calc(100vh - 200px);
-    padding: 20px;
+.sorting-zones-section .category-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 153, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
 }
 
-#weightSortingGame .conveyor-belt-container {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 200px;
-    background: #37475a;
+.sorting-zones-section .category-icon i {
+    font-size: 2rem;
+    color: var(--amazon-orange);
+}
+
+.sorting-zones-section .instruction-category h4 {
+    color: var(--amazon-blue);
+    font-size: 1.2rem;
+    margin: 1rem 0;
+}
+
+.sorting-zones-section .instruction-category p {
+    color: var(--amazon-grey);
+    margin-bottom: 1rem;
+}
+
+.sorting-zones-section .weight-range {
+    background: rgba(255, 153, 0, 0.1);
+    color: var(--amazon-orange);
+    padding: 0.5rem;
     border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 30px;
+    margin: 1rem 0;
+    font-weight: bold;
 }
 
-#weightSortingGame .conveyor-belt {
-    position: relative;
-    width: 100%;
+.sorting-zones-section .safety-tip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--amazon-grey);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.sorting-zones-section .safety-tip i {
+    color: var(--amazon-orange);
+}
+
+/* Game Controls Section */
+.sorting-zones-section .game-controls {
+    background: var(--amazon-white);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.sorting-zones-section .controls-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sorting-zones-section .controls-header i {
+    font-size: 1.5rem;
+    color: var(--amazon-orange);
+}
+
+.sorting-zones-section .controls-header h4 {
+    color: var(--amazon-blue);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.sorting-zones-section .instructions-list {
+    list-style-position: inside;
+    padding: 0;
+    margin: 0;
+}
+
+.sorting-zones-section .instructions-list li {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+/* Start Game Button */
+.sorting-zones-section .start-game-btn {
+    background: var(--amazon-orange);
+    color: var(--amazon-white);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin: 2rem auto 0;
+    transition: all var(--transition-normal);
+}
+
+.sorting-zones-section .start-game-btn:hover {
+    background: var(--amazon-orange-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Game Content */
+.sorting-zones-section .game-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Conveyor Belt */
+.sorting-zones-section .conveyor-belt-container {
+    background: var(--amazon-background);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.sorting-zones-section .conveyor-belt {
     height: 120px;
-    margin-top: 40px;
-    background: #333333;
+    background: var(--amazon-grey-light);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
 }
 
-#weightSortingGame .belt-animation {
+.sorting-zones-section .belt-animation {
     position: absolute;
     top: 0;
     left: 0;
@@ -101,19 +275,20 @@
     bottom: 0;
     background: repeating-linear-gradient(
             45deg,
-            #333333 0px,
-            #333333 10px,
-            #404040 10px,
-            #404040 20px
+            rgba(51, 51, 51, 0.1) 0px,
+            rgba(51, 51, 51, 0.1) 10px,
+            rgba(64, 64, 64, 0.1) 10px,
+            rgba(64, 64, 64, 0.1) 20px
     );
     animation: moveBelt 2s linear infinite;
 }
 
-#weightSortingGame .package {
+/* Package Styles */
+.sorting-zones-section .package {
     position: absolute;
     width: 80px;
     height: 80px;
-    background: #ff9900;
+    background: var(--amazon-orange);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -123,104 +298,103 @@
     top: 20px;
     animation: moveRight linear;
     animation-fill-mode: forwards;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    border: 2px solid #e88a00;
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--amazon-orange-dark);
     z-index: 3;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-#weightSortingGame .package.selected {
-    border-color: #1768c9;
-    box-shadow: 0 0 15px rgba(23, 104, 201, 0.5);
+.sorting-zones-section .package.selected {
     transform: scale(1.1);
-    z-index: 4;
+    box-shadow: var(--shadow-lg);
+    border-color: var(--amazon-blue);
 }
 
-#weightSortingGame .weight-display {
-    color: #ffffff;
+.sorting-zones-section .package .weight-display {
+    color: var(--amazon-white);
     font-weight: bold;
-    text-align: center;
-    font-size: 14px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-#weightSortingGame .sorting-zones {
-    position: relative;
-    z-index: 2;
+/* Sorting Zones */
+.sorting-zones-section .sorting-zones {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 20px;
+    gap: 2rem;
+    padding: 1rem;
 }
 
-#weightSortingGame .zone {
-    background: #ffffff;
-    border: 2px dashed #dddddd;
-    border-radius: 8px;
-    padding: 20px;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-#weightSortingGame .zone:hover {
-    border-color: #ff9900;
-    transform: translateY(-2px);
-}
-
-#weightSortingGame .zone-header {
+.sorting-zones-section .zone {
+    background: var(--amazon-background);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
     text-align: center;
-    margin-bottom: 10px;
+    transition: all var(--transition-normal);
+    border: 2px dashed var(--amazon-grey-light);
 }
 
-#weightSortingGame .zone-header i {
-    font-size: 24px;
-    color: #232f3e;
-    margin-bottom: 8px;
+.sorting-zones-section .zone:hover {
+    transform: translateY(-5px);
+    border-color: var(--amazon-orange);
 }
 
-#weightSortingGame .zone-description {
-    color: #666666;
-    margin-bottom: 10px;
+.sorting-zones-section .zone-header {
+    margin-bottom: 1rem;
 }
 
-#weightSortingGame .zone-counter {
-    margin-top: auto;
-    font-size: 14px;
-    color: #232f3e;
+.sorting-zones-section .zone-header i {
+    font-size: 2rem;
+    color: var(--amazon-orange);
+    margin-bottom: 0.5rem;
 }
 
-#weightSortingGame .game-feedback {
+.sorting-zones-section .zone-header h3 {
+    color: var(--amazon-blue);
+    margin: 0.5rem 0;
+}
+
+.sorting-zones-section .zone-description {
+    color: var(--amazon-grey);
+    margin-bottom: 1rem;
+}
+
+.sorting-zones-section .zone-counter {
+    font-weight: bold;
+    color: var(--amazon-blue);
+}
+
+/* Game Feedback */
+.sorting-zones-section .game-feedback {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 4px;
+    background: var(--amazon-background);
+    color: var(--text-color);
+    padding: 1rem 2rem;
+    border-radius: 10px;
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 1000;
+    box-shadow: var(--shadow-lg);
 }
 
-#weightSortingGame .game-feedback.show {
+.sorting-zones-section .game-feedback.show {
     opacity: 1;
 }
 
-#weightSortingGame .game-feedback.success {
-    background: rgba(76, 175, 80, 0.8);
+.sorting-zones-section .game-feedback.success {
+    border-left: 4px solid var(--amazon-success);
 }
 
-#weightSortingGame .game-feedback.error {
-    background: rgba(244, 67, 54, 0.8);
+.sorting-zones-section .game-feedback.error {
+    border-left: 4px solid var(--amazon-error);
 }
 
-#weightSortingGame .completion-message {
+/* Completion Message (Modal) */
+.sorting-zones-section .completion-message {
     position: fixed;
     top: 0;
     left: 0;
@@ -231,68 +405,158 @@
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1000;
 }
 
-#weightSortingGame .completion-message.show {
+.sorting-zones-section .completion-message.show {
     opacity: 1;
+    visibility: visible;
 }
 
-#weightSortingGame .message-content {
-    background: white;
+.sorting-zones-section .message-content {
+    background: var(--amazon-background);
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 20px;
     max-width: 500px;
     width: 90%;
     text-align: center;
+    box-shadow: var(--shadow-lg);
 }
 
-#weightSortingGame .message-content.success {
-    border-top: 5px solid #4CAF50;
+.sorting-zones-section .message-content.success {
+    border-top: 5px solid var(--amazon-success);
 }
 
-#weightSortingGame .modal-buttons {
+.sorting-zones-section .modal-buttons {
     display: flex;
     gap: 1rem;
     justify-content: center;
     margin-top: 2rem;
 }
 
-#weightSortingGame .button-primary {
-    background-color: #FF9900;
-    color: white;
+.sorting-zones-section .button-primary,
+.sorting-zones-section .button-secondary {
     padding: 0.8rem 1.5rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    transition: all var(--transition-normal);
 }
 
-#weightSortingGame .button-secondary {
-    background-color: #232F3E;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
+.sorting-zones-section .button-primary {
+    background-color: var(--amazon-orange);
+    color: var(--amazon-white);
 }
 
-@keyframes moveRight {
+.sorting-zones-section .button-secondary {
+    background-color: var(--amazon-blue);
+    color: var(--amazon-white);
+}
+
+.sorting-zones-section .button-primary:hover,
+.sorting-zones-section .button-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
     from {
-        left: -100px;
+        transform: translateY(20px);
+        opacity: 0;
     }
     to {
-        left: calc(100% + 100px);
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
 @keyframes moveBelt {
-    from {
-        background-position: 0 0;
+    from { background-position: 0 0; }
+    to { background-position: 40px 40px; }
+}
+
+@keyframes moveRight {
+    from { left: -100px; }
+    to { left: calc(100% + 100px); }
+}
+
+.sorting-zones-section .animated {
+    animation-duration: 0.6s;
+    animation-fill-mode: both;
+}
+
+.sorting-zones-section .animated[data-animation="fadeIn"] {
+    animation-name: fadeIn;
+}
+
+.sorting-zones-section .animated[data-animation="slideIn"] {
+    animation-name: slideIn;
+}
+
+.sorting-zones-section .hover-lift {
+    transition: transform var(--transition-normal);
+}
+
+.sorting-zones-section .hover-lift:hover {
+    transform: translateY(-5px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .sorting-zones-section .instruction-categories,
+    .sorting-zones-section .sorting-zones {
+        grid-template-columns: repeat(2, 1fr);
     }
-    to {
-        background-position: 40px 40px;
+}
+
+@media (max-width: 768px) {
+    .sorting-zones-section {
+        padding: 1rem;
     }
+
+    .sorting-zones-section .game-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .sorting-zones-section .instruction-categories,
+    .sorting-zones-section .sorting-zones {
+        grid-template-columns: 1fr;
+    }
+
+    .sorting-zones-section .zone {
+        padding: 1.5rem;
+    }
+
+    .sorting-zones-section .modal-buttons {
+        flex-direction: column;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .sorting-zones-section * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Performance Optimizations */
+.sorting-zones-section {
+    will-change: transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.sorting-zones-section .belt-animation {
+    will-change: background-position;
 }

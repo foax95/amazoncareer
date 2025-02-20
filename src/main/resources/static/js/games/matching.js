@@ -356,44 +356,50 @@ class BenefitsMatchingGame {
         const finalScore = this.state.score + timeBonus;
 
         messageEl.innerHTML = `
-            <div class="message-content ${completed ? 'success' : 'timeout'}">
-                <div class="message-header">
-                    <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
-                    <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+        <div class="message-content ${completed ? 'success' : 'timeout'}">
+            <div class="message-header">
+                <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
+                <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+            </div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span class="label">Matches Found:</span>
+                    <span class="value">${this.state.matchesFound}/${this.config.totalPairs}</span>
                 </div>
-                <div class="score-breakdown">
-                    <div class="score-item">
-                        <span class="label">Matches Found:</span>
-                        <span class="value">${this.state.matchesFound}/${this.config.totalPairs}</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="label">Attempts:</span>
-                        <span class="value">${this.state.attempts}</span>
-                    </div>
-                    ${completed ? `
-                        <div class="score-item">
-                            <span class="label">Time Bonus:</span>
-                            <span class="value">+${timeBonus}</span>
-                        </div>
-                    ` : ''}
-                    <div class="score-item total">
-                        <span class="label">Final Score:</span>
-                        <span class="value">${finalScore}</span>
-                    </div>
+                <div class="score-item">
+                    <span class="label">Attempts:</span>
+                    <span class="value">${this.state.attempts}</span>
                 </div>
-                <div class="modal-buttons">
-                    <button class="continue-button button-primary" onclick="navigateToNextGame()">
-                        <i class="fas fa-arrow-right"></i> Continue
-                    </button>
-                    <button class="replay-button button-secondary" onclick="window.matchingGame.initialize()">
-                        <i class="fas fa-redo"></i> Play Again
-                    </button>
+                ${completed ? `
+                    <div class="score-item">
+                        <span class="label">Time Bonus:</span>
+                        <span class="value">+${timeBonus}</span>
+                    </div>
+                ` : ''}
+                <div class="score-item total">
+                    <span class="label">Final Score:</span>
+                    <span class="value">${finalScore}</span>
                 </div>
             </div>
-        `;
+            <div class="modal-buttons">
+                <button class="continue-button button-primary" onclick="navigateToQuiz()">
+                    <i class="fas fa-arrow-right"></i> Continue to Quiz
+                </button>
+                <button class="replay-button button-secondary" onclick="window.matchingGame.initialize()">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        </div>
+    `;
 
         this.gameContainer.appendChild(messageEl);
         requestAnimationFrame(() => messageEl.classList.add('show'));
+        // Add event listener to the continue button
+        const continueBtn = messageEl.querySelector('#continueToQuizBtn');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', navigateToQuiz);
+
+        }
     }
 
     endGame(completed = false) {
@@ -459,7 +465,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Navigation function (implement based on your navigation system)
-function navigateToNextGame() {
-    // Implement navigation to next game/section
-    console.log('Navigating to next game...');
+function navigateToQuiz() {
+    const quizSection = document.getElementById('quizSection');
+    const matchingGame = document.getElementById('matchingGame');
+
+    if (!quizSection || !matchingGame) {
+        console.error('Required sections not found');
+        return;
+    }
+
+    // Hide matching game
+    matchingGame.style.display = 'none';
+    matchingGame.classList.remove('active');
+
+    // Show quiz section
+    quizSection.style.display = 'block';
+    quizSection.classList.add('active');
+
+    // Initialize quiz
+    if (!window.amazonQuiz) {
+        window.amazonQuiz = new AmazonQuiz();
+    }
+    window.amazonQuiz.initialize();
 }
+
+

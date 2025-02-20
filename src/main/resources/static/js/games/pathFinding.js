@@ -684,7 +684,7 @@ class PathFindingGame {
                 </div>
             </div>
             <div class="modal-buttons">
-                <button class="continue-button button-primary" onclick="navigateToMatchingGame()">
+                <button class="continue-button button-primary" onclick="window.pathFindingGame.navigateToMatchingGame()">
                     <i class="fas fa-arrow-right"></i> Continue to Benefits
                 </button>
                 <button class="replay-button button-secondary" onclick="window.pathFindingGame.initialize()">
@@ -697,6 +697,29 @@ class PathFindingGame {
         this.gameContainer.appendChild(messageEl);
         requestAnimationFrame(() => messageEl.classList.add('show'));
     }
+
+    navigateToMatchingGame() {
+        const pathFindingGame = document.querySelector('.pace-section');
+        const matchingGame = document.querySelector('.matching-section');
+
+        if (!matchingGame || !pathFindingGame) {
+            console.error('Required sections not found');
+            return;
+        }
+
+        // Hide pathfinding game
+        pathFindingGame.classList.remove('active');
+
+        // Show and initialize matching game
+        matchingGame.classList.add('active');
+
+        // Initialize matching game if available
+        if (!window.matchingGame) {
+            window.matchingGame = new BenefitsMatchingGame();
+        }
+        window.matchingGame.initialize();
+    }
+
 
     endGame(completed = false) {
         this.state.isPlaying = false;
