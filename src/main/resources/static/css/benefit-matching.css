@@ -24,7 +24,7 @@
 
     /* Base styles */
     display: none;
-    background-image: url('/static/css/src/main/resources/static/assets/images/HAZFC.png');
+    background-image: url('/src/public/assets/images/HAZFC.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

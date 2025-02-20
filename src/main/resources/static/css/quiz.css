@@ -19,7 +19,7 @@
     --transition-slow: 0.5s ease;
 
     /* Base styles */
-    background-image: url('/static/css/src/main/resources/static/assets/images/PIT.png');
+    background-image: url('/src/public/assets/images/PIT.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -20,7 +20,7 @@
 
     /* Base styles */
     display: none;
-    background-image: url('/static/css/src/main/resources/static/assets/images/CXO.png');
+    background-image: url('/src/public/assets/images/CXO.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
