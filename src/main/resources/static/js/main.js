@@ -59,7 +59,7 @@ function showLoadingScreen() {
 
                 if (progress >= 100) {
                     clearInterval(loadingInterval);
-                    setTimeout(() => resolve(), 500);
+                    setTimeout(() => resolve(), 5000);
                 }
             }, 30);
         } else {
@@ -475,30 +475,6 @@ function startGame(gameType) {
     }
 }
 
-function returnToGamesMenu() {
-    try {
-        document.querySelectorAll('.game-container').forEach(container => {
-            container.style.display = 'none';
-        });
-
-        if (window.weightSortingGame?.resetGame) {
-            window.weightSortingGame.resetGame();
-        }
-        if (window.pathFindingGame?.resetGame) {
-            window.pathFindingGame.resetGame();
-        }
-        if (window.matchingGame?.resetGame) {
-            window.matchingGame.resetGame();
-        }
-
-        const gamesMenu = document.getElementById('gamesMenu');
-        if (gamesMenu) gamesMenu.style.display = 'block';
-
-        updateUI();
-    } catch (error) {
-        console.error('Error returning to games menu:', error);
-    }
-}
 // Loading Tips
 const loadingTips = [
     "Did you know? Amazon's leadership principles help guide decision-making every day.",
@@ -515,8 +491,7 @@ const loadingTips = [
 function updateLoadingTip() {
     const tipElement = document.getElementById('loadingTip');
     if (tipElement) {
-        const randomTip = loadingTips[Math.floor(Math.random() * loadingTips.length)];
-        tipElement.textContent = randomTip;
+        tipElement.textContent = loadingTips[Math.floor(Math.random() * loadingTips.length)];
     }
 }
 

@@ -24,7 +24,7 @@
 
     /* Base styles */
     display: none;
-    background-image: url('https://drive-render.corp.amazon.com/view/ofarfern@/images/HAZFC.png');
+    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/HAZFC.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -59,8 +59,8 @@
 .matching-section .game-instructions-panel {
         border-radius: 20px;
         padding: 2.5rem;
-        max-width: 800px;
-        width: 90%;
+        max-width: 1000px;
+        width: 100%;
         transform: translateY(20px);
         opacity: 0;
         animation: quiz-slideUp 0.6s ease 0.2s forwards;
@@ -71,8 +71,8 @@
     background: var(--amazon-background);
     padding: 30px;
     border-radius: 20px;
-    max-width: 800px;
-    width: 90%;
+    max-width: 1000px;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: var(--shadow-lg);
@@ -611,3 +611,175 @@
 .matching-section .card-inner {
     will-change: transform;
 }
+/* Completion Message */
+.matching-section .completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--amazon-background);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+}
+
+.matching-section .message-content {
+    animation: bounceIn 0.6s ease;
+}
+
+.matching-section .message-content.success {
+    border-top: 4px solid var(--amazon-success);
+}
+
+.matching-section .message-content.timeout {
+    border-top: 4px solid var(--amazon-error);
+}
+
+.matching-section .message-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.matching-section .message-header i {
+    font-size: 32px;
+    color: var(--amazon-orange);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 153, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.matching-section .message-header h3 {
+    color: var(--amazon-blue);
+    font-size: 28px;
+    margin: 0;
+}
+
+.matching-section .score-breakdown {
+    background: rgba(255, 153, 0, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.matching-section .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--amazon-grey-light);
+}
+
+.matching-section .score-item:last-child {
+    border-bottom: none;
+}
+
+.matching-section .score-item.total {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid var(--amazon-grey-light);
+    font-weight: bold;
+}
+
+.matching-section .score-item .label {
+    color: var(--amazon-grey);
+}
+
+.matching-section .score-item .value {
+    color: var(--amazon-blue);
+    font-weight: bold;
+}
+
+.matching-section .modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.matching-section .button-primary {
+    background: var(--amazon-orange);
+    color: var(--amazon-white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition-normal);
+}
+
+.matching-section .button-primary:hover {
+    background: var(--amazon-orange-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.matching-section .button-secondary {
+    background: var(--amazon-white);
+    color: var(--amazon-orange);
+    border: 2px solid var(--amazon-orange);
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition-normal);
+}
+
+.matching-section .button-secondary:hover {
+    background: var(--amazon-orange);
+    color: var(--amazon-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .matching-section .completion-message {
+        padding: 20px;
+    }
+
+    .matching-section .message-header i {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+
+    .matching-section .message-header h3 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .matching-section .completion-message {
+        padding: 15px;
+    }
+
+    .matching-section .modal-buttons {
+        flex-direction: column;
+    }
+
+    .matching-section .button-primary,
+    .matching-section .button-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .matching-section .score-item {
+        font-size: 14px;
+    }
+}
+

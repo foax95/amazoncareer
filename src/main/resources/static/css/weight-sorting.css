@@ -19,8 +19,7 @@
     --transition-slow: 0.5s ease;
 
     /* Base styles */
-    display: none;
-    background-image: url('https://drive-render.corp.amazon.com/view/ofarfern@/images/sorting.png');
+    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/DC.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

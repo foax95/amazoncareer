@@ -107,14 +107,13 @@ body {
 }
 
 .loading-logo {
-    background-image: url('/src/public/assets/images/amazon.logo.gif');
+    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/AMAZON_MASTER_LOGOANIMATION_WHITE%26SMILEORANGE_4K.gif');
     background-size: auto 100%;
     background-repeat: no-repeat;
     background-position: center;
     width: 600px;
     height: 600px;
     margin: 0 auto;
-    animation: pulse 2s infinite;
     position: absolute;
     top: 30%;
     left: 50%;
@@ -149,13 +148,13 @@ body {
             var(--amazon-orange) 100%
     );
     width: 0;
-    transition: width 1s ease;
+    transition: width 5s ease;
 }
 
 .loading-tips {
     margin-top: var(--space-xl);
     color: var(--amazon-grey);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     font-style: italic;
 }
 /* Navigation Header */
@@ -449,7 +448,7 @@ body {
     position: relative;
     overflow: hidden;
     /* Background Image from web */
-    background-image: url('https://drive-render.corp.amazon.com/view/ofarfern@/images/welcome.png');
+    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/D1C.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

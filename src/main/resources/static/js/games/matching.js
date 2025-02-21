@@ -488,5 +488,3 @@ function navigateToQuiz() {
     }
     window.amazonQuiz.initialize();
 }
-
-
