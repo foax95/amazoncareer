@@ -107,45 +107,20 @@ body {
 }
 
 .loading-logo {
-    font-size: 48px;
-    color: var(--amazon-orange);
-    margin-bottom: var(--space-xl);
-}
-
-.spinner-container {
-    margin: var(--space-xl) auto;
-    width: 60px;
-    height: 60px;
-    position: relative;
-}
-
-.spinner {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.spinner-segment {
+    background-image: url('/src/public/assets/images/amazon.logo.gif');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+    animation: pulse 2s infinite;
     position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 4px solid transparent;
-    border-radius: 50%;
-    border-top-color: var(--amazon-orange);
-    opacity: 0.7;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.spinner-segment:nth-child(1) {
-    animation: rotate 2s ease-in-out infinite;
-}
-
-.spinner-segment:nth-child(2) {
-    animation: rotate 2s ease-in-out infinite 0.5s;
-}
-
-.spinner-segment:nth-child(3) {
-    animation: rotate 2s ease-in-out infinite 1s;
-}
 
 .loading-text {
     color: var(--amazon-white);
@@ -174,7 +149,7 @@ body {
             var(--amazon-orange) 100%
     );
     width: 0;
-    transition: width 0.3s ease;
+    transition: width 1s ease;
 }
 
 .loading-tips {
@@ -197,7 +172,6 @@ body {
 }
 
 .nav-title {
-    font-size: 2.5rem;
     font-weight: 800;
     position: static;
     text-align: center;
@@ -240,18 +214,6 @@ body {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-}
-
-/* Loading Animations */
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
 }
 
 /* Responsive Adjustments */
@@ -486,7 +448,8 @@ body {
     min-height: 100vh;
     position: relative;
     overflow: hidden;
-    background-image: url('/src/public/assets/images/welcome.png');
+    /* Background Image from web */
+    background-image: url('https://drive-render.corp.amazon.com/view/ofarfern@/images/welcome.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
