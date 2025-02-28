@@ -1,0 +1,396 @@
+/* Game Completion Section Styles */
+.game-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.completion-content {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+.completion-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.completion-icon {
+    font-size: 64px;
+    color: #FF9900;
+    margin-bottom: 1rem;
+}
+
+.completion-header h2 {
+    color: #232F3E;
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+/* Stats Cards */
+.completion-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-icon {
+    background: #FF9900;
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-info h4 {
+    color: #232F3E;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.stat-info span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FF9900;
+}
+
+/* Game Breakdown */
+.game-breakdown {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.game-breakdown h3 {
+    text-align: center;
+    color: #232F3E;
+    margin-bottom: 2rem;
+}
+
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.breakdown-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.breakdown-item i {
+    font-size: 2rem;
+    color: #FF9900;
+    margin-bottom: 1rem;
+}
+
+.breakdown-item h4 {
+    color: #232F3E;
+    margin: 0 0 1rem 0;
+}
+
+/* Progress Bars */
+.progress-bar {
+    background: #e9ecef;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.progress-fill {
+    background: #FF9900;
+    height: 100%;
+    transition: width 0.5s ease-out;
+}
+
+/* Action Buttons */
+.completion-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.button-primary,
+.button-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.button-primary {
+    background: #FF9900;
+    color: white;
+}
+
+.button-secondary {
+    background: #e9ecef;
+    color: #232F3E;
+}
+
+.button-primary:hover,
+.button-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Certificate Modal Styles */
+.certificate-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.certificate-container {
+    background: white;
+    border-radius: 12px;
+    max-width: 1000px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.certificate-preview {
+    padding: 2rem;
+}
+
+.certificate-content {
+    border: 10px solid #232F3E;
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+    background-size: 20px 20px;
+    background: #fff linear-gradient(45deg, #f8f9fa 25%, transparent 25%),
+    linear-gradient(-45deg, #f8f9fa 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f8f9fa 75%),
+    linear-gradient(-45deg, transparent 75%, #f8f9fa 75%) 0 0, 0 10px, 10px -10px, -10px 0;
+}
+
+/* Certificate Content Styles */
+.certificate-header {
+    margin-bottom: 2rem;
+}
+
+.amazon-logo {
+    max-width: 150px;
+    margin-bottom: 1rem;
+}
+
+.recipient-name {
+    font-size: 2.5rem;
+    color: #232F3E;
+    margin: 1.5rem 0;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+}
+
+.completion-text {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+.scores-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.score-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.certificate-seal {
+    font-size: 4rem;
+    color: #FF9900;
+    margin: 1.5rem 0;
+}
+
+.verification-code {
+    font-family: monospace;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+/* Animation Classes */
+.animated {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .completion-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .completion-stats,
+    .breakdown-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .completion-actions {
+        flex-direction: column;
+    }
+
+    .button-primary,
+    .button-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .certificate-content {
+        padding: 1.5rem;
+    }
+
+    .recipient-name {
+        font-size: 2rem;
+    }
+
+    .score-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-section {
+        padding: 1rem;
+    }
+
+    .completion-header h2 {
+        font-size: 2rem;
+    }
+
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .certificate-modal {
+        padding: 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .certificate-modal {
+        position: relative;
+        background: none;
+    }
+
+    .certificate-container {
+        box-shadow: none;
+    }
+
+    .modal-header,
+    .modal-footer,
+    .close-btn {
+        display: none;
+    }
+
+    .certificate-content {
+        border: none;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.button-primary:focus,
+.button-secondary:focus {
+    outline: 3px solid #FF9900;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+    .button-primary,
+    .button-secondary {
+        border: 2px solid currentColor;
+    }
+}

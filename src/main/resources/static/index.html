@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/weight-sorting.css">
     <link rel="stylesheet" href="css/benefit-matching.css">
     <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/certificate.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -16,16 +17,7 @@
 <div id="loadingOverlay" class="loading-overlay">
     <div class="loading-content animated" data-animation="fadeIn">
         <div class="loading-logo animated" data-animation="pulse">
-            <i class="fas fa-box"></i>
         </div>
-        <div class="spinner-container">
-            <div class="spinner animated" data-animation="spin">
-                <div class="spinner-segment"></div>
-                <div class="spinner-segment"></div>
-                <div class="spinner-segment"></div>
-            </div>
-        </div>
-        <p class="loading-text animated" data-animation="pulse">Loading...</p>
         <div class="loading-progress">
             <div class="progress-bar">
                 <div class="progress-fill animated" data-animation="slideIn" id="loadingProgress"></div>
@@ -47,16 +39,15 @@
         </div>
         <div class="nav-time animated" data-animation="fadeIn">
             Time: <span id="timeDisplay" class="animated" data-animation="pulse">0</span>
-    </div>
+        </div>
     </div>
 </header>
-
 <!-- Main Content Container -->
 <main class="main-content">
     <!-- Welcome Screen -->
     <section id="welcomeScreen" class="page active">
         <div class="welcome-container animated" data-animation="fadeIn">
-            <div class="welcome-background"></div> <!-- Add this line -->
+            <div class="welcome-background"></div>
             <div class="floating-boxes" id="floatingBoxes"></div>
             <div class="welcome-content animated" data-animation="fadeIn">
                 <h1 class="welcome-title animated" data-animation="slideIn">Welcome to Your Amazon Journey</h1>
@@ -106,6 +97,7 @@
             <h2>Weight Sorting Game</h2>
             <div class="instructions-content">
                 <div class="instruction-categories animated" data-animation="fadeIn">
+                    <!-- Weight categories: Individual, Team, Mechanical -->
                     <div class="instruction-category animated hover-lift" data-animation="fadeIn">
                         <div class="category-icon">
                             <i class="fas fa-user"></i>
@@ -145,7 +137,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="game-controls animated" data-animation="fadeIn">
                     <div class="controls-header">
                         <i class="fas fa-gamepad"></i>
@@ -213,7 +204,7 @@
             </div>
         </div>
     </section>
-
+    <!-- Path Finding Game -->
     <!-- Path Finding Game -->
     <section id="pathFindingGame" class="page pace-section">
         <!-- Game Header -->
@@ -221,7 +212,7 @@
             <div class="game-stats animated" data-animation="fadeIn">
                 <div class="stat-item">
                     <i class="fas fa-check-circle"></i>
-                    <span>Items: <span id="pathFindingSteps">0</span>/5</span>
+                    <span>Items: <span id="pathFindingSteps">0</span>/6</span>
                 </div>
                 <div class="stat-item">
                     <i class="fas fa-clock"></i>
@@ -348,6 +339,31 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- OUCH/Muscle Soreness Content -->
+                    <div class="modal-item-content" data-item="muscle_soreness">
+                        <div class="item-details">
+                            <h4>Physical Readiness - OUCH!</h4>
+                            <p>Prepare for initial physical adjustment period</p>
+                            <div class="important-notes">
+                                <h5>What to Expect:</h5>
+                                <ul>
+                                    <li>General muscle soreness in first two weeks</li>
+                                    <li>Normal response to new physical activity</li>
+                                    <li>Improves with proper self-care</li>
+                                </ul>
+                            </div>
+                            <div class="steps-section">
+                                <h5>Prevention & Relief:</h5>
+                                <ul>
+                                    <li>Stay well hydrated throughout the day</li>
+                                    <li>Perform proper stretching before/after work</li>
+                                    <li>Get adequate rest between shifts</li>
+                                    <li>Consider using compression gear</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="points-earned">
@@ -452,6 +468,14 @@
                                 Guidelines for workplace clothing
                             </div>
                         </div>
+                        <div class="preview-item" data-item="muscle_soreness">
+                            <i class="fas fa-dumbbell"></i>
+                            <span class="item-name">Physical Readiness</span>
+                            <small class="item-hint">Prepare for activity</small>
+                            <div class="item-tooltip">
+                                Tips for managing initial muscle soreness
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -505,7 +529,7 @@
                         <div class="progress-bar">
                             <div class="progress"></div>
                         </div>
-                        <span class="progress-text">0/5 Items</span>
+                        <span class="progress-text">0/6 Items</span>
                     </div>
                     <div class="collected-items-list"></div>
                 </div>
@@ -522,7 +546,7 @@
                 <div class="score-breakdown">
                     <div class="score-item">
                         <span class="label">Items Collected:</span>
-                        <span class="value items-collected">0/5</span>
+                        <span class="value items-collected">0/6</span>
                     </div>
                     <div class="score-item">
                         <span class="label">Time Bonus:</span>
@@ -542,7 +566,7 @@
     </section>
 
 
-    <!-- Benefits Matching Game -->
+    <!-- Benefit Matching Game -->
     <section id="matchingGame" class="page matching-section">
         <!-- Game Instructions Panel -->
         <div class="game-instructions-panel">
@@ -587,7 +611,6 @@
         <!-- Main Game Content -->
         <div class="game-content">
             <div class="game-header">
-                <!-- Game Stats -->
                 <div class="game-stats">
                     <div class="stat-item">
                         <i class="fas fa-puzzle-piece"></i>
@@ -606,197 +629,7 @@
 
             <!-- Cards Grid -->
             <div class="cards-grid">
-                <!-- Health Insurance Pair -->
-                <div class="benefit-card" data-benefit="health">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-heart"></i>
-                            <span>Health Insurance</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="health">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-heart"></i>
-                            <span>Health Insurance</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dental Coverage Pair -->
-                <div class="benefit-card" data-benefit="dental">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-tooth"></i>
-                            <span>Dental Coverage</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="dental">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-tooth"></i>
-                            <span>Dental Coverage</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vision Care Pair -->
-                <div class="benefit-card" data-benefit="vision">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-eye"></i>
-                            <span>Vision Care</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="vision">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-eye"></i>
-                            <span>Vision Care</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 401(k) Plan Pair -->
-                <div class="benefit-card" data-benefit="401k">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-piggy-bank"></i>
-                            <span>401(k) Plan</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="401k">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-piggy-bank"></i>
-                            <span>401(k) Plan</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Career Choice Pair -->
-                <div class="benefit-card" data-benefit="career">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-graduation-cap"></i>
-                            <span>Career Choice</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="career">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-graduation-cap"></i>
-                            <span>Career Choice</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PTO Pair -->
-                <div class="benefit-card" data-benefit="pto">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-umbrella-beach"></i>
-                            <span>Paid Time Off</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="pto">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-umbrella-beach"></i>
-                            <span>Paid Time Off</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Parental Leave Pair -->
-                <div class="benefit-card" data-benefit="parental">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-baby"></i>
-                            <span>Parental Leave</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="parental">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-baby"></i>
-                            <span>Parental Leave</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Employee Discount Pair -->
-                <div class="benefit-card" data-benefit="discount">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-tags"></i>
-                            <span>Employee Discount</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="benefit-card" data-benefit="discount">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <i class="fas fa-tags"></i>
-                            <span>Employee Discount</span>
-                        </div>
-                        <div class="card-back">
-                            <i class="fas fa-question"></i>
-                        </div>
-                    </div>
-                </div>
+                <!-- Cards will be dynamically generated by JavaScript -->
             </div>
 
             <!-- Benefit Information Modal -->
@@ -814,25 +647,46 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Completion Message -->
+            <div class="completion-message">
+                <h2><i class="fas fa-trophy"></i> Game Complete!</h2>
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span>Matches Found:</span>
+                        <span class="matches-found">0/8</span>
+                    </div>
+                    <div class="score-item">
+                        <span>Time Remaining:</span>
+                        <span class="time-bonus">0s</span>
+                    </div>
+                    <div class="score-item">
+                        <span>Attempts:</span>
+                        <span class="total-attempts">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span>Total Score:</span>
+                        <span class="final-score">0</span>
+                    </div>
+                </div>
+                <button class="continue-button">
+                    <i class="fas fa-arrow-right"></i> Continue to Quiz
+                </button>
+            </div>
         </div>
     </section>
-
 
     <!-- Quiz Section -->
     <section id="quizSection" class="page quiz-section">
         <!-- Quiz Instructions Panel -->
         <div class="quiz-instructions">
-            <h2><i class="fas fa-question-circle"></i> Benefits Knowledge Check</h2>
-            <p>Test your understanding of Amazon's benefits package!</p>
+            <h2><i class="fas fa-question-circle"></i> Amazon Onboarding Quiz</h2>
+            <p>Test your knowledge of Amazon's onboarding process!</p>
 
             <div class="instruction-details">
                 <div class="instruction-item">
-                    <i class="fas fa-info-circle"></i>
-                    <p>Answer questions about Amazon benefits</p>
-                </div>
-                <div class="instruction-item">
                     <i class="fas fa-clock"></i>
-                    <p>30 seconds per question</p>
+                    <p>You have 30 seconds to answer each question</p>
                 </div>
                 <div class="instruction-item">
                     <i class="fas fa-star"></i>
@@ -842,16 +696,10 @@
                     <i class="fas fa-check-double"></i>
                     <p>Review your answers at the end</p>
                 </div>
-            </div>
-
-            <div class="quiz-rules">
-                <h3>Quiz Rules:</h3>
-                <ul>
-                    <li>Choose the best answer for each question</li>
-                    <li>Questions are timed - answer before time runs out</li>
-                    <li>No going back to previous questions</li>
-                    <li>Score based on correct answers and completion time</li>
-                </ul>
+                <div class="instruction-item">
+                    <i class="fas fa-info-circle"></i>
+                    <p>No going back to previous questions</p>
+                </div>
             </div>
 
             <button class="start-quiz-btn button-primary">
@@ -860,14 +708,14 @@
         </div>
 
         <!-- Quiz Question Container -->
-        <div class="quiz-content" style="display: none;">
+        <div class="quiz-content">
             <div class="quiz-header">
                 <div class="quiz-progress">
                     <div class="progress-info">
                         <span class="question-counter">Question <span id="currentQuestion">1</span>/<span id="totalQuestions">5</span></span>
                         <span class="score-display">Score: <span id="currentScore">0</span></span>
                     </div>
-                    <div class="progress-bar-container">
+                    <div class="progress-container">
                         <div class="progress-bar"></div>
                     </div>
                 </div>
@@ -877,74 +725,51 @@
                 </div>
             </div>
 
-            <!-- Question Area -->
             <div class="question-area">
-                <div class="question-container">
-                    <p class="question-text"></p>
-                    <div class="options-grid">
-                        <!-- Options will be dynamically inserted here -->
+                <p class="question-text"></p>
+                <div class="options-grid"></div>
+                <!-- Feedback Overlay -->
+                <div class="feedback-overlay">
+                    <div class="feedback-content">
+                        <i class="feedback-icon fas"></i>
+                        <h3 class="feedback-title"></h3>
+                        <p class="feedback-explanation"></p>
+                        <button class="button-primary continue-btn">
+                            <i class="fas fa-arrow-right"></i> Continue
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Answer Feedback Modal -->
-        <div class="feedback-modal" style="display: none;">
-            <div class="feedback-content">
-                <div class="feedback-header">
-                    <i class="feedback-icon fas"></i>
-                    <h3 class="feedback-title"></h3>
-                </div>
-                <p class="feedback-explanation"></p>
-                <button class="continue-btn button-primary">
-                    <i class="fas fa-arrow-right"></i> Continue
-                </button>
-            </div>
-        </div>
-
         <!-- Quiz Summary -->
-        <div class="quiz-summary" style="display: none;">
-            <div class="summary-content">
-                <div class="summary-header">
-                    <i class="fas fa-trophy"></i>
-                    <h2>Quiz Complete!</h2>
-                </div>
+        <div class="quiz-summary">
+            <div class="summary-header">
+                <i class="fas fa-trophy"></i>
+                <h2>Quiz Complete!</h2>
+            </div>
 
-                <div class="score-breakdown">
-                    <div class="score-item">
-                        <span class="label">Correct Answers:</span>
-                        <span class="value" id="correctAnswers">0/5</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="label">Completion Time:</span>
-                        <span class="value" id="completionTime">0:00</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="label">Final Score:</span>
-                        <span class="value" id="finalScore">0</span>
-                    </div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <div class="score-label">Correct Answers</div>
+                    <div class="score-value" id="correctAnswers">0/5</div>
                 </div>
+                <div class="score-item">
+                    <div class="score-label">Completion Time</div>
+                    <div class="score-value" id="completionTime">0:00</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Final Score</div>
+                    <div class="score-value" id="finalScore">0</div>
+                </div>
+            </div>
 
-                <div class="performance-feedback">
-                    <h3>Performance Summary</h3>
-                    <div class="performance-message"></div>
-                </div>
-
-                <div class="answer-review">
-                    <h3>Question Review</h3>
-                    <div class="review-list">
-                        <!-- Question review items will be dynamically inserted here -->
-                    </div>
-                </div>
-
-                <div class="summary-buttons">
-                    <button class="retry-btn button-secondary" onclick="window.amazonQuiz.initialize()">
-                        <i class="fas fa-redo"></i> Try Again
-                    </button>
-                    <button class="complete-btn button-primary" onclick="window.amazonQuiz.completeTraining()">
-                        <i class="fas fa-check"></i> Complete Training
-                    </button>
-                </div>
+            <div class="summary-buttons">
+                <button class="button-primary retry-btn">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+                <button class="button-primary complete-btn">
+                    <i class="fas fa-check"></i> Complete Training
+                </button>
             </div>
         </div>
     </section>
@@ -1044,27 +869,9 @@
                     Download Certificate
                 </button>
             </div>
-
-            <!-- Certificate Preview -->
-            <div class="certificate-preview" id="certificatePreview" style="display: none;">
-                <div class="certificate-content">
-                    <div class="certificate-header">
-                        <img src="assets/images/amazon-logo.png" alt="Amazon Logo" class="certificate-logo">
-                        <h2>Certificate of Completion</h2>
-                    </div>
-                    <div class="certificate-body">
-                        <p>This certifies that</p>
-                        <h3 id="certificateName"></h3>
-                        <p>has successfully completed the</p>
-                        <h4>Day One Hero Training Program</h4>
-                        <p class="completion-date">Completed on <span id="completionDate"></span></p>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 </main>
-
 
 <!-- External Scripts -->
 <script src="js/config.js"></script>
@@ -1076,5 +883,6 @@
 <script src="js/games/matching.js"></script>
 <script src="js/games/quiz.js"></script>
 <script src="js/certificate.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>

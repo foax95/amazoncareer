@@ -1,7 +1,5 @@
-
 class PathFindingGame {
     constructor() {
-
         // Game state with pause functionality
         this.state = {
             isPlaying: false,
@@ -133,6 +131,30 @@ class PathFindingGame {
                 points: 100,
                 collected: false,
                 position: null
+            },
+            {
+                id: 'muscle_soreness',
+                icon: 'fa-dumbbell',
+                name: 'Physical Readiness',
+                hint: 'Prepare for activity',
+                details: {
+                    title: 'Physical Readiness - OUCH!',
+                    what_to_expect: [
+                        'General muscle soreness in first two weeks',
+                        'Normal response to new physical activity',
+                        'Improves with proper self-care'
+                    ],
+                    prevention_tips: [
+                        'Stay well hydrated throughout the day',
+                        'Perform proper stretching before/after work',
+                        'Get adequate rest between shifts',
+                        'Consider using compression gear'
+                    ]
+                },
+                points: 100,
+                collected: false,
+                position: null,
+                isSpecial: true
             }
         ];
 
@@ -148,6 +170,8 @@ class PathFindingGame {
         this.closePaceItemPopup = this.closePaceItemPopup.bind(this);
         this.resumeGame = this.resumeGame.bind(this);
     }
+
+    // ... (methods will follow in subsequent parts)
     initialize() {
         console.log('Initializing PACE Navigator Game');
         this.gameContainer = document.getElementById('pathFindingGame');
@@ -192,7 +216,7 @@ class PathFindingGame {
         if (progressBar) progressBar.style.width = '0%';
 
         const progressText = this.gameContainer.querySelector('.progress-text');
-        if (progressText) progressText.textContent = '0/5 Items';
+        if (progressText) progressText.textContent = '0/6 Items';
 
         // Clear any existing modal
         const modal = this.gameContainer.querySelector('.pace-item-modal');
@@ -211,7 +235,6 @@ class PathFindingGame {
 
         this.updateUI();
     }
-
 
     setupEventListeners() {
         // Remove existing listeners
@@ -296,15 +319,16 @@ class PathFindingGame {
         player.innerHTML = '<i class="fas fa-user-circle"></i>';
         gameArea.appendChild(player);
 
-        // Place PACE items
+        // Place initial PACE items (excluding muscle_soreness)
         this.placePaceItems();
         this.updatePlayerPosition(this.state.playerPosition);
     }
 
-
-
     placePaceItems() {
         this.paceItems.forEach(item => {
+            // Skip the muscle_soreness item initially
+            if (item.isSpecial) return;
+
             const position = this.getRandomEmptyPosition();
             item.position = position;
 
@@ -314,15 +338,40 @@ class PathFindingGame {
                 paceItem.className = 'pace-item';
                 paceItem.dataset.id = item.id;
                 paceItem.innerHTML = `
-                <div class="item-icon">
-                    <i class="fas ${item.icon}"></i>
-                </div>
-            `;
+                    <div class="item-icon">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                `;
                 cell.appendChild(paceItem);
             }
         });
     }
 
+    placeOuchItem() {
+        const ouchItem = this.paceItems.find(item => item.id === 'muscle_soreness');
+        if (!ouchItem) return;
+
+        const position = this.getRandomEmptyPosition();
+        ouchItem.position = position;
+
+        const cell = this.getCellAt(position);
+        if (cell) {
+            const paceItem = document.createElement('div');
+            paceItem.className = 'pace-item special-item';
+            paceItem.dataset.id = ouchItem.id;
+            paceItem.innerHTML = `
+                <div class="item-icon">
+                    <i class="fas ${ouchItem.icon}"></i>
+                </div>
+            `;
+            cell.appendChild(paceItem);
+
+            // Add animation for appearance
+            requestAnimationFrame(() => {
+                paceItem.classList.add('appear');
+            });
+        }
+    }
 
     getRandomEmptyPosition() {
         let position;
@@ -451,140 +500,6 @@ class PathFindingGame {
         }
     }
 
-
-    showPaceItemPopup(item, points, isLastItem) {
-        const modal = this.gameContainer.querySelector('.pace-item-modal');
-        if (!modal) return;
-
-        // Pause the game
-        this.pauseGame();
-
-        // Update modal content
-        const modalIcon = modal.querySelector('.modal-icon');
-        const modalTitle = modal.querySelector('.modal-title');
-        const itemContent = modal.querySelector(`.modal-item-content[data-item="${item.id}"]`);
-        const pointsDisplay = modal.querySelector('.points-earned .points');
-        const comboDisplay = modal.querySelector('.points-earned .combo');
-        const continueButton = modal.querySelector('.continue-button');
-
-        if (modalIcon) modalIcon.className = `modal-icon fas ${item.icon}`;
-        if (modalTitle) modalTitle.textContent = item.name;
-
-        // Hide all content sections and show the relevant one
-        modal.querySelectorAll('.modal-item-content').forEach(content => {
-            content.style.display = 'none';
-        });
-        if (itemContent) itemContent.style.display = 'block';
-
-        if (pointsDisplay) pointsDisplay.textContent = `+${points}`;
-        if (comboDisplay) {
-            comboDisplay.textContent = this.state.combo > 1 ? `Combo x${this.state.combo}!` : '';
-        }
-
-        // Update continue button for last item
-        if (isLastItem && continueButton) {
-            continueButton.innerHTML = 'Complete Game <i class="fas fa-check"></i>';
-        }
-
-        // Show modal with animation
-        modal.style.display = 'flex';
-        requestAnimationFrame(() => {
-            modal.classList.add('show');
-        });
-
-        // Store isLastItem state
-        this.state.isLastItem = isLastItem;
-    }
-
-
-    checkForItem(position) {
-        const cell = this.getCellAt(position);
-        if (!cell) return;
-
-        const paceItem = cell.querySelector('.pace-item');
-        if (paceItem && !this.state.modalVisible) {
-            const item = this.paceItems.find(item => item.id === paceItem.dataset.id);
-            if (item && !item.collected) {
-                this.collectItem(item, cell);
-            }
-        }
-    }
-
-    collectItem(item, cell) {
-        const now = Date.now();
-        const timeSinceLastCollect = now - this.state.lastCollectTime;
-
-        // Update combo
-        if (timeSinceLastCollect < this.config.comboTimeWindow) {
-            this.state.combo++;
-        } else {
-            this.state.combo = 1;
-        }
-
-        // Calculate points
-        const points = Math.floor(
-            this.config.basePoints * Math.pow(this.config.comboMultiplier, this.state.combo - 1)
-        );
-
-        // Update game state
-        item.collected = true;
-        this.state.collectedItems++;
-        this.state.score += points;
-        this.state.lastCollectTime = now;
-
-        // Remove item from grid
-        const paceItem = cell.querySelector('.pace-item');
-        if (paceItem) {
-            paceItem.classList.add('collected');
-            setTimeout(() => cell.removeChild(paceItem), this.config.animationDuration);
-        }
-
-        // Check if this is the last item
-        const isLastItem = this.state.collectedItems === this.paceItems.length;
-
-        // Show popup with information
-        this.showPaceItemPopup(item, points, isLastItem);
-
-        // Update progress
-        this.updateProgressBar();
-    }
-
-
-
-    closePaceItemPopup() {
-        const modal = this.gameContainer.querySelector('.pace-item-modal');
-        if (!modal) return;
-
-        modal.classList.remove('show');
-        setTimeout(() => {
-            modal.style.display = 'none';
-            this.state.modalVisible = false;
-
-            // If this was the last item, complete the game after closing the popup
-            if (this.state.isLastItem) {
-                const timeBonus = this.state.timeLeft * 10;
-                this.state.score += timeBonus;
-                this.endGame(true);
-            } else {
-                this.resumeGame();
-            }
-        }, this.config.modalTransitionTime);
-    }
-
-
-    updateProgressBar() {
-        const progressBar = this.gameContainer.querySelector('.progress');
-        const progressText = this.gameContainer.querySelector('.progress-text');
-        const progress = (this.state.collectedItems / this.paceItems.length) * 100;
-
-        if (progressBar) {
-            progressBar.style.width = `${progress}%`;
-        }
-        if (progressText) {
-            progressText.textContent = `${this.state.collectedItems}/5 Items`;
-        }
-    }
-
     handleKeydown(e) {
         if (!this.state.isPlaying || this.state.isPaused || this.state.modalVisible) return;
 
@@ -621,36 +536,165 @@ class PathFindingGame {
         }
     }
 
+    checkForItem(position) {
+        const cell = this.getCellAt(position);
+        if (!cell) return;
+
+        const paceItem = cell.querySelector('.pace-item');
+        if (paceItem && !this.state.modalVisible) {
+            const item = this.paceItems.find(item => item.id === paceItem.dataset.id);
+            if (item && !item.collected) {
+                this.collectItem(item, cell);
+            }
+        }
+    }
+
     updateUI() {
         // Update timer
-        const timerElement = document.getElementById('timeDisplay');
+        const timerElement = document.getElementById('pathFindingTimer');
         if (timerElement) {
             timerElement.textContent = this.state.timeLeft;
             timerElement.classList.toggle('warning', this.state.timeLeft <= 10);
         }
 
-        // Update score
-        const scoreElement = document.getElementById('scoreDisplay');
-        if (scoreElement) {
-            scoreElement.textContent = this.state.score;
-        }
-
         // Update collected items
         const stepsElement = document.getElementById('pathFindingSteps');
         if (stepsElement) {
-            stepsElement.textContent = `${this.state.collectedItems}/5`;
+            stepsElement.textContent = `${this.state.collectedItems}/6`;
         }
+
+        // Update progress bar
+        this.updateProgressBar();
     }
 
-    completeGame() {
-        if (this.state.modalVisible) {
-            this.closePaceItemPopup();
-            setTimeout(() => {
-                this.endGame(true);
-            }, this.config.modalTransitionTime);
-        } else {
-            this.endGame(true);
+    updateProgressBar() {
+        const progressBar = this.gameContainer.querySelector('.progress');
+        const progressText = this.gameContainer.querySelector('.progress-text');
+        const progress = (this.state.collectedItems / this.paceItems.length) * 100;
+
+        if (progressBar) {
+            progressBar.style.width = `${progress}%`;
         }
+        if (progressText) {
+            progressText.textContent = `${this.state.collectedItems}/6 Items`;
+        }
+    }
+    collectItem(item, cell) {
+        const now = Date.now();
+        const timeSinceLastCollect = now - this.state.lastCollectTime;
+
+        // Update combo
+        if (timeSinceLastCollect < this.config.comboTimeWindow) {
+            this.state.combo++;
+        } else {
+            this.state.combo = 1;
+        }
+
+        // Calculate points
+        const points = Math.floor(
+            this.config.basePoints * Math.pow(this.config.comboMultiplier, this.state.combo - 1)
+        );
+
+        // Update game state
+        item.collected = true;
+        this.state.collectedItems++;
+        this.state.score += points;
+        this.state.lastCollectTime = now;
+
+        // Remove item from grid
+        const paceItem = cell.querySelector('.pace-item');
+        if (paceItem) {
+            paceItem.classList.add('collected');
+            setTimeout(() => cell.removeChild(paceItem), this.config.animationDuration);
+        }
+
+        // Check if all regular items are collected
+        const regularItems = this.paceItems.filter(item => !item.isSpecial);
+        const allRegularItemsCollected = regularItems.every(item => item.collected);
+
+        if (allRegularItemsCollected &&
+            !this.paceItems.find(i => i.id === 'muscle_soreness').collected) {
+            // Place the OUCH item after a short delay
+            setTimeout(() => {
+                this.placeOuchItem();
+            }, this.config.animationDuration);
+        }
+
+        // Check if this is the last item (including OUCH)
+        const isLastItem = this.state.collectedItems === this.paceItems.length;
+
+        // Show popup with information
+        this.showPaceItemPopup(item, points, isLastItem);
+
+        // Update progress
+        this.updateProgressBar();
+    }
+
+    showPaceItemPopup(item, points, isLastItem) {
+        const modal = this.gameContainer.querySelector('.pace-item-modal');
+        if (!modal) return;
+
+        // Pause the game
+        this.pauseGame();
+        this.state.modalVisible = true;
+
+        // Update modal content
+        const modalIcon = modal.querySelector('.modal-icon');
+        const modalTitle = modal.querySelector('.modal-title');
+        const itemContent = modal.querySelector(`.modal-item-content[data-item="${item.id}"]`);
+        const pointsDisplay = modal.querySelector('.points-earned .points');
+        const comboDisplay = modal.querySelector('.points-earned .combo');
+        const continueButton = modal.querySelector('.continue-button');
+
+        if (modalIcon) modalIcon.className = `modal-icon fas ${item.icon}`;
+        if (modalTitle) modalTitle.textContent = item.name;
+
+        // Hide all content sections and show the relevant one
+        modal.querySelectorAll('.modal-item-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        if (itemContent) itemContent.style.display = 'block';
+
+        if (pointsDisplay) pointsDisplay.textContent = `+${points}`;
+        if (comboDisplay) {
+            comboDisplay.textContent = this.state.combo > 1 ? `Combo x${this.state.combo}!` : '';
+        }
+
+        // Update continue button for last item
+        if (isLastItem && continueButton) {
+            continueButton.innerHTML = 'Complete Game <i class="fas fa-check"></i>';
+        } else if (continueButton) {
+            continueButton.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+        }
+
+        // Show modal with animation
+        modal.style.display = 'flex';
+        requestAnimationFrame(() => {
+            modal.classList.add('show');
+        });
+
+        // Store isLastItem state
+        this.state.isLastItem = isLastItem;
+    }
+
+    closePaceItemPopup() {
+        const modal = this.gameContainer.querySelector('.pace-item-modal');
+        if (!modal) return;
+
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            this.state.modalVisible = false;
+
+            // If this was the last item, complete the game after closing the popup
+            if (this.state.isLastItem) {
+                const timeBonus = this.state.timeLeft * 10;
+                this.state.score += timeBonus;
+                this.endGame(true);
+            } else {
+                this.resumeGame();
+            }
+        }, this.config.modalTransitionTime);
     }
 
     showCompletionMessage(completed, timeBonus = 0) {
@@ -658,41 +702,41 @@ class PathFindingGame {
         messageEl.className = 'completion-message';
 
         messageEl.innerHTML = `
-        <div class="message-content ${completed ? 'success' : 'timeout'}">
-            <div class="message-header">
-                <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
-                <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+    <div class="message-content ${completed ? 'success' : 'timeout'}">
+        <div class="message-header">
+            <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
+            <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+        </div>
+        <div class="score-breakdown">
+            <div class="score-item">
+                <span class="label">Items Collected:</span>
+                <span class="value">${this.state.collectedItems}/5</span>
             </div>
-            <div class="score-breakdown">
+            ${completed ? `
                 <div class="score-item">
-                    <span class="label">Items Collected:</span>
-                    <span class="value">${this.state.collectedItems}/5</span>
+                    <span class="label">Time Bonus:</span>
+                    <span class="value">+${timeBonus}</span>
                 </div>
-                ${completed ? `
-                    <div class="score-item">
-                        <span class="label">Time Bonus:</span>
-                        <span class="value">+${timeBonus}</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="label">Time Remaining:</span>
-                        <span class="value">${this.state.timeLeft}s</span>
-                    </div>
-                ` : ''}
-                <div class="score-item total">
-                    <span class="label">Final Score:</span>
-                    <span class="value">${this.state.score}</span>
+                <div class="score-item">
+                    <span class="label">Time Remaining:</span>
+                    <span class="value">${this.state.timeLeft}s</span>
                 </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="continue-button button-primary" onclick="window.pathFindingGame.navigateToMatchingGame()">
-                    <i class="fas fa-arrow-right"></i> Continue to Benefits
-                </button>
-                <button class="replay-button button-secondary" onclick="window.pathFindingGame.initialize()">
-                    <i class="fas fa-redo"></i> Play Again
-                </button>
+            ` : ''}
+            <div class="score-item total">
+                <span class="label">Final Score:</span>
+                <span class="value">${this.state.score}</span>
             </div>
         </div>
-    `;
+        <div class="modal-buttons">
+            <button class="continue-button button-primary" onclick="window.pathFindingGame.navigateToMatchingGame()">
+                <i class="fas fa-arrow-right"></i> Continue to Benefits
+            </button>
+            <button class="replay-button button-secondary" onclick="window.pathFindingGame.initialize()">
+                <i class="fas fa-redo"></i> Play Again
+            </button>
+        </div>
+    </div>
+`;
 
         this.gameContainer.appendChild(messageEl);
         requestAnimationFrame(() => messageEl.classList.add('show'));
@@ -753,15 +797,56 @@ class PathFindingGame {
                 if (window.matchingGame && typeof window.matchingGame.initialize === 'function') {
                     window.matchingGame.initialize();
                 }
-            }, 5000); // 5-second delay before transition
+            }, 2000); // 2-second delay before transition
         }
     }
-
 }
 
 // Initialize the game when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Create global instance of the game
     const game = new PathFindingGame();
     window.pathFindingGame = game;
     game.initialize();
+
+    // Add touch control detection
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) {
+        document.body.classList.add('touch-device');
+    }
+
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (game.state.isPlaying) {
+                game.updatePlayerPosition(game.state.playerPosition);
+            }
+        }, 250);
+    });
+
+    // Handle visibility change
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && game.state.isPlaying && !game.state.isPaused) {
+            game.pauseGame();
+        }
+    });
+
+    // Handle modal clicks outside
+    document.addEventListener('click', (e) => {
+        const modal = document.querySelector('.pace-item-modal');
+        if (modal && e.target === modal) {
+            game.closePaceItemPopup();
+        }
+    });
+
+    // Prevent scrolling when using arrow keys
+    window.addEventListener('keydown', (e) => {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+            if (game.state.isPlaying) {
+                e.preventDefault();
+            }
+        }
+    });
 });

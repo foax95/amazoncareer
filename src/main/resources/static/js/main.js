@@ -1,5 +1,5 @@
 // Debug Mode Configuration
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 // Game State Management
 const gameState = {
@@ -33,10 +33,14 @@ const gameState = {
             highScore: 0,
             perfectMatches: 0,
             gamesPlayed: 0
+        }, quiz:
+        {
+            bestScore: 0,
+            completed: 0
         }
     },
     debug: {
-        disable: DEBUG_MODE
+        enable: DEBUG_MODE
     }
 };
 
@@ -187,7 +191,8 @@ function formatSectionName(sectionId) {
         'intro': 'Introduction',
         'weightSortingGame': 'Weight Sorting',
         'pathFindingGame': 'PACE Navigator',
-        'matchingGame': 'Benefits Matching'
+        'matchingGame': 'Benefits Matching',
+        "gameComplete": 'Game Complete'
     };
     return sectionNames[sectionId] || sectionId;
 }

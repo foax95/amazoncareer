@@ -35,6 +35,8 @@ class GameSequenceManager {
                 description: 'Test your Amazon knowledge',
                 type: 'quiz'
             }
+
+
         ];
         this.currentGameIndex = 0;
     }

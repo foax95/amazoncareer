@@ -1,281 +1,168 @@
 class AmazonQuiz {
     constructor() {
-        // Quiz state
         this.state = {
             isActive: false,
             currentQuestion: 0,
             score: 0,
             answers: [],
             completed: false,
-            initialized: false
+            initialized: false,
+            startTime: null,
+            endTime: null
         };
 
-        // Quiz configuration
         this.config = {
             timePerQuestion: 30,
             pointsPerQuestion: 100,
-            totalQuestions: 10,
-            visibilityCheckDuration: 10, // seconds
-            checkInterval: 1000 // milliseconds
+            totalQuestions: 5
         };
 
-        // Quiz questions database
         this.questions = [
             {
-                question: "Which benefit provides comprehensive medical coverage from day one?",
+                question: "Once hired, how many days do you have to wait until you can transfer to a new shift or building?",
                 options: [
-                    "Employee Discount",
-                    "Health Insurance",
-                    "Career Choice",
-                    "401(k) Plan"
-                ],
-                correctAnswer: 1,
-                explanation: "Health Insurance provides comprehensive medical, prescription, and preventive care coverage starting on your first day."
-            },
-            {
-                question: "What percentage of salary does Amazon match in the 401(k) Plan?",
-                options: [
-                    "2%",
-                    "4%",
-                    "6%",
-                    "8%"
+                    "7 days",
+                    "14 days",
+                    "30 days",
+                    "90 days"
                 ],
                 correctAnswer: 2,
-                explanation: "Amazon matches employee contributions up to 6% of their salary in the 401(k) Plan."
+                explanation: "You must wait 30 days from your hire date before you're eligible to transfer to a new shift or building."
             },
             {
-                question: "How much education funding is available through Career Choice annually?",
+                question: "Where do you go if you have questions about shift, pay, directions to site, or need to withdraw your application?",
                 options: [
-                    "$2,500",
-                    "$3,750",
-                    "$5,250",
-                    "$7,500"
+                    "Contact HR",
+                    "Call the Site",
+                    "Go to 'My Jobs' on your application",
+                    "Email your recruiter"
                 ],
                 correctAnswer: 2,
-                explanation: "Career Choice provides up to $5,250 per year for eligible educational programs."
+                explanation: "The 'My Jobs' section of your application is your go-to resource for questions about shift, pay, directions, and application management."
             },
             {
-                question: "What is the maximum duration of paid parental leave?",
+                question: "What tasks will you complete prior to Day One?",
                 options: [
-                    "10 weeks",
-                    "15 weeks",
-                    "20 weeks",
-                    "25 weeks"
+                    "Only order safety shoes",
+                    "Just set up employee A to Z account",
+                    "Start employment paperwork only",
+                    "All of the above"
+                ],
+                correctAnswer: 3,
+                explanation: "Prior to Day One, you need to complete ALL tasks: order safety shoes, set up your A to Z account, and start employment paperwork."
+            },
+            {
+                question: "Where will Amazon contact you with information prior to day one?",
+                options: [
+                    "Your home address",
+                    "Your phone number",
+                    "The email address used on the application",
+                    "Through your emergency contact"
                 ],
                 correctAnswer: 2,
-                explanation: "Amazon offers up to 20 weeks of paid parental leave for eligible employees."
+                explanation: "Amazon will contact you with pre-Day One information through the email address you provided on your application."
             },
             {
-                question: "What percentage discount do employees receive on Amazon purchases?",
+                question: "How can you be a 'Day One Hero'?",
                 options: [
-                    "5%",
-                    "10%",
-                    "15%",
-                    "20%"
+                    "Just bring your ID",
+                    "Only wear comfortable clothes",
+                    "Complete some Day One tasks",
+                    "Complete all prior Day One tasks, wear comfortable clothes, bring water and ID, and prepare for exercise soreness"
                 ],
-                correctAnswer: 1,
-                explanation: "Employees receive a 10% discount on eligible Amazon.com purchases."
+                correctAnswer: 3,
+                explanation: "To be fully prepared for Day One, complete all tasks, wear comfortable clothes, bring water and ID, and be ready for physical activity."
             }
         ];
 
-        // Timer and interval references
-        this.timer = null;
-        this.visibilityCheckInterval = null;
-
-        // Bind methods
-        this.initialize = this.initialize.bind(this);
-        this.startQuiz = this.startQuiz.bind(this);
-        this.submitAnswer = this.submitAnswer.bind(this);
-        this.showNextQuestion = this.showNextQuestion.bind(this);
-        this.endQuiz = this.endQuiz.bind(this);
-        this.ensureVisibility = this.ensureVisibility.bind(this);
-        this.cleanup = this.cleanup.bind(this);
+        this.initialize();
     }
 
     initialize() {
-        console.log('Initializing Amazon Benefits Quiz');
-        this.quizContainer = document.getElementById('quizSection');
-        if (!this.quizContainer) {
-            console.error('Quiz container not found');
-            return;
-        }
-
-        // Prevent multiple initializations
-        if (this.state.initialized) {
-            console.log('Quiz already initialized');
-            this.ensureVisibility();
-            return;
-        }
-
-        this.ensureVisibility();
-        this.resetQuiz();
-        this.showInstructions();
+        if (this.state.initialized) return;
+        this.bindElements();
         this.setupEventListeners();
-        this.startVisibilityCheck();
-
         this.state.initialized = true;
-        console.log('Quiz initialization complete');
     }
 
-    ensureVisibility() {
-        console.log('Ensuring quiz visibility');
-        if (this.quizContainer) {
-            this.quizContainer.style.display = 'block';
-            this.quizContainer.style.opacity = '1';
-            this.quizContainer.classList.add('active');
-            console.log('Quiz container styles set:', {
-                display: this.quizContainer.style.display,
-                opacity: this.quizContainer.style.opacity,
-                classList: this.quizContainer.classList
+    bindElements() {
+        this.elements = {
+            instructions: document.querySelector('.quiz-instructions'),
+            content: document.querySelector('.quiz-content'),
+            feedback: document.querySelector('.feedback-overlay'),
+            summary: document.querySelector('.quiz-summary'),
+            questionText: document.querySelector('.question-text'),
+            optionsGrid: document.querySelector('.options-grid'),
+            timer: document.querySelector('#questionTimer'),
+            progressBar: document.querySelector('.progress-bar'),
+            currentQuestion: document.querySelector('#currentQuestion'),
+            currentScore: document.querySelector('#currentScore'),
+            gameComplete: document.getElementById('gameComplete')
+        };
+    }
+
+    setupEventListeners() {
+        document.querySelector('.start-quiz-btn').addEventListener('click', () => this.startQuiz());
+        document.querySelector('.continue-btn').addEventListener('click', () => this.nextQuestion());
+        document.querySelector('.retry-btn').addEventListener('click', () => {
+            this.resetQuiz();
+            this.startQuiz();
+        });
+
+        const completeBtn = document.querySelector('.complete-btn');
+        if (completeBtn) {
+            completeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.completeTraining();
             });
         }
     }
 
-    startVisibilityCheck() {
-        console.log('Starting visibility check');
-        let checks = 0;
-
-        // Clear any existing interval
-        if (this.visibilityCheckInterval) {
-            clearInterval(this.visibilityCheckInterval);
-        }
-
-        this.visibilityCheckInterval = setInterval(() => {
-            this.ensureVisibility();
-            checks++;
-            if (checks >= this.config.visibilityCheckDuration) {
-                console.log('Visibility check complete');
-                clearInterval(this.visibilityCheckInterval);
-            }
-        }, this.config.checkInterval);
-    }
-
-    resetQuiz() {
-        console.log('Resetting quiz state');
-        this.state = {
-            isActive: false,
-            currentQuestion: 0,
-            score: 0,
-            answers: [],
-            completed: false,
-            initialized: true
-        };
-
-        this.questions = this.shuffleArray([...this.questions]);
-        this.cleanup();
-    }
-
-    setupEventListeners() {
-        console.log('Setting up event listeners');
-        const startButton = this.quizContainer.querySelector('.start-quiz-btn');
-        if (startButton) {
-            startButton.addEventListener('click', this.startQuiz);
-        }
-    }
-
-    showInstructions() {
-        console.log('Showing instructions');
-        const instructionsHtml = `
-            <div class="quiz-instructions" style="opacity: 1;">
-                <h2><i class="fas fa-question-circle"></i> Benefits Knowledge Check</h2>
-                <p>Test your understanding of Amazon's benefits package!</p>
-                
-                <div class="instruction-details">
-                    <div class="instruction-item">
-                        <i class="fas fa-info-circle"></i>
-                        <p>Answer questions about Amazon benefits</p>
-                    </div>
-                    <div class="instruction-item">
-                        <i class="fas fa-clock"></i>
-                        <p>${this.config.timePerQuestion} seconds per question</p>
-                    </div>
-                    <div class="instruction-item">
-                        <i class="fas fa-star"></i>
-                        <p>Earn points for correct answers</p>
-                    </div>
-                </div>
-
-                <button class="start-quiz-btn button-primary">
-                    <i class="fas fa-play"></i> Start Quiz
-                </button>
-            </div>
-        `;
-
-        this.quizContainer.innerHTML = instructionsHtml;
-    }
-
     startQuiz() {
-        console.log('Starting quiz');
-        if (this.state.isActive) {
-            console.log('Quiz already active');
-            return;
-        }
-
+        this.state.startTime = new Date();
         this.state.isActive = true;
-        this.showNextQuestion();
-        this.ensureVisibility();
+        this.elements.instructions.style.display = 'none';
+        this.elements.content.style.display = 'block';
+        this.showQuestion();
     }
 
-    showNextQuestion() {
-        console.log('Showing next question');
+    showQuestion() {
         if (this.state.currentQuestion >= this.questions.length) {
             this.endQuiz();
             return;
         }
 
         const question = this.questions[this.state.currentQuestion];
-        const questionElement = document.createElement('div');
-        questionElement.className = 'quiz-question';
-        questionElement.innerHTML = `
-            <div class="question-header">
-                <h3>Question ${this.state.currentQuestion + 1} of ${this.questions.length}</h3>
-                <div class="timer" id="questionTimer">${this.config.timePerQuestion}</div>
-            </div>
-            
-            <div class="question-content">
-                <p class="question-text">${question.question}</p>
-                <div class="options-grid">
-                    ${question.options.map((option, index) => `
-                        <button class="option-btn" data-index="${index}">
-                            ${option}
-                        </button>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        this.elements.questionText.textContent = question.question;
+        this.elements.optionsGrid.innerHTML = '';
 
-        this.quizContainer.innerHTML = '';
-        this.quizContainer.appendChild(questionElement);
-
-        const optionButtons = this.quizContainer.querySelectorAll('.option-btn');
-        optionButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (!this.state.isActive) return;
-                this.submitAnswer(parseInt(button.dataset.index));
-            });
+        question.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.className = 'option-btn';
+            button.textContent = option;
+            button.addEventListener('click', () => this.submitAnswer(index));
+            this.elements.optionsGrid.appendChild(button);
         });
 
-        this.startQuestionTimer();
-        this.ensureVisibility();
+        this.elements.currentQuestion.textContent = this.state.currentQuestion + 1;
+        this.elements.feedback.classList.remove('show');
+        this.updateProgress();
+        this.startTimer();
     }
 
-    startQuestionTimer() {
-        console.log('Starting question timer');
-        if (this.timer) {
-            clearInterval(this.timer);
-        }
+    startTimer() {
+        if (this.timer) clearInterval(this.timer);
 
         let timeLeft = this.config.timePerQuestion;
-        const timerDisplay = this.quizContainer.querySelector('#questionTimer');
+        this.elements.timer.textContent = timeLeft;
+        this.elements.timer.parentElement.classList.remove('warning');
 
         this.timer = setInterval(() => {
             timeLeft--;
-            if (timerDisplay) {
-                timerDisplay.textContent = timeLeft;
-                if (timeLeft <= 5) {
-                    timerDisplay.classList.add('warning');
-                }
+            this.elements.timer.textContent = timeLeft;
+
+            if (timeLeft <= 5) {
+                this.elements.timer.parentElement.classList.add('warning');
             }
 
             if (timeLeft <= 0) {
@@ -286,9 +173,14 @@ class AmazonQuiz {
     }
 
     submitAnswer(answerIndex) {
-        console.log('Submitting answer:', answerIndex);
+        clearInterval(this.timer);
         const currentQuestion = this.questions[this.state.currentQuestion];
         const isCorrect = answerIndex === currentQuestion.correctAnswer;
+
+        if (isCorrect) {
+            this.state.score += this.config.pointsPerQuestion;
+            this.elements.currentScore.textContent = this.state.score;
+        }
 
         this.state.answers.push({
             questionIndex: this.state.currentQuestion,
@@ -296,138 +188,318 @@ class AmazonQuiz {
             correct: isCorrect
         });
 
-        if (isCorrect) {
-            this.state.score += this.config.pointsPerQuestion;
-        }
-
-        this.showAnswerFeedback(isCorrect, currentQuestion.explanation);
+        this.showFeedback(isCorrect, currentQuestion.explanation);
     }
 
-    showAnswerFeedback(isCorrect, explanation) {
-        console.log('Showing answer feedback');
-        const feedbackHtml = `
-            <div class="answer-feedback ${isCorrect ? 'correct' : 'incorrect'}">
-                <div class="feedback-header">
-                    <i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}"></i>
-                    <h3>${isCorrect ? 'Correct!' : 'Incorrect'}</h3>
-                </div>
-                <p class="explanation">${explanation}</p>
-                <button class="continue-btn button-primary">Continue</button>
-            </div>
-        `;
+    showFeedback(isCorrect, explanation) {
+        const feedbackIcon = this.elements.feedback.querySelector('.feedback-icon');
+        const feedbackTitle = this.elements.feedback.querySelector('.feedback-title');
+        const feedbackExplanation = this.elements.feedback.querySelector('.feedback-explanation');
 
-        const feedbackElement = document.createElement('div');
-        feedbackElement.className = 'feedback-overlay';
-        feedbackElement.innerHTML = feedbackHtml;
+        feedbackIcon.className = `feedback-icon fas ${isCorrect ? 'fa-check-circle correct' : 'fa-times-circle incorrect'}`;
+        feedbackTitle.textContent = isCorrect ? 'Correct!' : 'Incorrect';
+        feedbackExplanation.textContent = explanation;
 
-        this.quizContainer.appendChild(feedbackElement);
+        this.elements.feedback.classList.add('show');
+    }
 
-        feedbackElement.querySelector('.continue-btn').addEventListener('click', () => {
-            feedbackElement.remove();
+    nextQuestion() {
+        this.elements.feedback.classList.remove('show');
+        setTimeout(() => {
             this.state.currentQuestion++;
-            this.showNextQuestion();
-        });
+            this.showQuestion();
+        }, 300);
+    }
+
+    updateProgress() {
+        const progress = ((this.state.currentQuestion + 1) / this.questions.length) * 100;
+        this.elements.progressBar.style.width = `${progress}%`;
     }
 
     endQuiz() {
-        console.log('Ending quiz');
+        this.state.endTime = new Date();
         this.state.completed = true;
-        this.cleanup();
+        clearInterval(this.timer);
+
+        this.elements.content.style.display = 'none';
+        this.elements.summary.style.display = 'block';
 
         const correctAnswers = this.state.answers.filter(answer => answer.correct).length;
-        const summaryHtml = `
-            <div class="quiz-summary">
-                <div class="summary-header">
-                    <i class="fas fa-trophy"></i>
-                    <h2>Quiz Complete!</h2>
-                </div>
-                
-                <div class="score-summary">
-                    <div class="score-item">
-                        <span class="label">Correct Answers:</span>
-                        <span class="value">${correctAnswers}/${this.questions.length}</span>
-                    </div>
-                    <div class="score-item">
-                        <span class="label">Final Score:</span>
-                        <span class="value">${this.state.score}</span>
-                    </div>
-                </div>
+        const timeElapsed = Math.floor((this.state.endTime - this.state.startTime) / 1000);
 
-                <div class="summary-buttons">
-                    <button class="review-btn button-secondary">
-                        <i class="fas fa-search"></i> Review Answers
-                    </button>
-                    <button class="complete-btn button-primary">
-                        <i class="fas fa-check"></i> Complete Training
-                    </button>
-                </div>
-            </div>
-        `;
-
-        this.quizContainer.innerHTML = summaryHtml;
-
-        // Add event listeners for summary buttons
-        this.quizContainer.querySelector('.review-btn').addEventListener('click', () => {
-            this.showAnswerReview();
-        });
-
-        this.quizContainer.querySelector('.complete-btn').addEventListener('click', () => {
-            this.completeTraining();
-        });
+        document.getElementById('correctAnswers').textContent = `${correctAnswers}/${this.questions.length}`;
+        document.getElementById('completionTime').textContent = this.formatTime(timeElapsed);
+        document.getElementById('finalScore').textContent = this.state.score;
     }
 
-    cleanup() {
-        console.log('Cleaning up quiz resources');
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
-        if (this.visibilityCheckInterval) {
-            clearInterval(this.visibilityCheckInterval);
-            this.visibilityCheckInterval = null;
-        }
+    formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
+    resetQuiz() {
+        this.state = {
+            isActive: false,
+            currentQuestion: 0,
+            score: 0,
+            answers: [],
+            completed: false,
+            initialized: true,
+            startTime: null,
+            endTime: null
+        };
 
-    showAnswerReview() {
-        // Implementation for answer review
-        console.log("Answer review to be implemented");
+        this.elements.instructions.style.display = 'block';
+        this.elements.content.style.display = 'none';
+        this.elements.summary.style.display = 'none';
+        this.elements.currentScore.textContent = '0';
+        this.elements.progressBar.style.width = '0%';
     }
 
     completeTraining() {
-        console.log("Completing training");
-        if (window.gameState) {
-            gameState.gameStats.quiz.completed = true;
-            gameState.gameStats.quiz.score = this.state.score;
-            gameState.player.completedSections.push('quiz');
-            saveGameState();
+        console.log('Complete Training triggered');
+
+        // Update game state if it exists
+        if (typeof window.gameState !== 'undefined' && window.gameState !== null) {
+            if (!window.gameState.gameStats) {
+                window.gameState.gameStats = {};
+            }
+            if (!window.gameState.gameStats.quiz) {
+                window.gameState.gameStats.quiz = {};
+            }
+            window.gameState.gameStats.quiz.completed = true;
+            window.gameState.gameStats.quiz.score = this.state.score;
+
+            if (!window.gameState.player) {
+                window.gameState.player = {};
+            }
+            if (!Array.isArray(window.gameState.player.completedSections)) {
+                window.gameState.player.completedSections = [];
+            }
+            window.gameState.player.completedSections.push('quiz');
+
+            if (typeof saveGameState === 'function') {
+                saveGameState();
+            } else {
+                console.warn('saveGameState function is not defined');
+            }
+        } else {
+            console.warn('gameState is not defined. Skipping game state update.');
+        }
+
+        // Hide all sections
+        const allSections = document.querySelectorAll('.page');
+        allSections.forEach(section => {
+            section.classList.remove('active');
+            section.style.display = 'none';
+        });
+
+        // Show game complete section
+        const gameCompleteSection = document.getElementById('gameComplete');
+        console.log('Game Complete Section:', gameCompleteSection);
+
+        if (gameCompleteSection) {
+            gameCompleteSection.style.display = 'block';
+            gameCompleteSection.classList.add('active');
+
+            // Update scores
+            this.updateFinalScores();
+
+            // Trigger animations
+            const animatedElements = gameCompleteSection.querySelectorAll('.animated');
+            animatedElements.forEach((element, index) => {
+                setTimeout(() => {
+                    if (element.dataset.animation) {
+                        element.classList.add(element.dataset.animation);
+                    }
+                }, index * 100);
+            });
+
+            // Trigger confetti effect
+            this.confetti({
+                particleCount: 150,
+                spread: 60,
+                origin: { y: 0.7 }
+            });
+        } else {
+            console.error('Game Complete section not found!');
         }
     }
+
+
+    updateFinalScores() {
+        try {
+            // Update quiz score
+            const quizFinalScore = document.getElementById('quizFinalScore');
+            if (quizFinalScore) {
+                quizFinalScore.textContent = this.state.score;
+            }
+
+            // Update quiz progress bar
+            const quizProgress = document.getElementById('quizProgress');
+            if (quizProgress) {
+                const progressPercentage = (this.state.score / (this.config.totalQuestions * this.config.pointsPerQuestion)) * 100;
+                quizProgress.style.width = `${progressPercentage}%`;
+            }
+
+            // Update total score
+            const totalFinalScore = document.getElementById('totalFinalScore');
+            if (totalFinalScore) {
+                const currentTotal = parseInt(totalFinalScore.textContent) || 0;
+                totalFinalScore.textContent = currentTotal + this.state.score;
+            }
+
+            // Update games completed
+            const gamesCompleted = document.getElementById('gamesCompleted');
+            if (gamesCompleted) {
+                const [completed, total] = gamesCompleted.textContent.split('/');
+                gamesCompleted.textContent = `${parseInt(completed) + 1}/${total}`;
+            }
+
+            // Update total time
+            if (this.state.startTime && this.state.endTime) {
+                const totalTimeTaken = document.getElementById('totalTimeTaken');
+                if (totalTimeTaken) {
+                    const quizTime = Math.floor((this.state.endTime - this.state.startTime) / 1000);
+                    const currentTimeArr = totalTimeTaken.textContent.split(':');
+                    const currentSeconds = parseInt(currentTimeArr[0]) * 60 + parseInt(currentTimeArr[1]);
+                    const newTotalSeconds = currentSeconds + quizTime;
+                    totalTimeTaken.textContent = this.formatTime(newTotalSeconds);
+                }
+            }
+        } catch (error) {
+            console.error('Error updating final scores:', error);
+        }
+    }
+
+    confetti(params) {
+        const defaults = {
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#FF9900', '#232F3E', '#146EB4', '#FFFFFF', '#ff9900'],
+            scalar: 2
+        };
+
+        const options = { ...defaults, ...params };
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9999';
+        document.body.appendChild(canvas);
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        for (let i = 0; i < options.particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = (15 + Math.random() * 15) * options.scalar;
+
+            particles.push({
+                color: options.colors[Math.floor(Math.random() * options.colors.length)],
+                x: options.origin.x ? options.origin.x * canvas.width : canvas.width / 2,
+                y: options.origin.y * canvas.height,
+                velocity: {
+                    x: Math.cos(angle) * velocity * (Math.random() * options.spread - options.spread/2),
+                    y: Math.sin(angle) * velocity * (Math.random() * options.spread - options.spread/2)
+                },
+                size: Math.random() * 10 + 5,
+                angle: Math.random() * Math.PI * 2,
+                tilt: 0,
+                tiltAngleIncrement: Math.random() * 0.1 + 0.05,
+                opacity: 1
+            });
+        }
+
+        let animationFrame;
+        let ticks = 0;
+
+        const animate = () => {
+            ticks++;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle, index) => {
+                particle.velocity.y += 0.5;
+                particle.x += particle.velocity.x;
+                particle.y += particle.velocity.y;
+                particle.tilt += particle.tiltAngleIncrement;
+                particle.opacity -= 0.005;
+
+                context.save();
+                context.translate(particle.x, particle.y);
+                context.rotate(particle.angle + particle.tilt);
+
+                context.fillStyle = `rgba(${this.hexToRgb(particle.color)}, ${particle.opacity})`;
+                context.fillRect(-particle.size/2, -particle.size/2, particle.size, particle.size);
+
+                context.restore();
+
+                if (particle.opacity <= 0 ||
+                    particle.y > canvas.height ||
+                    particle.x < 0 ||
+                    particle.x > canvas.width) {
+                    particles.splice(index, 1);
+                }
+            });
+
+            if (particles.length > 0 && ticks < 200) {
+                animationFrame = requestAnimationFrame(animate);
+            } else {
+                cancelAnimationFrame(animationFrame);
+                document.body.removeChild(canvas);
+            }
+        };
+
+        animate();
+    }
+
+    hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        return `${r}, ${g}, ${b}`;
+    }
 }
 
-// Initialize function for external use
-function initializeQuiz() {
-    if (!window.amazonQuiz) {
-        window.amazonQuiz = new AmazonQuiz();
-    }
-    window.amazonQuiz.initialize();
-}
+// Initialize quiz when document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.amazonQuiz = new AmazonQuiz();
 
-// Export the quiz initialization function
-window.initializeQuiz = initializeQuiz;
+    // Add CSS for proper visibility
+    const style = document.createElement('style');
+    style.textContent = `
+        .page {
+            display: none;
+        }
 
-// Add global error handler
-window.onerror = function(message, source, lineno, colno, error) {
-    console.error("Global error caught:", message, "Source:", source, "Line:", lineno);
-    if (window.amazonQuiz) {
-        window.amazonQuiz.ensureVisibility();
-    }
-    return false;
-};
+        .page.active {
+            display: block !important;
+        }
+
+        #gameComplete {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #gameComplete.active {
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(style);
+});

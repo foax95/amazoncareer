@@ -19,7 +19,7 @@
     --transition-slow: 0.5s ease;
 
     /* Base styles */
-    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/CXO.png');
+    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/PACE.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -54,17 +54,6 @@
 }
 
 /* Game Header and Stats */
-.pace-section .game-header {
-    background: var(--amazon-background);
-    padding: 1.5rem;
-    border-radius: 15px;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 2rem;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .pace-section .game-stats {
     background: var(--amazon-background);
     padding: 15px 30px;
@@ -110,7 +99,6 @@
     50% { opacity: 0.5; }
     100% { opacity: 1; }
 }
-
 /* Instructions Panel */
 .pace-section .game-instructions-panel {
     background: var(--amazon-background);
@@ -172,7 +160,7 @@
 
 .pace-section .items-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 15px;
 }
 
@@ -320,7 +308,7 @@
 .pace-section .pace-item[data-id="paperwork"] i { color: #008296; }
 .pace-section .pace-item[data-id="id"] i { color: #e31f64; }
 .pace-section .pace-item[data-id="dress_code"] i { color: #2d8c3c; }
-
+.pace-section .pace-item[data-id="muscle_soreness"] i { color: #d65106; }
 /* Modal Styles */
 .pace-section .pace-item-modal {
     display: none;
@@ -386,6 +374,125 @@
     border-top: 1px solid var(--amazon-grey-light);
 }
 
+/* Completion Message */
+.pace-section .completion-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--amazon-background);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.pace-section .completion-message.show {
+    display: block;
+}
+
+.pace-section .message-content {
+    background-color: var(--amazon-white);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--shadow-lg);
+}
+
+.pace-section .message-content.success {
+    border-top: 5px solid var(--amazon-success);
+}
+
+.pace-section .message-content.timeout {
+    border-top: 5px solid var(--amazon-error);
+}
+
+/* Message Header and Content */
+.pace-section .message-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pace-section .message-header i {
+    font-size: 24px;
+    color: var(--amazon-orange);
+}
+
+.pace-section .message-header h3 {
+    font-size: 24px;
+    color: var(--amazon-blue);
+    margin: 0;
+}
+
+.pace-section .score-breakdown {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.pace-section .score-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.pace-section .score-item.total {
+    font-weight: bold;
+    border-top: 2px solid var(--amazon-grey-light);
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+/* Buttons */
+.pace-section .modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pace-section .continue-button,
+.pace-section .replay-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pace-section .continue-button {
+    background-color: var(--amazon-orange);
+    color: var(--amazon-white);
+}
+
+.pace-section .continue-button:hover {
+    background-color: var(--amazon-orange-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.pace-section .replay-button {
+    background-color: var(--amazon-blue);
+    color: var(--amazon-white);
+}
+
+.pace-section .replay-button:hover {
+    background-color: #1a2530;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
 /* Controls */
 .pace-section .touch-controls {
     width: 100%;
@@ -442,33 +549,67 @@
     box-shadow: var(--shadow-md);
 }
 
-/* Completion Message */
-.pace-section .completion-message {
-    display: none;
+/* Info Popup */
+.pace-section .pace-info-popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: var(--amazon-background);
-    padding: 30px;
-    border-radius: 20px;
+    background: var(--amazon-white);
+    padding: 20px;
+    border-radius: 10px;
     box-shadow: var(--shadow-lg);
     z-index: 1000;
-    max-width: 400px;
+    max-width: 300px;
     width: 90%;
+}
+
+.pace-section .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.pace-section .popup-header h3 {
+    margin: 0;
+    color: var(--amazon-blue);
+}
+
+.pace-section .close-popup {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--amazon-grey);
+}
+
+.pace-section .progress-section {
+    margin-bottom: 15px;
+}
+
+.pace-section .progress-bar {
+    height: 10px;
+    background-color: var(--amazon-grey-light);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.pace-section .progress {
+    height: 100%;
+    background-color: var(--amazon-orange);
+    transition: width 0.3s ease;
+}
+
+.pace-section .progress-text {
     text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
 }
 
-.pace-section .completion-message.show {
-    display: block;
-}
-
-.pace-section .message-header {
-    margin-bottom: 20px;
-}
-
-.pace-section .score-breakdown {
-    margin: 20px 0;
+.pace-section .collected-items-list {
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 /* Animations */
@@ -487,6 +628,11 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes appear {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 .pace-section [data-animation="fadeIn"] {
     animation-name: fadeIn;
 }
@@ -495,6 +641,27 @@
     animation-name: slideIn;
 }
 
+.pace-section .pace-item.special-item.appear {
+    animation: appear 0.5s ease-out;
+}
+
+/* Points and Combo Display */
+.pace-section .points-earned {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pace-section .points {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--amazon-success);
+}
+
+.pace-section .combo {
+    color: var(--amazon-orange);
+    font-weight: bold;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .pace-section {
@@ -515,7 +682,7 @@
     }
 
     .pace-section .items-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .pace-section .game-area-container {
@@ -529,7 +696,7 @@
 
     .pace-section #player i,
     .pace-section .pace-item i {
-        font-size:  16px;
+        font-size: 16px;
     }
 
     .pace-section .control-button {
@@ -545,6 +712,24 @@
         width: 95%;
         max-height: 80vh;
     }
+
+    .pace-section .modal-buttons {
+        flex-direction: column;
+    }
+
+    .pace-section .continue-button,
+    .pace-section .replay-button {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .pace-section .message-content {
+        padding: 15px;
+    }
+
+    .pace-section .score-breakdown {
+        padding: 10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -557,6 +742,36 @@
 
     .pace-section .stat-item {
         padding: 5px 10px;
+    }
+
+    .pace-section .items-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pace-section .instruction-category {
+        padding: 15px;
+    }
+
+    .pace-section .modal-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pace-section .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .pace-section .message-header {
+        flex-direction: column;
+    }
+
+    .pace-section .score-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 5px;
     }
 }
 
@@ -575,6 +790,11 @@
         width: 40px;
         height: 40px;
     }
+
+    .pace-section .start-game-btn {
+        width: 100%;
+        font-size: 14px;
+    }
 }
 
 /* Accessibility */
@@ -584,5 +804,57 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
         scroll-behavior: auto !important;
+    }
+}
+
+/* Focus States */
+.pace-section button:focus,
+.pace-section .control-button:focus,
+.pace-section .preview-item:focus {
+    outline: 2px solid var(--amazon-orange);
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+    .pace-section {
+        forced-color-adjust: none;
+    }
+}
+
+/* Additional Utility Classes */
+.pace-section .hidden {
+    display: none !important;
+}
+
+.pace-section .visible {
+    display: block !important;
+}
+
+.pace-section .disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.pace-section .hover-lift {
+    transition: transform var(--transition-normal);
+}
+
+.pace-section .hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Print Styles */
+@media print {
+    .pace-section {
+        background: none;
+        color: black;
+    }
+
+    .pace-section .game-content,
+    .pace-section .touch-controls,
+    .pace-section .start-game-btn {
+        display: none !important;
     }
 }

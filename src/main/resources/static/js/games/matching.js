@@ -3,27 +3,16 @@ class BenefitsMatchingGame {
         // Game state
         this.state = {
             isPlaying: false,
-            isPaused: false,
             timeLeft: 60,
             score: 0,
             matchesFound: 0,
             attempts: 0,
             firstCard: null,
             secondCard: null,
-            canFlip: true,
-            modalVisible: false
+            canFlip: true
         };
 
-        // Game configuration
-        this.config = {
-            totalPairs: 8,
-            basePoints: 100,
-            timeBonus: 10,
-            animationDuration: 600,
-            modalTransitionTime: 300
-        };
-
-        // Benefits information
+        // Benefits data
         this.benefits = {
             health: {
                 name: "Health Insurance",
@@ -75,151 +64,95 @@ class BenefitsMatchingGame {
             }
         };
 
-        // Initialize tracking
         this.timer = null;
-
-        // Bind methods
-        this.handleCardClick = this.handleCardClick.bind(this);
-        this.startGame = this.startGame.bind(this);
-        this.endGame = this.endGame.bind(this);
-        this.closeBenefitPopup = this.closeBenefitPopup.bind(this);
-        this.resumeGame = this.resumeGame.bind(this);
     }
 
     initialize() {
-        console.log('Initializing Benefits Matching Game');
         this.gameContainer = document.getElementById('matchingGame');
-        if (!this.gameContainer) {
-            console.error('Game container not found');
-            return;
-        }
-
-        this.resetGameState();
         this.setupEventListeners();
-        this.showInstructions();
+        this.createCards();
     }
 
-    resetGameState() {
-        // Reset game state
-        Object.assign(this.state, {
-            isPlaying: false,
-            isPaused: false,
-            timeLeft: 60,
-            score: 0,
-            matchesFound: 0,
-            attempts: 0,
-            firstCard: null,
-            secondCard: null,
-            canFlip: true,
-            modalVisible: false
-        });
+    createCards() {
+        const cardsGrid = this.gameContainer.querySelector('.cards-grid');
+        cardsGrid.innerHTML = ''; // Clear existing cards
 
-        // Reset UI
-        this.updateUI();
-        this.resetCards();
+        const benefitPairs = Object.keys(this.benefits).reduce((pairs, benefit) => {
+            return [...pairs, benefit, benefit];
+        }, []);
 
-        // Clear timer
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
+        for (let i = benefitPairs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [benefitPairs[i], benefitPairs[j]] = [benefitPairs[j], benefitPairs[i]];
         }
+
+        benefitPairs.forEach(benefit => {
+            const card = document.createElement('div');
+            card.className = 'benefit-card';
+            card.dataset.benefit = benefit;
+
+            const benefitData = this.benefits[benefit];
+            card.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <i class="fas ${benefitData.icon}"></i>
+                                <span>${benefitData.name}</span>
+                            </div>
+                            <div class="card-back">
+                                <i class="fas fa-question"></i>
+                            </div>
+                        </div>
+                    `;
+
+            cardsGrid.appendChild(card);
+        });
     }
 
     setupEventListeners() {
-        // Card click events
-        const cards = this.gameContainer.querySelectorAll('.benefit-card');
-        cards.forEach(card => {
-            const newCard = card.cloneNode(true);
-            card.parentNode.replaceChild(newCard, card);
-            newCard.addEventListener('click', () => this.handleCardClick(newCard));
+        const startButton = this.gameContainer.querySelector('.start-game-btn');
+        startButton.addEventListener('click', () => this.startGame());
+
+        const cardsGrid = this.gameContainer.querySelector('.cards-grid');
+        cardsGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.benefit-card');
+            if (card) this.handleCardClick(card);
         });
 
-        // Start game button
-        const startButton = this.gameContainer.querySelector('.start-game-btn');
-        if (startButton) {
-            const newStartButton = startButton.cloneNode(true);
-            startButton.parentNode.replaceChild(newStartButton, startButton);
-            newStartButton.addEventListener('click', this.startGame);
-        }
+        const modalClose = this.gameContainer.querySelector('.modal-close');
+        modalClose.addEventListener('click', () => this.closeBenefitPopup());
 
-        // Modal close button
-        const closeButton = this.gameContainer.querySelector('.modal-close');
-        if (closeButton) {
-            closeButton.addEventListener('click', this.closeBenefitPopup);
-        }
-    }
-
-    showInstructions() {
-        const instructionsPanel = this.gameContainer.querySelector('.game-instructions-panel');
-        if (instructionsPanel) {
-            instructionsPanel.style.display = 'block';
-            requestAnimationFrame(() => {
-                instructionsPanel.style.opacity = '1';
-            });
-        }
+        const continueButton = this.gameContainer.querySelector('.continue-button');
+        continueButton.addEventListener('click', () => this.navigateToQuiz());
     }
 
     startGame() {
-        if (this.state.isPlaying) return;
-
         this.state.isPlaying = true;
-        this.shuffleCards();
+        this.state.timeLeft = 60;
+        this.state.score = 0;
+        this.state.matchesFound = 0;
+        this.state.attempts = 0;
+        this.state.firstCard = null;
+        this.state.secondCard = null;
+        this.state.canFlip = true;
+
+        this.gameContainer.querySelector('.game-instructions-panel').style.display = 'none';
+        this.gameContainer.querySelector('.game-content').classList.add('show');
+
         this.startTimer();
-
-        // Hide instructions, show game
-        const instructionsPanel = this.gameContainer.querySelector('.game-instructions-panel');
-        const gameContent = this.gameContainer.querySelector('.game-content');
-
-        if (instructionsPanel) {
-            instructionsPanel.style.opacity = '0';
-            setTimeout(() => {
-                instructionsPanel.style.display = 'none';
-            }, this.config.animationDuration);
-        }
-
-        if (gameContent) {
-            gameContent.style.display = 'block';
-            requestAnimationFrame(() => {
-                gameContent.style.opacity = '1';
-            });
-        }
-    }
-
-    shuffleCards() {
-        const cards = Array.from(this.gameContainer.querySelectorAll('.benefit-card'));
-        const cardsGrid = this.gameContainer.querySelector('.cards-grid');
-
-        for (let i = cards.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            cardsGrid.appendChild(cards[j]);
-        }
-    }
-
-    startTimer() {
-        if (this.timer) clearInterval(this.timer);
-
-        this.timer = setInterval(() => {
-            if (!this.state.isPaused && this.state.timeLeft > 0) {
-                this.state.timeLeft--;
-                this.updateUI();
-
-                if (this.state.timeLeft === 0) {
-                    this.endGame(false);
-                }
-            }
-        }, 1000);
     }
 
     handleCardClick(card) {
         if (!this.state.isPlaying ||
             !this.state.canFlip ||
-            this.state.modalVisible ||
             card.classList.contains('matched') ||
+            card === this.state.firstCard ||
             card.classList.contains('flipped')) {
             return;
         }
 
-        this.flipCard(card);
+        const cardInner = card.querySelector('.card-inner');
+        cardInner.classList.add('flip-in');
+        card.classList.add('flipped');
 
         if (!this.state.firstCard) {
             this.state.firstCard = card;
@@ -229,21 +162,13 @@ class BenefitsMatchingGame {
             this.checkMatch();
         }
     }
-    flipCard(card) {
-        card.classList.add('flipped');
-    }
-
-    unflipCard(card) {
-        card.classList.remove('flipped');
-    }
 
     checkMatch() {
         this.state.canFlip = false;
         const firstBenefit = this.state.firstCard.dataset.benefit;
         const secondBenefit = this.state.secondCard.dataset.benefit;
-        const isMatch = firstBenefit === secondBenefit;
 
-        if (isMatch) {
+        if (firstBenefit === secondBenefit) {
             this.handleMatch(firstBenefit);
         } else {
             this.handleMismatch();
@@ -257,14 +182,12 @@ class BenefitsMatchingGame {
         const points = this.calculatePoints();
         this.state.score += points;
 
-        const matchedCards = [this.state.firstCard, this.state.secondCard];
-        matchedCards.forEach(card => {
-            card.classList.add('matched');
-        });
+        this.state.firstCard.classList.add('matched');
+        this.state.secondCard.classList.add('matched');
 
         this.showBenefitPopup(benefitType, points);
 
-        if (this.state.matchesFound === this.config.totalPairs) {
+        if (this.state.matchesFound === 8) {
             this.endGame(true);
         } else {
             this.resetTurn();
@@ -273,10 +196,46 @@ class BenefitsMatchingGame {
 
     handleMismatch() {
         setTimeout(() => {
-            this.unflipCard(this.state.firstCard);
-            this.unflipCard(this.state.secondCard);
-            this.resetTurn();
+            const firstCardInner = this.state.firstCard.querySelector('.card-inner');
+            const secondCardInner = this.state.secondCard.querySelector('.card-inner');
+
+            firstCardInner.classList.remove('flip-in');
+            secondCardInner.classList.remove('flip-in');
+            firstCardInner.classList.add('flip-out');
+            secondCardInner.classList.add('flip-out');
+
+            this.state.firstCard.classList.remove('flipped');
+            this.state.secondCard.classList.remove('flipped');
+
+            setTimeout(() => {
+                firstCardInner.classList.remove('flip-out');
+                secondCardInner.classList.remove('flip-out');
+                this.resetTurn();
+            }, 600);
         }, 1000);
+    }
+
+    calculatePoints() {
+        return 100 + Math.floor(this.state.timeLeft / 10) * 10;
+    }
+
+    showBenefitPopup(benefitType, points) {
+        const benefit = this.benefits[benefitType];
+        const modal = this.gameContainer.querySelector('.benefit-info-modal');
+
+        modal.querySelector('.modal-icon').className = `modal-icon fas ${benefit.icon}`;
+        modal.querySelector('.modal-title').textContent = benefit.name;
+        modal.querySelector('.modal-description').textContent = benefit.description;
+        modal.querySelector('.modal-details').textContent = benefit.details;
+        modal.querySelector('.points-earned').textContent = `+${points} points`;
+
+        modal.classList.add('show');
+    }
+
+    closeBenefitPopup() {
+        const modal = this.gameContainer.querySelector('.benefit-info-modal');
+        modal.classList.remove('show');
+        this.resetTurn();
     }
 
     resetTurn() {
@@ -285,206 +244,75 @@ class BenefitsMatchingGame {
         this.state.canFlip = true;
     }
 
-    calculatePoints() {
-        const basePoints = this.config.basePoints;
-        const timeBonus = Math.floor(this.state.timeLeft / 10) * 10;
-        return basePoints + timeBonus;
-    }
+    startTimer() {
+        if (this.timer) clearInterval(this.timer);
 
-    showBenefitPopup(benefitType, points) {
-        const benefit = this.benefits[benefitType];
-        if (!benefit) return;
+        this.timer = setInterval(() => {
+            if (this.state.timeLeft > 0) {
+                this.state.timeLeft--;
+                this.updateUI();
 
-        this.state.isPaused = true;
-        this.state.modalVisible = true;
-
-        const modal = this.gameContainer.querySelector('.benefit-info-modal');
-        if (!modal) return;
-
-        // Update modal content
-        modal.querySelector('.modal-icon').className = `modal-icon fas ${benefit.icon}`;
-        modal.querySelector('.modal-title').textContent = benefit.name;
-        modal.querySelector('.modal-description').textContent = benefit.description;
-        modal.querySelector('.modal-details').textContent = benefit.details;
-        modal.querySelector('.points-earned').textContent = `+${points} points`;
-
-        // Show modal with animation
-        modal.style.display = 'flex';
-        requestAnimationFrame(() => {
-            modal.classList.add('show');
-        });
-    }
-
-    closeBenefitPopup() {
-        const modal = this.gameContainer.querySelector('.benefit-info-modal');
-        if (!modal) return;
-
-        modal.classList.remove('show');
-        setTimeout(() => {
-            modal.style.display = 'none';
-            this.state.modalVisible = false;
-            this.state.isPaused = false;
-        }, this.config.modalTransitionTime);
+                if (this.state.timeLeft === 0) {
+                    this.endGame(false);
+                }
+            }
+        }, 1000);
     }
 
     updateUI() {
-        // Update timer
         const timerDisplay = this.gameContainer.querySelector('#matchingTimer');
-        if (timerDisplay) {
-            timerDisplay.textContent = this.state.timeLeft;
-            timerDisplay.classList.toggle('warning', this.state.timeLeft <= 10);
-        }
+        const matchesDisplay = this.gameContainer.querySelector('#matchesFound');
+        const attemptsDisplay = this.gameContainer.querySelector('#attemptCounter');
 
-        // Update matches
-        const matchesCounter = this.gameContainer.querySelector('#matchesFound');
-        if (matchesCounter) {
-            matchesCounter.textContent = this.state.matchesFound;
-        }
+        timerDisplay.textContent = this.state.timeLeft;
+        matchesDisplay.textContent = this.state.matchesFound;
+        attemptsDisplay.textContent = this.state.attempts;
 
-        // Update attempts
-        const attemptsCounter = this.gameContainer.querySelector('#attemptCounter');
-        if (attemptsCounter) {
-            attemptsCounter.textContent = this.state.attempts;
+        if (this.state.timeLeft <= 10) {
+            timerDisplay.classList.add('warning');
         }
     }
 
-    showCompletionMessage(completed) {
-        const messageEl = document.createElement('div');
-        messageEl.className = 'completion-message';
-
-        const timeBonus = completed ? this.state.timeLeft * this.config.timeBonus : 0;
-        const finalScore = this.state.score + timeBonus;
-
-        messageEl.innerHTML = `
-        <div class="message-content ${completed ? 'success' : 'timeout'}">
-            <div class="message-header">
-                <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
-                <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
-            </div>
-            <div class="score-breakdown">
-                <div class="score-item">
-                    <span class="label">Matches Found:</span>
-                    <span class="value">${this.state.matchesFound}/${this.config.totalPairs}</span>
-                </div>
-                <div class="score-item">
-                    <span class="label">Attempts:</span>
-                    <span class="value">${this.state.attempts}</span>
-                </div>
-                ${completed ? `
-                    <div class="score-item">
-                        <span class="label">Time Bonus:</span>
-                        <span class="value">+${timeBonus}</span>
-                    </div>
-                ` : ''}
-                <div class="score-item total">
-                    <span class="label">Final Score:</span>
-                    <span class="value">${finalScore}</span>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="continue-button button-primary" onclick="navigateToQuiz()">
-                    <i class="fas fa-arrow-right"></i> Continue to Quiz
-                </button>
-                <button class="replay-button button-secondary" onclick="window.matchingGame.initialize()">
-                    <i class="fas fa-redo"></i> Play Again
-                </button>
-            </div>
-        </div>
-    `;
-
-        this.gameContainer.appendChild(messageEl);
-        requestAnimationFrame(() => messageEl.classList.add('show'));
-        // Add event listener to the continue button
-        const continueBtn = messageEl.querySelector('#continueToQuizBtn');
-        if (continueBtn) {
-            continueBtn.addEventListener('click', navigateToQuiz);
-
-        }
-    }
-
-    endGame(completed = false) {
+    endGame(completed) {
+        clearInterval(this.timer);
         this.state.isPlaying = false;
-        this.state.isPaused = true;
 
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
+        const completionMessage = this.gameContainer.querySelector('.completion-message');
 
-        // Store final score
+        completionMessage.querySelector('.matches-found').textContent =
+            `${this.state.matchesFound}/8`;
+        completionMessage.querySelector('.time-bonus').textContent =
+            `${this.state.timeLeft}s`;
+        completionMessage.querySelector('.total-attempts').textContent =
+            this.state.attempts;
+        completionMessage.querySelector('.final-score').textContent =
+            this.state.score;
+
+        completionMessage.classList.add('show');
+
         localStorage.setItem('matchingGameScore', this.state.score.toString());
+    }
 
-        // Update gameState if completion was successful
-        if (completed && window.gameState) {
-            gameState.gameStats.matching.matchesFound += this.state.matchesFound;
-            gameState.gameStats.matching.gamesPlayed++;
-            if (!gameState.player.completedSections.includes('matchingGame')) {
-                gameState.player.completedSections.push('matchingGame');
+    navigateToQuiz() {
+        const quizSection = document.getElementById('quizSection');
+        const matchingGame = document.getElementById('matchingGame');
+
+        if (quizSection && matchingGame) {
+            matchingGame.style.display = 'none';
+            matchingGame.classList.remove('active');
+
+            quizSection.style.display = 'block';
+            quizSection.classList.add('active');
+
+            if (window.amazonQuiz) {
+                window.amazonQuiz.initialize();
             }
-            saveGameState();
         }
-
-        // Show completion message
-        this.showCompletionMessage(completed);
-
-        // After delay, transition to next game if completed successfully
-        if (completed) {
-            setTimeout(() => {
-                // Navigate to next game or section
-                showSection('nextGame'); // Replace 'nextGame' with actual next section
-            }, 5000);
-        }
-    }
-
-    resetCards() {
-        const cards = this.gameContainer.querySelectorAll('.benefit-card');
-        cards.forEach(card => {
-            card.classList.remove('flipped', 'matched');
-        });
-    }
-
-    pauseGame() {
-        this.state.isPaused = true;
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
-    }
-
-    resumeGame() {
-        this.state.isPaused = false;
-        this.startTimer();
     }
 }
 
-// Initialize the game when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     const game = new BenefitsMatchingGame();
     window.matchingGame = game;
     game.initialize();
 });
-
-// Navigation function (implement based on your navigation system)
-function navigateToQuiz() {
-    const quizSection = document.getElementById('quizSection');
-    const matchingGame = document.getElementById('matchingGame');
-
-    if (!quizSection || !matchingGame) {
-        console.error('Required sections not found');
-        return;
-    }
-
-    // Hide matching game
-    matchingGame.style.display = 'none';
-    matchingGame.classList.remove('active');
-
-    // Show quiz section
-    quizSection.style.display = 'block';
-    quizSection.classList.add('active');
-
-    // Initialize quiz
-    if (!window.amazonQuiz) {
-        window.amazonQuiz = new AmazonQuiz();
-    }
-    window.amazonQuiz.initialize();
-}

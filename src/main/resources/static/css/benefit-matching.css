@@ -22,9 +22,8 @@
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
 
-    /* Base styles */
     display: none;
-    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/HAZFC.png');
+    background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/benefit.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -38,7 +37,6 @@
     display: block;
 }
 
-/* Background Overlay */
 .matching-section::before {
     content: '';
     position: fixed;
@@ -57,14 +55,11 @@
 
 /* Instructions Panel */
 .matching-section .game-instructions-panel {
-        border-radius: 20px;
-        padding: 2.5rem;
-        max-width: 1000px;
-        width: 100%;
-        transform: translateY(20px);
-        opacity: 0;
-        animation: quiz-slideUp 0.6s ease 0.2s forwards;
-        margin: auto;
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 1000px;
+    width: 100%;
+    margin: auto;
 }
 
 .matching-section .instructions-content {
@@ -92,14 +87,6 @@
     color: var(--amazon-orange);
 }
 
-.matching-section .instructions-content > p {
-    font-size: 18px;
-    color: var(--text-color);
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* Instruction Steps */
 .matching-section .instruction-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -126,12 +113,6 @@
     margin-bottom: 15px;
 }
 
-.matching-section .step p {
-    color: var(--text-color);
-    line-height: 1.4;
-}
-
-/* Additional Instructions */
 .matching-section .additional-instructions {
     background: var(--amazon-white);
     padding: 20px;
@@ -140,33 +121,6 @@
     box-shadow: var(--shadow-md);
 }
 
-.matching-section .additional-instructions h3 {
-    color: var(--amazon-blue);
-    margin-bottom: 15px;
-    font-size: 20px;
-}
-
-.matching-section .additional-instructions ol {
-    padding-left: 20px;
-    margin-bottom: 15px;
-}
-
-.matching-section .additional-instructions li {
-    color: var(--text-color);
-    margin-bottom: 10px;
-    line-height: 1.5;
-}
-
-.matching-section .additional-instructions p {
-    color: var(--amazon-blue);
-    font-style: italic;
-    margin-top: 15px;
-    padding: 10px;
-    background: rgba(255, 153, 0, 0.1);
-    border-radius: 10px;
-}
-
-/* Start Game Button */
 .matching-section .start-game-btn {
     background: var(--amazon-orange);
     color: var(--amazon-white);
@@ -190,38 +144,26 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
-/* Game Content - Initially Hidden */
+
+/* Game Content */
 .matching-section .game-content {
-    display: none; /* Explicitly hide */
+    display: none;
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     flex-direction: column;
     align-items: center;
-    opacity: 0;
 }
 
-/* Game Content - When Active */
 .matching-section .game-content.show {
     display: flex;
-    opacity: 1;
 }
 
-/* Instructions Panel - When Hidden */
-.matching-section .game-instructions-panel.hide {
-    display: none;
-}
-
-
-/* Game Header */
 .matching-section .game-header {
     width: 100%;
     max-width: 800px;
     margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .matching-section .game-stats {
@@ -325,6 +267,106 @@
     box-shadow: var(--shadow-md);
 }
 
+/* Modal Styles */
+.matching-section .benefit-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.matching-section .benefit-info-modal.show {
+    display: flex;
+}
+
+.matching-section .modal-content {
+    background: var(--amazon-background);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+.matching-section .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--amazon-grey);
+    cursor: pointer;
+}
+
+/* Completion Message */
+.matching-section .completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--amazon-background);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: none;
+}
+
+.matching-section .completion-message.show {
+    display: block;
+}
+
+.matching-section .completion-message h2 {
+    color: var(--amazon-blue);
+    margin-bottom: 20px;
+}
+
+.matching-section .score-breakdown {
+    background: rgba(255, 153, 0, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.matching-section .score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--amazon-grey-light);
+}
+
+.matching-section .score-item:last-child {
+    border-bottom: none;
+    font-weight: bold;
+}
+
+.matching-section .continue-button {
+    background: var(--amazon-orange);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.matching-section .continue-button:hover {
+    background: var(--amazon-orange-dark);
+    transform: translateY(-2px);
+}
+
 /* Animations */
 @keyframes flipIn {
     from { transform: rotateY(180deg); }
@@ -344,10 +386,14 @@
     animation: flipOut 0.6s ease-in;
 }
 
-/* Responsive adjustments for game content */
+/* Responsive Design */
 @media (max-width: 900px) {
     .matching-section .cards-grid {
         grid-template-columns: repeat(3, minmax(120px, 1fr));
+    }
+
+    .matching-section .instruction-steps {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -360,12 +406,9 @@
         flex-direction: column;
         gap: 10px;
     }
-}
 
-@media (max-width: 400px) {
-    .matching-section .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+    .matching-section .instruction-steps {
+        grid-template-columns: 1fr;
     }
 
     .matching-section .card-front i,
@@ -377,409 +420,10 @@
         font-size: 12px;
     }
 }
-/* Benefit Information Modal */
-.matching-section .benefit-info-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-}
 
-.matching-section .benefit-info-modal.show {
-    display: flex;
-    opacity: 1;
-}
-
-.matching-section .modal-content {
-    background: var(--amazon-background);
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 500px;
-    width: 90%;
-    position: relative;
-    transform: scale(0.9);
-    transition: transform var(--transition-normal);
-    box-shadow: var(--shadow-lg);
-}
-
-.matching-section .benefit-info-modal.show .modal-content {
-    transform: scale(1);
-}
-
-.matching-section .modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: var(--amazon-grey);
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-normal);
-}
-
-.matching-section .modal-close:hover {
-    background: rgba(0, 0, 0, 0.1);
-    color: var(--amazon-blue);
-    transform: rotate(90deg);
-}
-
-.matching-section .modal-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding-right: 40px;
-}
-
-.matching-section .modal-icon {
-    font-size: 32px;
-    color: var(--amazon-orange);
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 153, 0, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.matching-section .modal-title {
-    font-size: 24px;
-    color: var(--amazon-blue);
-    font-weight: bold;
-    margin: 0;
-}
-
-.matching-section .modal-body {
-    color: var(--text-color);
-}
-
-.matching-section .modal-description {
-    font-size: 16px;
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-.matching-section .modal-details {
-    font-size: 14px;
-    color: var(--amazon-grey);
-    background: rgba(0, 0, 0, 0.05);
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.matching-section .points-earned {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    color: var(--amazon-success);
-    background: rgba(45, 140, 1, 0.1);
-    padding: 15px;
-    border-radius: 10px;
-    animation: bounceIn 0.6s ease;
-}
-
-/* Additional Animations */
-@keyframes bounceIn {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.1); }
-    70% { transform: scale(0.9); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
-
-/* Global Animation Classes */
-.matching-section .fade-in {
-    animation: fadeIn var(--transition-normal) forwards;
-}
-
-.matching-section .fade-out {
-    animation: fadeOut var(--transition-normal) forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; transform: translateY(0); }
-    to { opacity: 0; transform: translateY(20px); }
-}
-
-/* Timer Warning State */
-.matching-section #matchingTimer.warning {
-    color: var(--amazon-error);
-    animation: shake 0.5s ease-in-out;
-}
-
-/* Button States */
-.matching-section button {
-    transition: all var(--transition-normal);
-}
-
-.matching-section button:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.matching-section button:active {
-    transform: translateY(0);
-}
-
-/* Accessibility */
-.matching-section button:focus-visible,
-.matching-section .benefit-card:focus-visible {
-    outline: 3px solid var(--amazon-orange);
-    outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .matching-section * {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
-/* Additional Responsive Adjustments */
-@media (max-width: 768px) {
-    .matching-section .modal-content {
-        padding: 20px;
-    }
-
-    .matching-section .modal-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-    }
-
-    .matching-section .modal-title {
-        font-size: 20px;
-    }
-
-    .matching-section .points-earned {
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 480px) {
-    .matching-section .modal-content {
-        padding: 15px;
-    }
-
-    .matching-section .modal-header {
-        flex-direction: column;
-        text-align: center;
+@media (max-width: 400px) {
+    .matching-section .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-
-    .matching-section .points-earned {
-        font-size: 16px;
-    }
 }
-
-/* Performance Optimizations */
-.matching-section {
-    will-change: transform;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.matching-section .card-inner {
-    will-change: transform;
-}
-/* Completion Message */
-.matching-section .completion-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--amazon-background);
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
-}
-
-.matching-section .message-content {
-    animation: bounceIn 0.6s ease;
-}
-
-.matching-section .message-content.success {
-    border-top: 4px solid var(--amazon-success);
-}
-
-.matching-section .message-content.timeout {
-    border-top: 4px solid var(--amazon-error);
-}
-
-.matching-section .message-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.matching-section .message-header i {
-    font-size: 32px;
-    color: var(--amazon-orange);
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 153, 0, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.matching-section .message-header h3 {
-    color: var(--amazon-blue);
-    font-size: 28px;
-    margin: 0;
-}
-
-.matching-section .score-breakdown {
-    background: rgba(255, 153, 0, 0.1);
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 25px;
-}
-
-.matching-section .score-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--amazon-grey-light);
-}
-
-.matching-section .score-item:last-child {
-    border-bottom: none;
-}
-
-.matching-section .score-item.total {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid var(--amazon-grey-light);
-    font-weight: bold;
-}
-
-.matching-section .score-item .label {
-    color: var(--amazon-grey);
-}
-
-.matching-section .score-item .value {
-    color: var(--amazon-blue);
-    font-weight: bold;
-}
-
-.matching-section .modal-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 25px;
-}
-
-.matching-section .button-primary {
-    background: var(--amazon-orange);
-    color: var(--amazon-white);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all var(--transition-normal);
-}
-
-.matching-section .button-primary:hover {
-    background: var(--amazon-orange-dark);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.matching-section .button-secondary {
-    background: var(--amazon-white);
-    color: var(--amazon-orange);
-    border: 2px solid var(--amazon-orange);
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all var(--transition-normal);
-}
-
-.matching-section .button-secondary:hover {
-    background: var(--amazon-orange);
-    color: var(--amazon-white);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .matching-section .completion-message {
-        padding: 20px;
-    }
-
-    .matching-section .message-header i {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-    }
-
-    .matching-section .message-header h3 {
-        font-size: 24px;
-    }
-}
-
-@media (max-width: 480px) {
-    .matching-section .completion-message {
-        padding: 15px;
-    }
-
-    .matching-section .modal-buttons {
-        flex-direction: column;
-    }
-
-    .matching-section .button-primary,
-    .matching-section .button-secondary {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .matching-section .score-item {
-        font-size: 14px;
-    }
-}
-
