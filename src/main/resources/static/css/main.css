@@ -86,7 +86,6 @@ body {
     min-height: 100vh;
 }
 /* Loading Overlay Styles */
-/* Loading Overlay Styles */
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -335,7 +334,18 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-
+/*Styles for small screens*/
+@media (max-width: 768px) {
+    #welcomeScreen {
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/welcome-mobile.png');
+    }
+}
+/*Styles for mobile*/
+@media (max-width: 480px) {
+    #welcomeScreen {
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/welcome-mobile.png');
+    }
+}
 #welcomeScreen::before {
     content: '';
     position: absolute;
