@@ -346,6 +346,15 @@ body {
         background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/welcome-mobile.png');
     }
 }
+/*Styles for portrait mode*/
+@media (orientation: portrait) {
+    #welcomeScreen {
+        background-size: contain;
+        background-position: center;
+        background-color: #000; /* Optional: adds a background color in case the image doesn't cover the entire screen */
+    }
+}
+
 #welcomeScreen::before {
     content: '';
     position: absolute;
