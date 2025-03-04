@@ -30,12 +30,17 @@
     color: var(--text-color);
     padding: 2rem;
     font-family: Arial, sans-serif;
+    will-change: transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/*Styles portrait mode background image*/
+/* Portrait Mode Background */
 @media (orientation: portrait) {
     .sorting-zones-section {
         background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/AMZL-+Mobile.png');
+        padding: 1rem;
+        min-height: 100dvh;
     }
 }
 
@@ -85,7 +90,7 @@
     gap: 0.8rem;
     font-size: 1.1rem;
     font-weight: bold;
-    color: var(--text-color); /* Updated to dark color */
+    color: var(--text-color);
 }
 
 .sorting-zones-section .stat-item i {
@@ -163,7 +168,6 @@
     color: var(--amazon-grey);
     margin-bottom: 1rem;
 }
-
 .sorting-zones-section .weight-range {
     background: rgba(255, 153, 0, 0.1);
     color: var(--amazon-orange);
@@ -186,110 +190,6 @@
 .sorting-zones-section .safety-tip i {
     color: var(--amazon-orange);
 }
-
-/* Tablet Responsive */
-@media screen and (max-width: 768px) {
-    .sorting-zones-section .game-instructions-panel {
-        padding: 2rem;
-        margin: 0 1rem 2rem;
-    }
-
-    .sorting-zones-section .game-instructions-panel h2 {
-        font-size: 1.75rem;
-    }
-
-    .sorting-zones-section .instruction-categories {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-
-    .sorting-zones-section .category-icon {
-        width: 50px;
-        height: 50px;
-    }
-
-    .sorting-zones-section .category-icon i {
-        font-size: 1.75rem;
-    }
-
-    .sorting-zones-section .instruction-category h4 {
-        font-size: 1.1rem;
-    }
-}
-
-/* Mobile Responsive */
-@media screen and (max-width: 480px) {
-    .sorting-zones-section .game-instructions-panel {
-        padding: 1.5rem;
-        margin: 0 0.5rem 1.5rem;
-        border-radius: 15px;
-    }
-
-    .sorting-zones-section .game-instructions-panel h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .sorting-zones-section .instructions-content {
-        gap: 1.5rem;
-    }
-
-    .sorting-zones-section .instruction-categories {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .sorting-zones-section .instruction-category {
-        padding: 1.25rem;
-    }
-
-    .sorting-zones-section .category-icon {
-        width: 45px;
-        height: 45px;
-    }
-
-    .sorting-zones-section .category-icon i {
-        font-size: 1.5rem;
-    }
-
-    .sorting-zones-section .instruction-category h4 {
-        font-size: 1rem;
-        margin: 0.75rem 0;
-    }
-
-    .sorting-zones-section .instruction-category p {
-        font-size: 0.9rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .sorting-zones-section .weight-range {
-        padding: 0.4rem;
-        font-size: 0.9rem;
-        margin: 0.75rem 0;
-    }
-
-    .sorting-zones-section .safety-tip {
-        font-size: 0.8rem;
-        margin-top: 0.75rem;
-    }
-}
-
-/* Small Mobile Responsive */
-@media screen and (max-width: 320px) {
-    .sorting-zones-section .game-instructions-panel {
-        padding: 1rem;
-    }
-
-    .sorting-zones-section .game-instructions-panel h2 {
-        font-size: 1.25rem;
-    }
-
-    .sorting-zones-section .instruction-category {
-        padding: 1rem;
-    }
-}
-
 
 /* Game Controls Section */
 .sorting-zones-section .game-controls {
@@ -391,6 +291,7 @@
             rgba(64, 64, 64, 0.1) 20px
     );
     animation: moveBelt 2s linear infinite;
+    will-change: background-position;
 }
 
 /* Package Styles */
@@ -434,7 +335,6 @@
     gap: 2rem;
     padding: 1rem;
 }
-
 .sorting-zones-section .zone {
     background: var(--amazon-background);
     padding: 2rem;
@@ -598,28 +498,6 @@
     from { left: -100px; }
     to { left: calc(100% + 100px); }
 }
-
-.sorting-zones-section .animated {
-    animation-duration: 0.6s;
-    animation-fill-mode: both;
-}
-
-.sorting-zones-section .animated[data-animation="fadeIn"] {
-    animation-name: fadeIn;
-}
-
-.sorting-zones-section .animated[data-animation="slideIn"] {
-    animation-name: slideIn;
-}
-
-.sorting-zones-section .hover-lift {
-    transition: transform var(--transition-normal);
-}
-
-.sorting-zones-section .hover-lift:hover {
-    transform: translateY(-5px);
-}
-
 /* Responsive Design */
 @media (max-width: 1024px) {
     .sorting-zones-section .instruction-categories,
@@ -652,6 +530,164 @@
     }
 }
 
+/* Tablet Responsive */
+@media screen and (max-width: 768px) {
+    .sorting-zones-section .game-instructions-panel {
+        padding: 2rem;
+        margin: 0 1rem 2rem;
+    }
+
+    .sorting-zones-section .game-instructions-panel h2 {
+        font-size: 1.75rem;
+    }
+
+    .sorting-zones-section .instruction-categories {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .sorting-zones-section .category-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sorting-zones-section .category-icon i {
+        font-size: 1.75rem;
+    }
+
+    .sorting-zones-section .instruction-category h4 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 480px) {
+    .sorting-zones-section {
+        padding: 0.5rem;
+    }
+
+    .sorting-zones-section .game-instructions-panel {
+        padding: 1.5rem;
+        margin: 0 0.5rem 1.5rem;
+        border-radius: 15px;
+    }
+
+    .sorting-zones-section .game-instructions-panel h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sorting-zones-section .instructions-content {
+        gap: 1.5rem;
+    }
+
+    .sorting-zones-section .instruction-categories {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sorting-zones-section .instruction-category {
+        padding: 1.25rem;
+    }
+
+    .sorting-zones-section .package {
+        width: 60px;
+        height: 60px;
+        touch-action: none;
+    }
+
+    .sorting-zones-section .zone {
+        min-height: 150px;
+        margin: 0.5rem;
+    }
+
+    .sorting-zones-section .start-game-btn,
+    .sorting-zones-section .button-primary,
+    .sorting-zones-section .button-secondary {
+        min-height: 44px;
+        padding: 0.8rem 1.2rem;
+    }
+}
+
+/* Small Screen Optimizations */
+@media screen and (max-width: 320px) {
+    .sorting-zones-section {
+        padding: 0.5rem;
+    }
+
+    .sorting-zones-section .game-instructions-panel {
+        padding: 1rem;
+    }
+
+    .sorting-zones-section .game-instructions-panel h2 {
+        font-size: 1.25rem;
+    }
+
+    .sorting-zones-section .instruction-category {
+        padding: 1rem;
+    }
+
+    .sorting-zones-section .game-header,
+    .sorting-zones-section .conveyor-belt-container,
+    .sorting-zones-section .zone {
+        padding: 0.8rem;
+        margin: 0.5rem;
+    }
+
+    .sorting-zones-section .package {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sorting-zones-section .package .weight-display {
+        font-size: 0.9rem;
+    }
+}
+
+/* Landscape Mode Adjustments for Mobile */
+@media (orientation: landscape) and (max-height: 500px) {
+    .sorting-zones-section {
+        padding: 0.5rem;
+    }
+
+    .sorting-zones-section .game-header {
+        margin-bottom: 1rem;
+    }
+
+    .sorting-zones-section .sorting-zones {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .sorting-zones-section .zone {
+        padding: 1rem;
+    }
+
+    .sorting-zones-section .conveyor-belt {
+        height: 80px;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .sorting-zones-section .zone:hover {
+        transform: none;
+    }
+
+    .sorting-zones-section .package:hover {
+        transform: none;
+    }
+
+    .sorting-zones-section .zone:active {
+        background-color: rgba(255, 153, 0, 0.1);
+    }
+
+    .sorting-zones-section .package:active {
+        transform: scale(1.05);
+    }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     .sorting-zones-section * {
@@ -660,13 +696,24 @@
     }
 }
 
-/* Performance Optimizations */
-.sorting-zones-section {
-    will-change: transform;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+/* Animation Classes */
+.sorting-zones-section .animated {
+    animation-duration: 0.6s;
+    animation-fill-mode: both;
 }
 
-.sorting-zones-section .belt-animation {
-    will-change: background-position;
+.sorting-zones-section .animated[data-animation="fadeIn"] {
+    animation-name: fadeIn;
+}
+
+.sorting-zones-section .animated[data-animation="slideIn"] {
+    animation-name: slideIn;
+}
+
+.sorting-zones-section .hover-lift {
+    transition: transform var(--transition-normal);
+}
+
+.sorting-zones-section .hover-lift:hover {
+    transform: translateY(-5px);
 }
