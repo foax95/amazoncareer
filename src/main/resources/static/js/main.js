@@ -371,6 +371,24 @@ function showSection(sectionId) {
         }
     }
 }
+function startJourney() {
+    // Hide welcome screen
+    document.getElementById('welcomeScreen').classList.remove('active');
+
+    // Start the first game in the sequence (Weight Sorting)
+    showSection('weightSortingGame');
+
+    // Initialize the game if needed
+    if (window.weightSortingGame && typeof window.weightSortingGame.initialize === 'function') {
+        window.weightSortingGame.initialize();
+    }
+
+    // Update game state
+    if (!gameState.player.visitedSections.includes('weightSortingGame')) {
+        gameState.player.visitedSections.push('weightSortingGame');
+    }
+    saveGameState();
+}
 
 function initializeGame(sectionId) {
     try {

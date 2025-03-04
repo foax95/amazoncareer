@@ -51,27 +51,51 @@
             <div class="floating-boxes" id="floatingBoxes"></div>
             <div class="welcome-content animated" data-animation="fadeIn">
                 <h1 class="welcome-title animated" data-animation="slideIn">Welcome to Your Amazon Journey</h1>
-                <form id="registrationForm" class="animated" data-animation="fadeIn" onsubmit="handleRegistration(event)">
-                    <div class="input-group animated" data-animation="slideIn" style="animation-delay: 200ms">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="name" class="input-field" placeholder="Your Name" required
-                               pattern="[A-Za-z\s]{2,}" title="Please enter a valid name (at least 2 characters)">
+
+                <div class="intro-text animated" data-animation="fadeIn">
+                    <h2>Get Ready for Your Day One Adventure!</h2>
+                    <p>Your journey begins with four exciting challenges that will prepare you for success:</p>
+
+                    <div class="game-preview-grid">
+                        <div class="game-preview">
+                            <i class="fas fa-weight-hanging"></i>
+                            <h3>Safety First</h3>
+                            <p>Master package sorting and learn essential safety guidelines for handling different weight categories.</p>
+                        </div>
+
+                        <div class="game-preview">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <h3>Pre-Hire Checklist Navigator</h3>
+                            <p>Navigate through your pre-hire checklist and collect important items needed for Day 1.</p>
+                        </div>
+
+                        <div class="game-preview">
+                            <i class="fas fa-th"></i>
+                            <h3>Benefits Match</h3>
+                            <p>Discover Amazon's comprehensive benefits package by matching pairs of benefit cards.</p>
+                        </div>
+
+                        <div class="game-preview">
+                            <i class="fas fa-question-circle"></i>
+                            <h3>Knowledge Quiz</h3>
+                            <p>Test your understanding of Amazon's onboarding process and workplace essentials.</p>
+                        </div>
                     </div>
-                    <div class="input-group animated" data-animation="slideIn" style="animation-delay: 400ms">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" class="input-field" placeholder="Your Email" required
-                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                               title="Please enter a valid email address">
+
+                    <div class="start-section">
+                        <p class="start-message">Ready to begin your Amazon journey?</p>
+                        <button id="continueToGame" class="continue-btn animated" data-animation="pulseIn"
+                                onclick="startJourney()">
+                            Start Your Journey
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
-                    <button type="submit" class="button-primary animated" data-animation="fadeIn"
-                            style="animation-delay: 600ms">
-                        Begin Your Adventure
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
+
+
 
     <!-- Weight Sorting Game -->
     <section id="weightSortingGame" class="page sorting-zones-section">
@@ -773,115 +797,39 @@
         </div>
     </section>
 
-    <!-- Game Complete/Reset Section -->
+    <!-- Certificate Page -->
     <section id="gameComplete" class="page game-section">
-        <div class="completion-content animated" data-animation="fadeIn">
-            <div class="completion-header">
-                <i class="fas fa-trophy completion-icon animated" data-animation="bounce"></i>
-                <h2>Training Complete!</h2>
+        <div class="survey-wrapper animated" data-animation="fadeIn">
+            <!-- Congratulations Text -->
+            <div class="survey-header">
+                <h1>Congratulations on Completing Your Training!</h1>
+                <p>Please take a moment to complete our feedback survey below.</p>
             </div>
 
-            <div class="completion-stats">
-                <div class="stat-card animated hover-lift" data-animation="fadeIn">
-                    <div class="stat-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h4>Total Score</h4>
-                        <span id="totalFinalScore">0</span>
-                    </div>
-                </div>
-
-                <div class="stat-card animated hover-lift" data-animation="fadeIn">
-                    <div class="stat-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h4>Games Completed</h4>
-                        <span id="gamesCompleted">0/4</span>
-                    </div>
-                </div>
-
-                <div class="stat-card animated hover-lift" data-animation="fadeIn">
-                    <div class="stat-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h4>Total Time</h4>
-                        <span id="totalTimeTaken">0:00</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="game-breakdown">
-                <h3>Performance Breakdown</h3>
-                <div class="breakdown-grid">
-                    <div class="breakdown-item">
-                        <i class="fas fa-weight-hanging"></i>
-                        <h4>Safety First</h4>
-                        <p>Score: <span id="weightSortingFinalScore">0</span></p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="weightSortingProgress"></div>
-                        </div>
-                    </div>
-
-                    <div class="breakdown-item">
-                        <i class="fas fa-map-marked-alt"></i>
-                        <h4>Pre-Hire Checklist Navigator</h4>
-                        <p>Score: <span id="pathFindingFinalScore">0</span></p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="pathFindingProgress"></div>
-                        </div>
-                    </div>
-
-                    <div class="breakdown-item">
-                        <i class="fas fa-th"></i>
-                        <h4>Benefits Match</h4>
-                        <p>Score: <span id="matchingFinalScore">0</span></p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="matchingProgress"></div>
-                        </div>
-                    </div>
-
-                    <div class="breakdown-item">
-                        <i class="fas fa-question-circle"></i>
-                        <h4>Knowledge Quiz</h4>
-                        <p>Score: <span id="quizFinalScore">0</span></p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="quizProgress"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="completion-actions">
-                <button class="button-primary animated hover-lift" data-animation="fadeIn" onclick="resetAllGames()">
-                    <i class="fas fa-redo"></i>
-                    Start Fresh Training
-                </button>
-                <button class="button-secondary animated hover-lift" data-animation="fadeIn" onclick="returnToMainMenu()">
-                    <i class="fas fa-home"></i>
-                    Return to Menu
-                </button>
-                <button class="button-secondary animated hover-lift" data-animation="fadeIn" onclick="downloadCertificate()">
-                    <i class="fas fa-certificate"></i>
-                    Download Certificate
-                </button>
+            <!-- Survey Embed -->
+            <div class="survey-frame">
+                <iframe
+                        src="https://amazonexteu.qualtrics.com/jfe/form/SV_9Qz87yEIpp5YDu6"
+                        width="100%"
+                        height="600px"
+                        frameborder="0"
+                        style="border: none;"
+                ></iframe>
             </div>
         </div>
     </section>
+
 </main>
 
 <!-- External Scripts -->
 <script src="js/config.js"></script>
 <script src="js/main.js"></script>
 <script src="js/gameSequence.js"></script>
-<script src="js/scoreManager.js"></script>
+<script src="js/database.js"></script>
 <script src="js/games/weightSorting.js"></script>
 <script src="js/games/pathFinding.js"></script>
 <script src="js/games/matching.js"></script>
 <script src="js/games/quiz.js"></script>
-<script src="js/certificate.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>

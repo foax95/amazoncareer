@@ -65,12 +65,24 @@ class BenefitsMatchingGame {
         };
 
         this.timer = null;
+        this.gameContainer = null;
+
+        // Clean up on initialization
+        this.cleanup();
     }
 
     initialize() {
         this.gameContainer = document.getElementById('matchingGame');
         this.setupEventListeners();
         this.createCards();
+        this.loadGameStats();
+    }
+
+    loadGameStats() {
+        if (window.gameState && window.gameState.gameStats && window.gameState.gameStats.matching) {
+            const stats = window.gameState.gameStats.matching;
+            document.getElementById('matchingHighScore').textContent = stats.highScore || 0;
+        }
     }
 
     createCards() {
@@ -93,16 +105,16 @@ class BenefitsMatchingGame {
 
             const benefitData = this.benefits[benefit];
             card.innerHTML = `
-                        <div class="card-inner">
-                            <div class="card-front">
-                                <i class="fas ${benefitData.icon}"></i>
-                                <span>${benefitData.name}</span>
-                            </div>
-                            <div class="card-back">
-                                <i class="fas fa-question"></i>
-                            </div>
-                        </div>
-                    `;
+                <div class="card-inner">
+                    <div class="card-front">
+                        <i class="fas ${benefitData.icon}"></i>
+                        <span>${benefitData.name}</span>
+                    </div>
+                    <div class="card-back">
+                        <i class="fas fa-question"></i>
+                    </div>
+                </div>
+            `;
 
             cardsGrid.appendChild(card);
         });
@@ -270,27 +282,99 @@ class BenefitsMatchingGame {
 
         if (this.state.timeLeft <= 10) {
             timerDisplay.classList.add('warning');
+        } else {
+            timerDisplay.classList.remove('warning');
         }
     }
 
-    endGame(completed) {
+   async endGame(completed) {
         clearInterval(this.timer);
         this.state.isPlaying = false;
 
-        const completionMessage = this.gameContainer.querySelector('.completion-message');
+        // Calculate final score with time bonus if completed
+        if (completed) {
+            const timeBonus = this.state.timeLeft * 10;
+            this.state.score += timeBonus;
+        }
 
-        completionMessage.querySelector('.matches-found').textContent =
-            `${this.state.matchesFound}/8`;
-        completionMessage.querySelector('.time-bonus').textContent =
-            `${this.state.timeLeft}s`;
-        completionMessage.querySelector('.total-attempts').textContent =
-            this.state.attempts;
-        completionMessage.querySelector('.final-score').textContent =
-            this.state.score;
+        // Save score to database
+       await gameDB.saveScore('matching', this.state.score);
+
+        // Update game state if available
+        if (window.gameState) {
+            if (!window.gameState.gameStats) {
+                window.gameState.gameStats = {};
+            }
+            if (!window.gameState.gameStats.matching) {
+                window.gameState.gameStats.matching = {};
+            }
+
+            const stats = window.gameState.gameStats.matching;
+            stats.lastScore = this.state.score;
+            stats.highScore = Math.max(this.state.score, stats.highScore || 0);
+            stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
+            stats.perfectMatches = (stats.perfectMatches || 0) +
+                (this.state.matchesFound === 8 ? 1 : 0);
+
+            if (!window.gameState.player) {
+                window.gameState.player = {};
+            }
+            if (!Array.isArray(window.gameState.player.completedSections)) {
+                window.gameState.player.completedSections = [];
+            }
+            if (completed && !window.gameState.player.completedSections.includes('matchingGame')) {
+                window.gameState.player.completedSections.push('matchingGame');
+            }
+
+            if (typeof saveGameState === 'function') {
+                saveGameState();
+            }
+        }
+
+        // Show completion message
+        const completionMessage = this.gameContainer.querySelector('.completion-message');
+        completionMessage.innerHTML = `
+            <div class="message-content ${completed ? 'success' : 'timeout'}">
+                <div class="message-header">
+                    <i class="fas ${completed ? 'fa-trophy' : 'fa-clock'}"></i>
+                    <h3>${completed ? 'Congratulations!' : 'Time\'s Up!'}</h3>
+                </div>
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="label">Matches Found:</span>
+                        <span class="value matches-found">${this.state.matchesFound}/8</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">Total Attempts:</span>
+                        <span class="value total-attempts">${this.state.attempts}</span>
+                    </div>
+                    ${completed ? `
+                        <div class="score-item">
+                            <span class="label">Time Remaining:</span>
+                            <span class="value time-bonus">${this.state.timeLeft}s</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="label">Time Bonus:</span>
+                            <span class="value">+${this.state.timeLeft * 10}</span>
+                        </div>
+                    ` : ''}
+                    <div class="score-item total">
+                        <span class="label">Final Score:</span>
+                        <span class="value final-score">${this.state.score}</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="continue-button button-primary" onclick="window.matchingGame.navigateToQuiz()">
+                        <i class="fas fa-arrow-right"></i> Continue to Quiz
+                    </button>
+                    <button class="replay-button button-secondary" onclick="window.matchingGame.restart()">
+                        <i class="fas fa-redo"></i> Play Again
+                    </button>
+                </div>
+            </div>
+        `;
 
         completionMessage.classList.add('show');
-
-        localStorage.setItem('matchingGameScore', this.state.score.toString());
     }
 
     navigateToQuiz() {
@@ -298,19 +382,81 @@ class BenefitsMatchingGame {
         const matchingGame = document.getElementById('matchingGame');
 
         if (quizSection && matchingGame) {
+            // First, hide the matching game
             matchingGame.style.display = 'none';
             matchingGame.classList.remove('active');
 
-            quizSection.style.display = 'block';
-            quizSection.classList.add('active');
+            // Clear any completion messages or modals
+            const completionMessage = matchingGame.querySelector('.completion-message');
+            if (completionMessage) {
+                completionMessage.classList.remove('show');
+            }
 
-            if (window.amazonQuiz) {
-                window.amazonQuiz.initialize();
+            const modal = matchingGame.querySelector('.benefit-info-modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+
+            // Show quiz section after a short delay
+            setTimeout(() => {
+                quizSection.style.display = 'block';
+                quizSection.classList.add('active');
+
+                // Initialize quiz if available
+                if (window.amazonQuiz) {
+                    window.amazonQuiz.initialize();
+                }
+            }, 300); // Short delay for smooth transition
+        }
+    }
+
+    cleanup() {
+        // Clear any active timers
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+
+        // Reset game state
+        this.state = {
+            isPlaying: false,
+            timeLeft: 60,
+            score: 0,
+            matchesFound: 0,
+            attempts: 0,
+            firstCard: null,
+            secondCard: null,
+            canFlip: true
+        };
+
+        // Clear UI elements
+        if (this.gameContainer) {
+            const completionMessage = this.gameContainer.querySelector('.completion-message');
+            if (completionMessage) {
+                completionMessage.classList.remove('show');
+            }
+
+            const modal = this.gameContainer.querySelector('.benefit-info-modal');
+            if (modal) {
+                modal.classList.remove('show');
             }
         }
     }
+
+
+
+    restart() {
+        this.cleanup();
+        const messageEl = this.gameContainer.querySelector('.completion-message');
+        if (messageEl) {
+            messageEl.classList.remove('show');
+        }
+        this.createCards();
+        this.startGame();
+    }
 }
 
+// Initialize game when document is loaded
 document.addEventListener('DOMContentLoaded', () => {
     const game = new BenefitsMatchingGame();
     window.matchingGame = game;

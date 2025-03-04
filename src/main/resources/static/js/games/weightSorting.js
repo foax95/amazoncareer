@@ -314,18 +314,52 @@ class WeightSortingGame {
             if (countElement) countElement.textContent = count;
         });
     }
-    endGame() {
+   async endGame(completed = false) {
         this.isPlaying = false;
         clearInterval(this.timer);
         clearInterval(this.packageGenerationTimer);
 
-        // Store final score for next game
-        localStorage.setItem('weightSortingScore', this.score.toString());
+        // Calculate final score with any bonuses
+        if (completed && this.mistakesMade === 0) {
+            this.score += 100; // Perfect round bonus
+        }
 
-        // Show completion message with navigation options
-        this.showCompletionMessage();
+
+       await gameDB.saveScore('weightSorting', this.score);
+
+        // Update game state if available
+        if (window.gameState) {
+            if (!window.gameState.gameStats) {
+                window.gameState.gameStats = {};
+            }
+            if (!window.gameState.gameStats.weightSorting) {
+                window.gameState.gameStats.weightSorting = {};
+            }
+
+            const stats = window.gameState.gameStats.weightSorting;
+            stats.lastScore = this.score;
+            stats.highScore = Math.max(this.score, stats.highScore || 0);
+            stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
+            stats.perfectRounds = (stats.perfectRounds || 0) +
+                (this.mistakesMade === 0 ? 1 : 0);
+
+            if (!window.gameState.player) {
+                window.gameState.player = {};
+            }
+            if (!Array.isArray(window.gameState.player.completedSections)) {
+                window.gameState.player.completedSections = [];
+            }
+            if (completed && !window.gameState.player.completedSections.includes('weightSortingGame')) {
+                window.gameState.player.completedSections.push('weightSortingGame');
+            }
+
+            if (typeof saveGameState === 'function') {
+                saveGameState();
+            }
+        }
+
+        this.showCompletionMessage(completed);
     }
-
 
     showCompletionMessage() {
         const messageEl = document.createElement('div');

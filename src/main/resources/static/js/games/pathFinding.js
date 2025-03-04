@@ -752,20 +752,30 @@ class PathFindingGame {
         }
 
         // Hide pathfinding game
+        pathFindingGame.style.display = 'none';
         pathFindingGame.classList.remove('active');
 
-        // Show and initialize matching game
+        // Remove completion message if exists
+        const completionMessage = pathFindingGame.querySelector('.completion-message');
+        if (completionMessage) {
+            completionMessage.remove();
+        }
+
+        // Show matching game
+        matchingGame.style.display = 'block';
         matchingGame.classList.add('active');
 
-        // Initialize matching game if available
-        if (!window.matchingGame) {
+        // Initialize matching game
+        if (window.matchingGame) {
+            window.matchingGame.initialize();
+        } else {
             window.matchingGame = new BenefitsMatchingGame();
+            window.matchingGame.initialize();
         }
-        window.matchingGame.initialize();
     }
 
 
-    endGame(completed = false) {
+   async endGame(completed = false) {
         this.state.isPlaying = false;
         this.state.isPaused = true;
 
@@ -774,32 +784,48 @@ class PathFindingGame {
             this.timer = null;
         }
 
-        // Store final score for next game
-        localStorage.setItem('pathFindingScore', this.state.score.toString());
-
-        // Update gameState if completion was successful
-        if (completed && window.gameState) {
-            gameState.gameStats.pathFinding.pathsCompleted++;
-            gameState.gameStats.pathFinding.gamesPlayed++;
-            if (!gameState.player.completedSections.includes('pathFindingGame')) {
-                gameState.player.completedSections.push('pathFindingGame');
-            }
-            saveGameState();
-        }
-
-        // Show completion message with navigation options
-        this.showCompletionMessage(completed);
-
-        // After a delay, transition to matching game if completed successfully
+        // Calculate final score with time bonus if completed
         if (completed) {
-            setTimeout(() => {
-                showSection('matchingGame');
-                if (window.matchingGame && typeof window.matchingGame.initialize === 'function') {
-                    window.matchingGame.initialize();
-                }
-            }, 2000); // 2-second delay before transition
+            const timeBonus = this.state.timeLeft * 10;
+            this.state.score += timeBonus;
         }
+
+        // Save score to database
+       await gameDB.saveScore('pathFinding', this.state.score);
+
+        // Update game state if available
+        if (window.gameState) {
+            if (!window.gameState.gameStats) {
+                window.gameState.gameStats = {};
+            }
+            if (!window.gameState.gameStats.pathFinding) {
+                window.gameState.gameStats.pathFinding = {};
+            }
+
+            const stats = window.gameState.gameStats.pathFinding;
+            stats.lastScore = this.state.score;
+            stats.highScore = Math.max(this.state.score, stats.highScore || 0);
+            stats.pathsCompleted = (stats.pathsCompleted || 0) + (completed ? 1 : 0);
+            stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
+
+            if (!window.gameState.player) {
+                window.gameState.player = {};
+            }
+            if (!Array.isArray(window.gameState.player.completedSections)) {
+                window.gameState.player.completedSections = [];
+            }
+            if (completed && !window.gameState.player.completedSections.includes('pathFindingGame')) {
+                window.gameState.player.completedSections.push('pathFindingGame');
+            }
+
+            if (typeof saveGameState === 'function') {
+                saveGameState();
+            }
+        }
+
+        this.showCompletionMessage(completed, completed ? this.state.timeLeft * 10 : 0);
     }
+
 }
 
 // Initialize the game when the DOM is loaded
