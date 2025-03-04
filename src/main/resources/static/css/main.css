@@ -334,16 +334,10 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-/*Styles for small screens*/
-@media (max-width: 500px) {
+/*Styles portrait mode*/
+@media (orientation: portrait) {
     #welcomeScreen {
-        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/welcome-mobile.png');
-    }
-}
-/*Styles for mobile*/
-@media (max-width: 200px) {
-    #welcomeScreen {
-        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/welcome-mobile.png');
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/welcome-mobile.png');
     }
 }
 
@@ -463,6 +457,16 @@ body {
 
 .input-field:focus + i {
     color: var(--amazon-orange);
+}
+/*Registration Form mobile*/
+@media (max-width: 768px) {
+    .input-group i {
+        left: var(--space-sm);
+    }
+
+    .input-field {
+        padding: var(--space-sm) var(--space-sm) var(--space-sm) 2.5rem;
+    }
 }
 
 /* Progress Bar */
