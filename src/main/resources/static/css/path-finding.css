@@ -160,6 +160,56 @@
     margin-bottom: 10px;
 }
 
+/* Tablet Responsive */
+@media screen and (max-width: 768px) {
+    .pace-section .game-instructions-panel {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .pace-section .game-instructions-panel h2 {
+        font-size: 1.75rem;
+    }
+
+    .pace-section .instruction-categories {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 480px) {
+    .pace-section .game-instructions-panel {
+        padding: 1rem;
+        width: 100%;
+        border-radius: 15px;
+    }
+
+    .pace-section .game-instructions-panel h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .pace-section .instructions-content {
+        gap: 1.5rem;
+    }
+
+    .pace-section .instruction-categories {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .pace-section .instruction-category {
+        padding: 15px;
+    }
+
+    .pace-section .instruction-category i {
+        font-size: 20px;
+    }
+}
+
+
+
 /* Items Preview */
 .pace-section .items-preview {
     margin-top: 30px;
