@@ -32,6 +32,13 @@
     font-family: Arial, sans-serif;
 }
 
+/*Styles portrait mode background image*/
+@media (orientation: portrait) {
+    .sorting-zones-section {
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/AMZL-+Mobile.png');
+    }
+}
+
 .sorting-zones-section.active {
     display: block;
 }

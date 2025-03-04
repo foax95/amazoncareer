@@ -32,6 +32,12 @@
     width: 100%;
     position: relative;
 }
+/*Styles portrait mode background image*/
+@media (orientation: portrait) {
+    .matching-section {
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/AIR+-+Mobile.png');
+    }
+}
 
 .matching-section.active {
     display: block;

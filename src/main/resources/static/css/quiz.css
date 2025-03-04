@@ -45,6 +45,12 @@ body {
     justify-content: center;
     position: relative;
 }
+/*Styles portrait mode background image*/
+@media (orientation: portrait) {
+    .quiz-section {
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/LP-+Mobile.png');
+    }
+}
 
 .quiz-section::before {
     content: '';
