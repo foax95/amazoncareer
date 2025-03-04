@@ -33,7 +33,7 @@
 /*Styles portrait mode background*/
 @media (orientation: portrait) {
     .pace-section {
-        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/PACE-+Mobile.png');
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Mobile-768x1024px+Portrait/PACE-Mobile.png');
     }
 }
 
