@@ -1,156 +1,127 @@
-class CertificateManager {
+class GameCompletion {
     constructor() {
-        this.userName = localStorage.getItem('userName');
-        this.completionDate = new Date().toLocaleDateString();
-        this.scores = this.getGameScores();
-        this.initializeEvents();
-        this.displayCertificate(); // Add this to show certificate immediately
-        this.loadConfetti().then(() => {
-            // Trigger confetti when page loads
-            if (window.confetti) {
-                this.confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
+        // Cache DOM elements
+        this.section = document.getElementById('gameComplete');
+        this.floatingElements = this.section.querySelectorAll('.floating-element');
+        this.surveyFrame = this.section.querySelector('iframe');
+        this.notificationTemplate = `
+            <div class="notification success" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span>Survey submitted successfully!</span>
+            </div>
+        `;
+    }
+
+    /**
+     * Initialize the completion section
+     */
+    init() {
+        this.initializeFloatingElements();
+        this.setupSurveyListener();
+        this.appendNotification();
+    }
+
+    /**
+     * Initialize floating elements with random movements
+     */
+    initializeFloatingElements() {
+        this.floatingElements.forEach(element => {
+            // Generate random positions for floating animation
+            const xRange = Math.random() * 200 - 100; // -100 to 100
+            const yRange = Math.random() * 200 - 100; // -100 to 100
+
+            // Set custom properties for animation
+            element.style.setProperty('--x', `${xRange}px`);
+            element.style.setProperty('--y', `${yRange}px`);
+
+            // Add random delays to create natural movement
+            element.style.animationDelay = `${Math.random() * 2}s`;
         });
     }
 
-    confetti(param) {
-        if (window.confetti) {
-            window.confetti(param);
-        }
-        else {
-            console.error('Confetti not loaded');
-        }
-        console.log('Confetti triggered');
-        console.log('Confetti parameters:', param);
-        console.log('Confetti loaded:', window.confetti);
-        console.log('Confetti function:', window.confetti);
+    /**
+     * Setup survey iframe listener
+     */
+    setupSurveyListener() {
+        if (this.surveyFrame) {
+            this.surveyFrame.addEventListener('load', () => this.handleSurveyLoad());
 
-    }
-
-    async loadConfetti() {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js';
-        document.head.appendChild(script);
-
-        return new Promise((resolve) => {
-            script.onload = () => resolve();
-        });
-    }
-
-    initializeEvents() {
-        const downloadBtn = document.querySelector('.button-primary');
-        if (downloadBtn) {
-            downloadBtn.onclick = () => this.downloadCertificate();
+            // Listen for messages from the survey
+            window.addEventListener('message', (event) => this.handleSurveyMessage(event));
         }
     }
 
-    getGameScores() {
-        return {
-            weightSorting: localStorage.getItem('weightSortingScore') || '0',
-            pathFinding: localStorage.getItem('pathFindingScore') || '0',
-            matching: localStorage.getItem('matchingGameScore') || '0',
-            quiz: localStorage.getItem('quizScore') || '0'
-        };
+    /**
+     * Handle survey iframe load
+     */
+    handleSurveyLoad() {
+        console.log('Survey loaded successfully');
     }
 
-    calculateTotalScore() {
-        const scores = this.getGameScores();
-        const total = Object.values(scores).reduce((sum, score) => {
-            return sum + parseInt(score || 0);
-        }, 0);
-
-        // Update the total score display
-        const totalScoreElement = document.getElementById('totalFinalScore');
-        if (totalScoreElement) {
-            totalScoreElement.textContent = this.formatScore(total);
-        }
-
-        return total;
-    }
-
-    formatScore(score) {
-        return parseInt(score || 0).toLocaleString();
-    }
-
-    displayCertificate() {
-        const scores = this.getGameScores();
-        const totalScore = this.calculateTotalScore();
-
-        // Update recipient name and date
-        document.querySelector('.recipient-name').textContent = this.userName;
-        document.querySelector('.completion-date').textContent = `on ${this.completionDate}`;
-
-        // Update individual scores and progress bars
-        this.updateScoreDisplay('weightSorting', scores.weightSorting);
-        this.updateScoreDisplay('pathFinding', scores.pathFinding);
-        this.updateScoreDisplay('matching', scores.matching);
-        this.updateScoreDisplay('quiz', scores.quiz);
-
-        // Update total score
-        document.getElementById('totalFinalScore').textContent = this.formatScore(totalScore);
-
-        // Update verification code
-        document.getElementById('certificationId').textContent = this.generateVerificationCode();
-    }
-
-    updateScoreDisplay(gameType, score) {
-        const scoreElement = document.getElementById(`${gameType}FinalScore`);
-        const progressBar = document.getElementById(`${gameType}Progress`);
-
-        if (scoreElement) {
-            scoreElement.textContent = this.formatScore(score);
-        }
-
-        if (progressBar) {
-            // Assuming maximum score of 500 for each game
-            const percentage = (parseInt(score) / 500) * 100;
-            progressBar.style.width = `${Math.min(100, percentage)}%`;
-        }
-    }
-
-    generateVerificationCode() {
-        return btoa(`${this.userName}-${this.completionDate}-${Date.now()}`).substring(0, 8);
-    }
-
-    async downloadCertificate() {
-        const certificateContent = document.querySelector('.certificate-content');
+    /**
+     * Handle messages from survey iframe
+     * @param {MessageEvent} event
+     */
+    handleSurveyMessage(event) {
+        // Verify origin for security
+        if (event.origin !== "https://amazonexteu.qualtrics.com") return;
 
         try {
-            const canvas = await html2canvas(certificateContent, {
-                scale: 2,
-                backgroundColor: '#ffffff',
-                logging: false
-            });
-
-            const link = document.createElement('a');
-            link.download = `Amazon_DayOneHero_Certificate_${this.userName}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-
-            this.showNotification('Certificate downloaded successfully!', 'success');
+            const data = JSON.parse(event.data);
+            if (data.event === 'surveyComplete') {
+                this.showNotification();
+            }
         } catch (error) {
-            console.error('Error generating certificate:', error);
-            this.showNotification('Failed to download certificate. Please try again.', 'error');
+            console.error('Error processing survey message:', error);
         }
     }
 
-    showNotification(message, type = 'success') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
-        `;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
+    /**
+     * Append notification element to DOM
+     */
+    appendNotification() {
+        if (!document.querySelector('.notification')) {
+            this.section.insertAdjacentHTML('beforeend', this.notificationTemplate);
+        }
+    }
+
+    /**
+     * Show success notification
+     */
+    showNotification() {
+        const notification = this.section.querySelector('.notification');
+        if (!notification) return;
+
+        // Show notification
+        notification.style.display = 'flex';
+        notification.style.opacity = '1';
+
+        // Hide after delay
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 300);
+        }, 3000);
+    }
+
+    /**
+     * Clean up resources
+     */
+    destroy() {
+        // Remove event listeners
+        window.removeEventListener('message', this.handleSurveyMessage);
+        this.floatingElements.forEach(element => {
+            element.style.animation = 'none';
+        });
     }
 }
 
-// Initialize certificate manager when page loads
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.certificateManager = new CertificateManager();
+    const gameCompletion = new GameCompletion();
+    gameCompletion.init();
+
+    // Store instance for potential cleanup
+    window.gameCompletion = gameCompletion;
 });
