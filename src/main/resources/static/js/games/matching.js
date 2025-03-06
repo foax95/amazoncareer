@@ -9,28 +9,17 @@ class BenefitsMatchingGame {
             attempts: 0,
             firstCard: null,
             secondCard: null,
-            canFlip: true
+            canFlip: true,
+            mismatchCounts: {}
         };
 
         // Benefits data
         this.benefits = {
-            health: {
-                name: "Health Insurance",
+            insurance: {
+                name: "Insurance",
                 icon: "fa-heart",
-                description: "Comprehensive medical coverage starting day one",
-                details: "Full medical, prescription, and preventive care coverage"
-            },
-            dental: {
-                name: "Dental Coverage",
-                icon: "fa-tooth",
-                description: "Complete dental care including preventive services",
-                details: "Covers cleanings, fillings, and major procedures"
-            },
-            vision: {
-                name: "Vision Care",
-                icon: "fa-eye",
-                description: "Eye exams, glasses, and contact lens coverage",
-                details: "Annual eye exams and vision correction coverage"
+                description: "Comprehensive health, dental, and vision insurance coverage",
+                details: "Includes medical, dental, and vision care starting day one"
             },
             '401k': {
                 name: "401(k) Plan",
@@ -93,6 +82,7 @@ class BenefitsMatchingGame {
             return [...pairs, benefit, benefit];
         }, []);
 
+        // Shuffle the cards
         for (let i = benefitPairs.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [benefitPairs[i], benefitPairs[j]] = [benefitPairs[j], benefitPairs[i]];
@@ -138,14 +128,17 @@ class BenefitsMatchingGame {
     }
 
     startGame() {
-        this.state.isPlaying = true;
-        this.state.timeLeft = 60;
-        this.state.score = 0;
-        this.state.matchesFound = 0;
-        this.state.attempts = 0;
-        this.state.firstCard = null;
-        this.state.secondCard = null;
-        this.state.canFlip = true;
+        this.state = {
+            isPlaying: true,
+            timeLeft: 60,
+            score: 0,
+            matchesFound: 0,
+            attempts: 0,
+            firstCard: null,
+            secondCard: null,
+            canFlip: true,
+            mismatchCounts: {}
+        };
 
         this.gameContainer.querySelector('.game-instructions-panel').style.display = 'none';
         this.gameContainer.querySelector('.game-content').classList.add('show');
@@ -199,7 +192,7 @@ class BenefitsMatchingGame {
 
         this.showBenefitPopup(benefitType, points);
 
-        if (this.state.matchesFound === 8) {
+        if (this.state.matchesFound === 6) { // Updated to 6 pairs
             this.endGame(true);
         } else {
             this.resetTurn();
@@ -207,6 +200,12 @@ class BenefitsMatchingGame {
     }
 
     handleMismatch() {
+        const firstBenefit = this.state.firstCard.dataset.benefit;
+        const secondBenefit = this.state.secondCard.dataset.benefit;
+        const mismatchKey = [firstBenefit, secondBenefit].sort().join('-');
+
+        this.state.mismatchCounts[firstBenefit] = (this.state.mismatchCounts[firstBenefit] || 0) + 1;
+
         setTimeout(() => {
             const firstCardInner = this.state.firstCard.querySelector('.card-inner');
             const secondCardInner = this.state.secondCard.querySelector('.card-inner');
@@ -223,8 +222,33 @@ class BenefitsMatchingGame {
                 firstCardInner.classList.remove('flip-out');
                 secondCardInner.classList.remove('flip-out');
                 this.resetTurn();
+
+                // Check if we should show hints
+                if (this.state.mismatchCounts[firstBenefit] >= 2) {
+                    this.showMatchingHints(firstBenefit);
+                }
             }, 600);
         }, 1000);
+    }
+
+    // Add new method for showing matching hints:
+    showMatchingHints(benefitType) {
+        // Remove any existing hints
+        const allCards = this.gameContainer.querySelectorAll('.benefit-card');
+        allCards.forEach(card => card.classList.remove('hint-glow'));
+
+        // Add glow effect to matching cards
+        const matchingCards = this.gameContainer.querySelectorAll(`.benefit-card[data-benefit="${benefitType}"]`);
+        matchingCards.forEach(card => {
+            if (!card.classList.contains('matched')) {
+                card.classList.add('hint-glow');
+
+                // Remove the hint glow after 2 seconds
+                setTimeout(() => {
+                    card.classList.remove('hint-glow');
+                }, 2000);
+            }
+        });
     }
 
     calculatePoints() {
@@ -287,20 +311,17 @@ class BenefitsMatchingGame {
         }
     }
 
-   async endGame(completed) {
+    async endGame(completed) {
         clearInterval(this.timer);
         this.state.isPlaying = false;
 
-        // Calculate final score with time bonus if completed
         if (completed) {
             const timeBonus = this.state.timeLeft * 10;
             this.state.score += timeBonus;
         }
 
-        // Save score to database
-       await gameDB.saveScore('matching', this.state.score);
+        await gameDB.saveScore('matching', this.state.score);
 
-        // Update game state if available
         if (window.gameState) {
             if (!window.gameState.gameStats) {
                 window.gameState.gameStats = {};
@@ -314,7 +335,7 @@ class BenefitsMatchingGame {
             stats.highScore = Math.max(this.state.score, stats.highScore || 0);
             stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
             stats.perfectMatches = (stats.perfectMatches || 0) +
-                (this.state.matchesFound === 8 ? 1 : 0);
+                (this.state.matchesFound === 6 ? 1 : 0);
 
             if (!window.gameState.player) {
                 window.gameState.player = {};
@@ -331,7 +352,6 @@ class BenefitsMatchingGame {
             }
         }
 
-        // Show completion message
         const completionMessage = this.gameContainer.querySelector('.completion-message');
         completionMessage.innerHTML = `
             <div class="message-content ${completed ? 'success' : 'timeout'}">
@@ -342,7 +362,7 @@ class BenefitsMatchingGame {
                 <div class="score-breakdown">
                     <div class="score-item">
                         <span class="label">Matches Found:</span>
-                        <span class="value matches-found">${this.state.matchesFound}/8</span>
+                        <span class="value matches-found">${this.state.matchesFound}/6</span>
                     </div>
                     <div class="score-item">
                         <span class="label">Total Attempts:</span>
@@ -382,11 +402,9 @@ class BenefitsMatchingGame {
         const matchingGame = document.getElementById('matchingGame');
 
         if (quizSection && matchingGame) {
-            // First, hide the matching game
             matchingGame.style.display = 'none';
             matchingGame.classList.remove('active');
 
-            // Clear any completion messages or modals
             const completionMessage = matchingGame.querySelector('.completion-message');
             if (completionMessage) {
                 completionMessage.classList.remove('show');
@@ -397,16 +415,14 @@ class BenefitsMatchingGame {
                 modal.classList.remove('show');
             }
 
-            // Show quiz section after a short delay
             setTimeout(() => {
                 quizSection.style.display = 'block';
                 quizSection.classList.add('active');
 
-                // Initialize quiz if available
                 if (window.amazonQuiz) {
                     window.amazonQuiz.initialize();
                 }
-            }, 300); // Short delay for smooth transition
+            }, 300);
         }
     }
 
@@ -426,23 +442,44 @@ class BenefitsMatchingGame {
             attempts: 0,
             firstCard: null,
             secondCard: null,
-            canFlip: true
+            canFlip: true,
+            mismatchCounts: {}
         };
 
-        // Clear UI elements
+        // Clear UI elements if game container exists
         if (this.gameContainer) {
+            // Remove completion message
             const completionMessage = this.gameContainer.querySelector('.completion-message');
             if (completionMessage) {
                 completionMessage.classList.remove('show');
             }
 
+            // Remove benefit info modal
             const modal = this.gameContainer.querySelector('.benefit-info-modal');
             if (modal) {
                 modal.classList.remove('show');
             }
-        }
-    }
 
+            // Remove hint modal
+            const hintModal = this.gameContainer.querySelector('.hint-modal');
+            if (hintModal) {
+                hintModal.classList.remove('show');
+            }
+
+            // Remove any active hints from cards
+            const allCards = this.gameContainer.querySelectorAll('.benefit-card');
+            allCards.forEach(card => {
+                card.classList.remove('hint-glow', 'flipped', 'matched');
+                const cardInner = card.querySelector('.card-inner');
+                if (cardInner) {
+                    cardInner.classList.remove('flip-in', 'flip-out');
+                }
+            });
+        }
+
+        // Reset mismatch counts
+        this.state.mismatchCounts = {};
+    }
 
 
     restart() {
