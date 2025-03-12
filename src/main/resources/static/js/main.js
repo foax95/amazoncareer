@@ -190,7 +190,7 @@ function formatSectionName(sectionId) {
     const sectionNames = {
         'intro': 'Introduction',
         'weightSortingGame': 'Weight Sorting',
-        'pathFindingGame': 'PACE Navigator',
+        // 'pathFindingGame': 'PACE Navigator',
         'matchingGame': 'Benefits Matching',
         "gameComplete": 'Game Complete'
     };
@@ -440,8 +440,8 @@ function startTraining() {
 
 function completeGame(currentGame) {
     const gameSequence = {
-        weightSortingGame: 'pathFindingGame',
-        pathFindingGame: 'matchingGame',
+        weightSortingGame: 'matchingGame', //replace matchingGame with pathFindingGame to enable the next game
+        // pathFindingGame: 'matchingGame',
         matchingGame: 'gameComplete'
     };
 
@@ -476,23 +476,7 @@ function startGame(gameType) {
             if (gameContent) gameContent.style.display = 'none';
         }
 
-        switch(gameType) {
-            case 'weightSorting':
-                if (typeof initializeWeightSortingGame === 'function') {
-                    initializeWeightSortingGame();
-                }
-                break;
-            case 'pathFinding':
-                if (typeof initializePathFindingGame === 'function') {
-                    initializePathFindingGame();
-                }
-                break;
-            case 'matching':
-                if (typeof initializeMatchingGame === 'function') {
-                    initializeMatchingGame();
-                }
-                break;
-        }
+
     } catch (error) {
         console.error('Error starting game:', error);
     }

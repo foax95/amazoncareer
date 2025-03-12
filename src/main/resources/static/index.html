@@ -63,16 +63,16 @@
                             <p>Master package sorting and learn essential safety guidelines for handling different weight categories.</p>
                         </div>
 
-                        <div class="game-preview">
-                            <i class="fas fa-map-marked-alt"></i>
-                            <h3>Pre-Hire Checklist Navigator</h3>
-                            <p>Navigate through your pre-hire checklist and collect important items needed for Day 1.</p>
-                        </div>
+<!--                        <div class="game-preview">-->
+<!--                            <i class="fas fa-map-marked-alt"></i>-->
+<!--                            <h3>Pre-Hire Checklist Navigator</h3>-->
+<!--                            <p>Navigate through your pre-hire checklist and collect important items needed for Day 1.</p>-->
+<!--                        </div>-->
 
                         <div class="game-preview">
                             <i class="fas fa-th"></i>
-                            <h3>Benefits Match</h3>
-                            <p>Discover Amazon's comprehensive benefits package by matching pairs of benefit cards.</p>
+                            <h3>Pre-Hire Checklist match</h3>
+                            <p>Navigate through your pre-hire checklist and collect important items needed for Day 1.</p>
                         </div>
 
                         <div class="game-preview">
@@ -589,22 +589,22 @@
     </section>
 
 
-    <!-- Benefit Matching Game -->
+    <!-- Pre-hire Checklist Matching Game -->
     <section id="matchingGame" class="page matching-section">
         <!-- Game Instructions Panel -->
         <div class="game-instructions-panel">
             <div class="instructions-content">
-                <h2><i class="fas fa-puzzle-piece"></i> Benefits Matching Game</h2>
-                <p>Test your knowledge of Amazon benefits by finding matching pairs!</p>
+                <h2><i class="fas fa-clipboard-check"></i> Pre-hire Checklist Matching Game</h2>
+                <p>Test your knowledge of important pre-hire tasks by finding matching pairs!</p>
 
                 <div class="instruction-steps">
                     <div class="step">
                         <i class="fas fa-mouse-pointer"></i>
-                        <p>Click cards to flip them and reveal Amazon benefits</p>
+                        <p>Click cards to flip them and reveal pre-hire checklist items</p>
                     </div>
                     <div class="step">
                         <i class="fas fa-sync-alt"></i>
-                        <p>Find matching benefit pairs to score points</p>
+                        <p>Find matching checklist pairs to score points</p>
                     </div>
                     <div class="step">
                         <i class="fas fa-clock"></i>
@@ -613,14 +613,42 @@
                 </div>
 
                 <div class="additional-instructions">
+                    <h3>Pre-hire Checklist Items:</h3>
+                    <div class="checklist-preview">
+                        <div class="preview-item">
+                            <i class="fas fa-laptop"></i>
+                            <span>Application Status</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-shoe-prints"></i>
+                            <span>Safety Shoes</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-tags"></i>
+                            <span>Shoe Ordering</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-file-signature"></i>
+                            <span>Pre-hire Forms</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-id-card"></i>
+                            <span>Photo ID</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Day 1 Attire</span>
+                        </div>
+                    </div>
+
                     <h3>How to Play:</h3>
                     <ol>
-                        <li>Click on any card to flip it and reveal an Amazon benefit.</li>
+                        <li>Click on any card to flip it and reveal a pre-hire checklist item.</li>
                         <li>Click on a second card to try and find its match.</li>
                         <li>If the cards match, they will remain face up, and you'll earn points.</li>
                         <li>If they don't match, both cards will flip back over.</li>
                         <li>Remember the locations of cards to make matches more quickly.</li>
-                        <li>Match all 8 pairs before time runs out to win!</li>
+                        <li>Match all 6 pairs before time runs out to win!</li>
                     </ol>
                     <p><strong>Tip:</strong> The faster you complete the game, the higher your score will be!</p>
                 </div>
@@ -636,8 +664,8 @@
             <div class="game-header">
                 <div class="game-stats">
                     <div class="stat-item">
-                        <i class="fas fa-puzzle-piece"></i>
-                        <span>Matches: <span id="matchesFound">0</span>/<span id="totalPairs">8</span></span>
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Matches: <span id="matchesFound">0</span>/<span id="totalPairs">6</span></span>
                     </div>
                     <div class="stat-item">
                         <i class="fas fa-clock"></i>
@@ -660,9 +688,8 @@
                 <div class="hint-content"></div>
             </div>
 
-
-            <!-- Benefit Information Modal -->
-            <div class="benefit-info-modal">
+            <!-- Checklist Item Information Modal -->
+            <div class="checklist-info-modal">
                 <div class="modal-content">
                     <button class="modal-close"><i class="fas fa-times"></i></button>
                     <div class="modal-header">
@@ -679,31 +706,42 @@
 
             <!-- Completion Message -->
             <div class="completion-message">
-                <h2><i class="fas fa-trophy"></i> Game Complete!</h2>
-                <div class="score-breakdown">
-                    <div class="score-item">
-                        <span>Matches Found:</span>
-                        <span class="matches-found">0/8</span>
+                <div class="message-content">
+                    <div class="message-header">
+                        <i class="fas fa-trophy"></i>
+                        <h2>Game Complete!</h2>
                     </div>
-                    <div class="score-item">
-                        <span>Time Remaining:</span>
-                        <span class="time-bonus">0s</span>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <span class="label">Items Matched:</span>
+                            <span class="matches-found">0/6</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="label">Time Remaining:</span>
+                            <span class="time-bonus">0s</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="label">Attempts:</span>
+                            <span class="total-attempts">0</span>
+                        </div>
+                        <div class="score-item total">
+                            <span class="label">Total Score:</span>
+                            <span class="final-score">0</span>
+                        </div>
                     </div>
-                    <div class="score-item">
-                        <span>Attempts:</span>
-                        <span class="total-attempts">0</span>
-                    </div>
-                    <div class="score-item">
-                        <span>Total Score:</span>
-                        <span class="final-score">0</span>
+                    <div class="modal-buttons">
+                        <button class="continue-button button-primary">
+                            <i class="fas fa-arrow-right"></i> Continue to Quiz
+                        </button>
+                        <button class="replay-button button-secondary">
+                            <i class="fas fa-redo"></i> Play Again
+                        </button>
                     </div>
                 </div>
-                <button class="continue-button">
-                    <i class="fas fa-arrow-right"></i> Continue to Quiz
-                </button>
             </div>
         </div>
     </section>
+
 
     <!-- Quiz Section -->
     <section id="quizSection" class="page quiz-section">

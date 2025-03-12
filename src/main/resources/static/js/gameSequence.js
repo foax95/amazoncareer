@@ -11,14 +11,14 @@ class GameSequenceManager {
                 description: 'Learn proper package handling',
                 type: 'game'
             },
-            {
-                id: 'pathFinding',
-                name: 'PACE Navigator',
-                completed: false,
-                icon: 'fas fa-map-marked-alt',
-                description: 'Find your way around Amazon',
-                type: 'game'
-            },
+            // {
+            //     id: 'pathFinding',
+            //     name: 'PACE Navigator',
+            //     completed: false,
+            //     icon: 'fas fa-map-marked-alt',
+            //     description: 'Find your way around Amazon',
+            //     type: 'game'
+            // },
             {
                 id: 'matching',
                 name: 'Benefits Match',

@@ -1,4 +1,4 @@
-class BenefitsMatchingGame {
+class PreHireChecklistGame {
     constructor() {
         // Game state
         this.state = {
@@ -10,46 +10,78 @@ class BenefitsMatchingGame {
             firstCard: null,
             secondCard: null,
             canFlip: true,
-            mismatchCounts: {}
+            mismatchCounts: {},
+            timerPaused: false,
+            openModals: 0,
+            gameCompleted: false
         };
 
-        // Benefits data
-        this.benefits = {
-            insurance: {
-                name: "Insurance",
-                icon: "fa-heart",
-                description: "Comprehensive health, dental, and vision insurance coverage",
-                details: "Includes medical, dental, and vision care starting day one"
+        this.checklistItems = {
+            applicationStatus: {
+                name: "Application Status",
+                icon: "fa-laptop",
+                description: "Track Your Application Progress",
+                details: "Visit hiring.amazon.com and follow these steps:\n" +
+                    "• Log in to your account\n" +
+                    "• Click on 'My Jobs'\n" +
+                    "• Select your active application\n" +
+                    "• View application status and pre-employment screening results"
             },
-            '401k': {
-                name: "401(k) Plan",
-                icon: "fa-piggy-bank",
-                description: "Retirement savings with company match",
-                details: "Company matches contributions up to 6% of salary"
+            safetyShoes: {
+                name: "Safety Shoes",
+                icon: "fa-shoe-prints",
+                description: "Order Required Safety Shoes ($110 Credit)",
+                details: "Safety shoes are mandatory for all Amazon worksites. Order process:\n" +
+                    "• Wait for pre-employment screenings completion\n" +
+                    "• Access $110 Zappos credit on hiring.amazon.com\n" +
+                    "• Use blue button in pre-hire checklist to visit Zappos\n" +
+                    "• Click 'Accept & Shop' for approved shoes\n" +
+                    "• Credit applies automatically at checkout\n" +
+                    "• Can use remaining credit for insoles\n" +
+                    "Note: If shoes don't arrive by Day 1, safety-shoe covers will be provided"
             },
-            career: {
-                name: "Career Choice",
-                icon: "fa-graduation-cap",
-                description: "Education funding for in-demand careers",
-                details: "Up to $5,250 per year for eligible programs"
+            prehireForms: {
+                name: "Pre-hire Forms",
+                icon: "fa-file-signature",
+                description: "Complete Employment Documentation",
+                details: "Log in to hiring.amazon.com and complete:\n" +
+                    "• Payroll Direct Deposit setup\n" +
+                    "• Terms of Employment\n" +
+                    "• Non-Disclosure Agreement\n" +
+                    "• Additional employment-related forms\n" +
+                    "Complete all forms before Day 1. HR can assist with questions on your first day"
             },
-            pto: {
-                name: "Paid Time Off",
-                icon: "fa-umbrella-beach",
-                description: "Flexible vacation and personal time",
-                details: "Accrued PTO based on tenure and position"
+            photoID: {
+                name: "Photo ID",
+                icon: "fa-id-card",
+                description: "Government-Issued Photo ID Required",
+                details: "Bring a valid government-issued photo ID on Day 1.\n" +
+                    "This is required to receive your Amazon badge and gain facility access.\n" +
+                    "Acceptable forms include driver's license, state ID, or passport"
             },
-            parental: {
-                name: "Parental Leave",
-                icon: "fa-baby",
-                description: "Paid leave for new parents",
-                details: "Up to 20 weeks of paid parental leave"
+            day1Attire: {
+                name: "Day 1 Attire",
+                icon: "fa-tshirt",
+                description: "Dress Code Requirements",
+                details: "Prepare appropriate workwear for your first day:\n" +
+                    "• Wear your ordered safety shoes if received\n" +
+                    "• If shoes haven't arrived, wear closed-toe/closed-heel shoes\n" +
+                    "• Dress comfortably and appropriately\n" +
+                    "• No formal interview attire needed\n" +
+                    "• Clothing should be workplace-appropriate and allow for movement"
             },
-            discount: {
-                name: "Employee Discount",
-                icon: "fa-tags",
-                description: "Special savings on Amazon purchases",
-                details: "10% off eligible Amazon.com purchases"
+            ouch: {
+                name: "Ouch Prevention",
+                icon: "fa-heartbeat",
+                description: "Prepare for Physical Demands",
+                details: "Understanding and managing potential soreness in your first few weeks:\n" +
+                    "• Initial Adjustment: Your body may need time to adapt to new physical activities\n" +
+                    "• Common Areas: You might experience soreness in feet, legs, back, or arms\n" +
+                    "• Stretching: Perform gentle stretches before and after shifts\n" +
+                    "• Proper Technique: Learn and use correct lifting and movement techniques\n" +
+                    "• Hydration: Drink plenty of water to help prevent muscle cramping\n" +
+                    "• Rest: Ensure adequate sleep and rest between shifts\n" +
+                    "Remember: Some initial discomfort is normal, but your health and safety are top priorities"
             }
         };
 
@@ -78,27 +110,27 @@ class BenefitsMatchingGame {
         const cardsGrid = this.gameContainer.querySelector('.cards-grid');
         cardsGrid.innerHTML = ''; // Clear existing cards
 
-        const benefitPairs = Object.keys(this.benefits).reduce((pairs, benefit) => {
-            return [...pairs, benefit, benefit];
+        const checklistPairs = Object.keys(this.checklistItems).reduce((pairs, item) => {
+            return [...pairs, item, item];
         }, []);
 
         // Shuffle the cards
-        for (let i = benefitPairs.length - 1; i > 0; i--) {
+        for (let i = checklistPairs.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [benefitPairs[i], benefitPairs[j]] = [benefitPairs[j], benefitPairs[i]];
+            [checklistPairs[i], checklistPairs[j]] = [checklistPairs[j], checklistPairs[i]];
         }
 
-        benefitPairs.forEach(benefit => {
+        checklistPairs.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'benefit-card';
-            card.dataset.benefit = benefit;
+            card.className = 'checklist-card';
+            card.dataset.item = item;
 
-            const benefitData = this.benefits[benefit];
+            const itemData = this.checklistItems[item];
             card.innerHTML = `
                 <div class="card-inner">
                     <div class="card-front">
-                        <i class="fas ${benefitData.icon}"></i>
-                        <span>${benefitData.name}</span>
+                        <i class="fas ${itemData.icon}"></i>
+                        <span>${itemData.name}</span>
                     </div>
                     <div class="card-back">
                         <i class="fas fa-question"></i>
@@ -116,12 +148,12 @@ class BenefitsMatchingGame {
 
         const cardsGrid = this.gameContainer.querySelector('.cards-grid');
         cardsGrid.addEventListener('click', (e) => {
-            const card = e.target.closest('.benefit-card');
+            const card = e.target.closest('.checklist-card');
             if (card) this.handleCardClick(card);
         });
 
         const modalClose = this.gameContainer.querySelector('.modal-close');
-        modalClose.addEventListener('click', () => this.closeBenefitPopup());
+        modalClose.addEventListener('click', () => this.closeItemPopup());
 
         const continueButton = this.gameContainer.querySelector('.continue-button');
         continueButton.addEventListener('click', () => this.navigateToQuiz());
@@ -137,7 +169,10 @@ class BenefitsMatchingGame {
             firstCard: null,
             secondCard: null,
             canFlip: true,
-            mismatchCounts: {}
+            mismatchCounts: {},
+            timerPaused: false,
+            openModals: 0,
+            gameCompleted: false
         };
 
         this.gameContainer.querySelector('.game-instructions-panel').style.display = 'none';
@@ -170,11 +205,11 @@ class BenefitsMatchingGame {
 
     checkMatch() {
         this.state.canFlip = false;
-        const firstBenefit = this.state.firstCard.dataset.benefit;
-        const secondBenefit = this.state.secondCard.dataset.benefit;
+        const firstItem = this.state.firstCard.dataset.item;
+        const secondItem = this.state.secondCard.dataset.item;
 
-        if (firstBenefit === secondBenefit) {
-            this.handleMatch(firstBenefit);
+        if (firstItem === secondItem) {
+            this.handleMatch(firstItem);
         } else {
             this.handleMismatch();
         }
@@ -182,7 +217,7 @@ class BenefitsMatchingGame {
         this.updateUI();
     }
 
-    handleMatch(benefitType) {
+    handleMatch(itemType) {
         this.state.matchesFound++;
         const points = this.calculatePoints();
         this.state.score += points;
@@ -190,21 +225,25 @@ class BenefitsMatchingGame {
         this.state.firstCard.classList.add('matched');
         this.state.secondCard.classList.add('matched');
 
-        this.showBenefitPopup(benefitType, points);
+        this.state.timerPaused = true;
+        this.showItemPopup(itemType, points);
 
-        if (this.state.matchesFound === 6) { // Updated to 6 pairs
-            this.endGame(true);
+        if (this.state.matchesFound === 6) {
+            this.state.gameCompleted = true;
+            if (this.state.openModals === 0) {
+                this.endGame(true);
+            }
         } else {
             this.resetTurn();
         }
     }
 
     handleMismatch() {
-        const firstBenefit = this.state.firstCard.dataset.benefit;
-        const secondBenefit = this.state.secondCard.dataset.benefit;
-        const mismatchKey = [firstBenefit, secondBenefit].sort().join('-');
+        const firstItem = this.state.firstCard.dataset.item;
+        const secondItem = this.state.secondCard.dataset.item;
+        const mismatchKey = [firstItem, secondItem].sort().join('-');
 
-        this.state.mismatchCounts[firstBenefit] = (this.state.mismatchCounts[firstBenefit] || 0) + 1;
+        this.state.mismatchCounts[firstItem] = (this.state.mismatchCounts[firstItem] || 0) + 1;
 
         setTimeout(() => {
             const firstCardInner = this.state.firstCard.querySelector('.card-inner');
@@ -223,27 +262,24 @@ class BenefitsMatchingGame {
                 secondCardInner.classList.remove('flip-out');
                 this.resetTurn();
 
-                // Check if we should show hints
-                if (this.state.mismatchCounts[firstBenefit] >= 2) {
-                    this.showMatchingHints(firstBenefit);
+                if (this.state.mismatchCounts[firstItem] >= 2) {
+                    this.showMatchingHints(firstItem);
                 }
             }, 600);
         }, 1000);
     }
 
-    // Add new method for showing matching hints:
-    showMatchingHints(benefitType) {
-        // Remove any existing hints
-        const allCards = this.gameContainer.querySelectorAll('.benefit-card');
+    showMatchingHints(itemType) {
+        const allCards = this.gameContainer.querySelectorAll('.checklist-card');
         allCards.forEach(card => card.classList.remove('hint-glow'));
 
-        // Add glow effect to matching cards
-        const matchingCards = this.gameContainer.querySelectorAll(`.benefit-card[data-benefit="${benefitType}"]`);
+        const matchingCards = this.gameContainer.querySelectorAll(
+            `.checklist-card[data-item="${itemType}"]`
+        );
         matchingCards.forEach(card => {
             if (!card.classList.contains('matched')) {
                 card.classList.add('hint-glow');
 
-                // Remove the hint glow after 2 seconds
                 setTimeout(() => {
                     card.classList.remove('hint-glow');
                 }, 2000);
@@ -255,23 +291,45 @@ class BenefitsMatchingGame {
         return 100 + Math.floor(this.state.timeLeft / 10) * 10;
     }
 
-    showBenefitPopup(benefitType, points) {
-        const benefit = this.benefits[benefitType];
-        const modal = this.gameContainer.querySelector('.benefit-info-modal');
+    showItemPopup(itemType, points) {
+        const item = this.checklistItems[itemType];
+        const modal = this.gameContainer.querySelector('.checklist-info-modal');
 
-        modal.querySelector('.modal-icon').className = `modal-icon fas ${benefit.icon}`;
-        modal.querySelector('.modal-title').textContent = benefit.name;
-        modal.querySelector('.modal-description').textContent = benefit.description;
-        modal.querySelector('.modal-details').textContent = benefit.details;
+        this.state.openModals++;
+
+        modal.querySelector('.modal-icon').className = `modal-icon fas ${item.icon}`;
+        modal.querySelector('.modal-title').textContent = item.name;
+        modal.querySelector('.modal-description').textContent = item.description;
+
+        const detailsContent = item.details;
+        const detailsEl = modal.querySelector('.modal-details');
+        const lines = detailsContent.split('\n').filter(line => line.trim());
+        const title = lines[0];
+        const bullets = lines.slice(1);
+
+        detailsEl.innerHTML = `
+            <div class="detail-title">${title.trim()}</div>
+            <ul class="detail-bullets">
+                ${bullets.map(bullet => `
+                    <li>${bullet.trim().replace('•', '')}</li>
+                `).join('')}
+            </ul>
+        `;
+
         modal.querySelector('.points-earned').textContent = `+${points} points`;
-
         modal.classList.add('show');
     }
 
-    closeBenefitPopup() {
-        const modal = this.gameContainer.querySelector('.benefit-info-modal');
+    closeItemPopup() {
+        const modal = this.gameContainer.querySelector('.checklist-info-modal');
         modal.classList.remove('show');
+        this.state.openModals--;
+        this.state.timerPaused = false;
         this.resetTurn();
+
+        if (this.state.gameCompleted && this.state.openModals === 0) {
+            this.endGame(true);
+        }
     }
 
     resetTurn() {
@@ -284,7 +342,7 @@ class BenefitsMatchingGame {
         if (this.timer) clearInterval(this.timer);
 
         this.timer = setInterval(() => {
-            if (this.state.timeLeft > 0) {
+            if (this.state.timeLeft > 0 && !this.state.timerPaused) {
                 this.state.timeLeft--;
                 this.updateUI();
 
@@ -320,8 +378,12 @@ class BenefitsMatchingGame {
             this.state.score += timeBonus;
         }
 
-        await gameDB.saveScore('matching', this.state.score);
+        // Save score if gameDB is available
+        if (typeof gameDB !== 'undefined') {
+            await gameDB.saveScore('matching', this.state.score);
+        }
 
+        // Update game state if available
         if (window.gameState) {
             if (!window.gameState.gameStats) {
                 window.gameState.gameStats = {};
@@ -347,11 +409,20 @@ class BenefitsMatchingGame {
                 window.gameState.player.completedSections.push('matchingGame');
             }
 
-            if (typeof saveGameState === 'function') {
+            if (typeof saveGameState ===
+
+                'function') {
                 saveGameState();
             }
         }
 
+        // Only show completion message if all modals are closed
+        if (this.state.openModals === 0) {
+            this.showCompletionMessage(completed);
+        }
+    }
+
+    showCompletionMessage(completed) {
         const completionMessage = this.gameContainer.querySelector('.completion-message');
         completionMessage.innerHTML = `
             <div class="message-content ${completed ? 'success' : 'timeout'}">
@@ -361,7 +432,7 @@ class BenefitsMatchingGame {
                 </div>
                 <div class="score-breakdown">
                     <div class="score-item">
-                        <span class="label">Matches Found:</span>
+                        <span class="label">Pre-hire Items Matched:</span>
                         <span class="value matches-found">${this.state.matchesFound}/6</span>
                     </div>
                     <div class="score-item">
@@ -384,10 +455,10 @@ class BenefitsMatchingGame {
                     </div>
                 </div>
                 <div class="modal-buttons">
-                    <button class="continue-button button-primary" onclick="window.matchingGame.navigateToQuiz()">
+                    <button class="continue-button button-primary" onclick="window.preHireGame.navigateToQuiz()">
                         <i class="fas fa-arrow-right"></i> Continue to Quiz
                     </button>
-                    <button class="replay-button button-secondary" onclick="window.matchingGame.restart()">
+                    <button class="replay-button button-secondary" onclick="window.preHireGame.restart()">
                         <i class="fas fa-redo"></i> Play Again
                     </button>
                 </div>
@@ -410,7 +481,7 @@ class BenefitsMatchingGame {
                 completionMessage.classList.remove('show');
             }
 
-            const modal = matchingGame.querySelector('.benefit-info-modal');
+            const modal = matchingGame.querySelector('.checklist-info-modal');
             if (modal) {
                 modal.classList.remove('show');
             }
@@ -427,13 +498,11 @@ class BenefitsMatchingGame {
     }
 
     cleanup() {
-        // Clear any active timers
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = null;
         }
 
-        // Reset game state
         this.state = {
             isPlaying: false,
             timeLeft: 60,
@@ -443,31 +512,24 @@ class BenefitsMatchingGame {
             firstCard: null,
             secondCard: null,
             canFlip: true,
-            mismatchCounts: {}
+            mismatchCounts: {},
+            timerPaused: false,
+            openModals: 0,
+            gameCompleted: false
         };
 
-        // Clear UI elements if game container exists
         if (this.gameContainer) {
-            // Remove completion message
             const completionMessage = this.gameContainer.querySelector('.completion-message');
             if (completionMessage) {
                 completionMessage.classList.remove('show');
             }
 
-            // Remove benefit info modal
-            const modal = this.gameContainer.querySelector('.benefit-info-modal');
+            const modal = this.gameContainer.querySelector('.checklist-info-modal');
             if (modal) {
                 modal.classList.remove('show');
             }
 
-            // Remove hint modal
-            const hintModal = this.gameContainer.querySelector('.hint-modal');
-            if (hintModal) {
-                hintModal.classList.remove('show');
-            }
-
-            // Remove any active hints from cards
-            const allCards = this.gameContainer.querySelectorAll('.benefit-card');
+            const allCards = this.gameContainer.querySelectorAll('.checklist-card');
             allCards.forEach(card => {
                 card.classList.remove('hint-glow', 'flipped', 'matched');
                 const cardInner = card.querySelector('.card-inner');
@@ -476,11 +538,7 @@ class BenefitsMatchingGame {
                 }
             });
         }
-
-        // Reset mismatch counts
-        this.state.mismatchCounts = {};
     }
-
 
     restart() {
         this.cleanup();
@@ -495,7 +553,7 @@ class BenefitsMatchingGame {
 
 // Initialize game when document is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new BenefitsMatchingGame();
-    window.matchingGame = game;
+    const game = new PreHireChecklistGame();
+    window.preHireGame = game;
     game.initialize();
 });

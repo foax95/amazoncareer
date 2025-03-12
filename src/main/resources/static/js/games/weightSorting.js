@@ -397,7 +397,7 @@ class WeightSortingGame {
             </div>
             <div class="modal-buttons">
                 <button class="continue-button button-primary" onclick="completeGame('weightSortingGame')">
-                    <i class="fas fa-arrow-right"></i> Continue to PACE Navigator
+                    <i class="fas fa-arrow-right"></i> Continue
                 </button>
                 <button class="replay-button button-secondary" onclick="window.weightSortingGame.restart()">
                     <i class="fas fa-redo"></i> Play Again
