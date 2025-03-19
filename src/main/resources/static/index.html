@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="css/weight-sorting.css">
     <link rel="stylesheet" href="css/benefit-matching.css">
     <link rel="stylesheet" href="css/quiz.css">
-    <link rel="stylesheet" href="css/certificate.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -20,7 +19,7 @@
         </div>
         <div class="loading-progress">
             <div class="progress-bar">
-                <div class="progress-fill animated" data-animation="slideIn" id="loadingProgress"></div>
+                <div class="progress-fill animated " data-animation="slideIn" id="loadingProgress"></div>
             </div>
             <span class="progress-text" id="loadingProgressText">0%</span>
         </div>
@@ -42,6 +41,8 @@
         </div>
     </div>
 </header>
+
+
 <!-- Main Content Container -->
 <main class="main-content">
     <!-- Welcome Screen -->
@@ -56,29 +57,15 @@
                     <h2>Get Ready for Your Day One Adventure!</h2>
                     <p>Your journey begins with four exciting challenges that will prepare you for success:</p>
 
-                    <div class="game-preview-grid">
-                        <div class="game-preview">
-                            <i class="fas fa-weight-hanging"></i>
-                            <h3>Safety First</h3>
-                            <p>Master package sorting and learn essential safety guidelines for handling different weight categories.</p>
-                        </div>
-
-<!--                        <div class="game-preview">-->
-<!--                            <i class="fas fa-map-marked-alt"></i>-->
-<!--                            <h3>Pre-Hire Checklist Navigator</h3>-->
-<!--                            <p>Navigate through your pre-hire checklist and collect important items needed for Day 1.</p>-->
-<!--                        </div>-->
-
-                        <div class="game-preview">
-                            <i class="fas fa-th"></i>
-                            <h3>Pre-Hire Checklist match</h3>
-                            <p>Navigate through your pre-hire checklist and collect important items needed for Day 1.</p>
-                        </div>
-
-                        <div class="game-preview">
-                            <i class="fas fa-question-circle"></i>
-                            <h3>Knowledge Quiz</h3>
-                            <p>Test your understanding of Amazon's onboarding process and workplace essentials.</p>
+                        <!-- Survey Embed -->
+                        <div class="survey-frame">
+                            <iframe
+                                    src="https://amazonexteu.qualtrics.com/jfe/form/SV_9Qz87yEIpp5YDu6"
+                                    width="100%"
+                                    height="600px"
+                                    frameborder="0"
+                                    style="border: none;"
+                            ></iframe>
                         </div>
                     </div>
 
@@ -92,7 +79,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
     </section>
 
 
@@ -843,31 +830,8 @@
 
     <!-- Certificate Page -->
     <section id="gameComplete" class="page game-section">
-        <!-- Floating Elements -->
-        <div class="floating-elements">
-            <div class="floating-element" style="top: 10%; left: 10%;">🎮</div>
-            <div class="floating-element" style="top: 30%; right: 20%;">🏆</div>
-            <div class="floating-element" style="bottom: 20%; left: 30%;">⭐</div>
-            <div class="floating-element" style="top: 50%; right: 10%;">🌟</div>
-        </div>
-        <div class="survey-wrapper animated" data-animation="fadeIn">
-            <!-- Congratulations Text -->
-            <div class="survey-header">
-                <h1>You are almost there!</h1>
-                <p>Please take a moment to complete the survey below.</p>
-            </div>
-
-            <!-- Survey Embed -->
-            <div class="survey-frame">
-                <iframe
-                        src="https://amazonexteu.qualtrics.com/jfe/form/SV_9Qz87yEIpp5YDu6"
-                        width="100%"
-                        height="600px"
-                        frameborder="0"
-                        style="border: none;"
-                ></iframe>
-            </div>
-        </div>
+        <iframe id="celebrationFrame" src="celebration.html"
+                style="width: 100%; height: 100vh; border: none; position: absolute; top: 0; left: 0;"></iframe>
     </section>
 
 </main>
@@ -881,7 +845,5 @@
 <script src="js/games/pathFinding.js"></script>
 <script src="js/games/matching.js"></script>
 <script src="js/games/quiz.js"></script>
-<script src="js/certificate.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>

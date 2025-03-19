@@ -588,27 +588,7 @@ async function initializeApp() {
     }
 }
 
-// Handle Registration
-function handleRegistration(event) {
-    event.preventDefault();
 
-    try {
-        const name = document.getElementById('name')?.value?.trim();
-        const email = document.getElementById('email')?.value?.trim();
-
-        if (name && email) {
-            gameState.player.name = name;
-            gameState.player.email = email;
-            saveGameState();
-            showSection('weightSortingGame');
-        } else {
-            alert('Please enter both name and email to continue.');
-        }
-    } catch (error) {
-        console.error('Error handling registration:', error);
-        alert('There was an error processing your registration. Please try again.');
-    }
-}
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
