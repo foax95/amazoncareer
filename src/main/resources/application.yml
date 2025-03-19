@@ -1,4 +1,4 @@
-cloud:
+gitcloud:
   aws:
     stack:
       auto: false
