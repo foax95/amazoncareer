@@ -1,8 +1,8 @@
 
 gitignore: true
 aws:
-  access-key-id: AKIAZOZQFZUTHQ5LFQYR
-  secret-access-key: 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
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY}
   region: ${AWS_REGION:us-east-2}
 
 server:
