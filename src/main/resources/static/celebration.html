@@ -12,6 +12,7 @@
       --accent-color: #146EB4;
       --white: #ffffff;
       --glow-color: rgba(255, 153, 0, 0.5);
+      --text-shadow-dark: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     body {
@@ -26,7 +27,8 @@
       position: relative;
       min-height: 100vh;
       width: 100%;
-      background: radial-gradient(circle at center, #37475A, #232F3E);
+      background: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Celebration.png') center center no-repeat;
+      background-size: cover;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -38,7 +40,7 @@
       z-index: 2;
       text-align: center;
       padding: 3rem;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
       backdrop-filter: blur(10px);
       border-radius: 20px;
       max-width: 800px;
@@ -53,15 +55,17 @@
     .amazon-logo {
       width: 150px;
       margin-bottom: 1rem;
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
     }
 
     .trophy-animation {
       font-size: 8rem;
       margin-bottom: 1rem;
       animation: trophyBounce 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-      text-shadow: 0 0 20px var(--glow-color);
+      text-shadow: 0 0 20px var(--glow-color), var(--text-shadow-dark);
       cursor: pointer;
       transition: transform 0.3s ease;
+      color: #FFD700; /* Golden color for trophy */
     }
 
     .trophy-animation:hover {
@@ -69,11 +73,11 @@
     }
 
     .completion-content h1 {
-      color: var(--primary-color);
+      color: #FFB84D; /* Brighter orange for better contrast */
       font-size: 3rem;
       margin-bottom: 1rem;
       font-weight: 700;
-      text-shadow: 0 0 10px var(--glow-color);
+      text-shadow: 0 0 10px var(--glow-color), var(--text-shadow-dark);
       animation: glowText 2s ease-in-out infinite;
     }
 
@@ -81,8 +85,9 @@
       color: var(--white);
       font-size: 1.5rem;
       margin-bottom: 2rem;
-      opacity: 0.9;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+      opacity: 1; /* Increased from 0.9 for better contrast */
+      text-shadow: var(--text-shadow-dark);
+      font-weight: 500; /* Added font weight for better visibility */
     }
 
     .stats-container {
@@ -99,7 +104,7 @@
       color: var(--white);
       animation: fadeInUp 0.6s ease-out forwards;
       padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.6); /* Darker background for better contrast */
       border-radius: 15px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
@@ -107,19 +112,24 @@
 
     .stat-item:hover {
       transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.8); /* Darker on hover */
     }
 
     .stat-icon {
       font-size: 3rem;
       margin-bottom: 0.5rem;
       animation: pulse 2s infinite;
+      color: #FFB84D; /* Brighter orange for icons */
+      text-shadow: var(--text-shadow-dark);
     }
 
     .stat-label {
       font-size: 1.2rem;
-      opacity: 0.9;
+      opacity: 1; /* Increased from 0.9 for better contrast */
       font-weight: 600;
+      color: #ffffff; /* Explicit white color */
+      text-shadow: var(--text-shadow-dark);
     }
 
     .celebration-particles {
@@ -134,10 +144,14 @@
 
     .next-steps {
       margin-top: 2rem;
-      color: var(--white);
+      color: #ffffff; /* Explicit white color */
       font-size: 1.2rem;
       line-height: 1.6;
+      text-shadow: var(--text-shadow-dark);
+      font-weight: 500; /* Added font weight for better visibility */
     }
+
+    /* Rest of the animations remain the same */
 
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -150,8 +164,8 @@
     }
 
     @keyframes glowText {
-      0%, 100% { text-shadow: 0 0 10px var(--glow-color); }
-      50% { text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color); }
+      0%, 100% { text-shadow: 0 0 10px var(--glow-color), var(--text-shadow-dark); }
+      50% { text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color), var(--text-shadow-dark); }
     }
 
     @keyframes pulse {
@@ -185,6 +199,10 @@
     }
 
     @media (max-width: 768px) {
+      #gameComplete.page.game-section {
+        background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/Celebration+(1).png');
+      }
+
       .completion-content h1 {
         font-size: 2.5rem;
       }
@@ -210,6 +228,7 @@
         width: 120px;
       }
     }
+
   </style>
 </head>
 <body>
@@ -218,7 +237,7 @@
 
   <div class="completion-wrapper animated">
     <div class="completion-content">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon Logo" class="amazon-logo">
+      <img src="https://images-game-wfs.s3.us-east-2.amazonaws.com/Amazon_Logo_White_Smile+Orange.png" alt="Amazon Logo" class="amazon-logo">
       <div class="trophy-animation" id="trophy">🏆</div>
       <h1>Day One Hero!</h1>
       <p class="completion-message">Congratulations on completing the Amazon Day One Hero game!</p>
