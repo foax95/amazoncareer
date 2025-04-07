@@ -457,49 +457,6 @@
     to { left: calc(100% + 100px); }
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-    .sorting-zones-section {
-        padding: 0.5rem;
-    }
-
-    .sorting-zones-section .game-instructions-panel {
-        padding: 1rem;
-    }
-
-    .sorting-zones-section .instruction-categories {
-        grid-template-columns: 1fr;
-    }
-
-    .sorting-zones-section .package {
-        width: 60px;
-        height: 60px;
-    }
-
-    .sorting-zones-section .package .weight-display {
-        font-size: 0.9rem;
-    }
-
-    .sorting-zones-section .modal-buttons {
-        flex-direction: column;
-    }
-}
-
-/* Touch Device Optimizations */
-@media (hover: none) {
-    .sorting-zones-section .zone:hover,
-    .sorting-zones-section .package:hover {
-        transform: none;
-    }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    .sorting-zones-section * {
-        animation: none !important;
-        transition: none !important;
-    }
-}
 /* Core adjustments for portrait mode */
 @media (orientation: portrait) {
     .sorting-zones-section {
@@ -530,53 +487,65 @@
         font-size: 0.9rem;
     }
 
-    /* Instructions panel adjustments */
+    /* Updated Instructions Panel Styles for Mobile */
     .sorting-zones-section .game-instructions-panel {
-        padding: 1rem;
+        padding: 0.75rem;
         border-radius: 12px;
         margin-bottom: 0.5rem;
+        max-height: none;
     }
 
     .sorting-zones-section .game-instructions-panel h2 {
-        font-size: 1.25rem;
-        margin-bottom: 0.75rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
     }
 
-    /* Instruction categories optimization */
     .sorting-zones-section .instruction-categories {
-        grid-template-columns: repeat(1, 1fr);
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
 
     .sorting-zones-section .instruction-category {
-        padding: 0.75rem;
-        border-radius: 12px;
+        padding: 0.5rem;
+        gap: 0.5rem;
         display: grid;
         grid-template-columns: auto 1fr;
-        align-items: center;
-        gap: 0.75rem;
+        align-items: start;
         text-align: left;
     }
 
     .sorting-zones-section .category-icon {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
+        grid-row: 1 / 3;
         margin: 0;
     }
 
     .sorting-zones-section .category-icon i {
-        font-size: 1.25rem;
-    }
-
-    .sorting-zones-section .instruction-category h4 {
-        margin: 0;
         font-size: 1rem;
     }
 
-    .sorting-zones-section .instruction-category p {
-        margin: 0.25rem 0;
+    .sorting-zones-section .instruction-category h4 {
         font-size: 0.9rem;
-        grid-column: 1 / -1;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .sorting-zones-section .instruction-category p {
+        font-size: 0.8rem;
+        margin: 0;
+        line-height: 1.2;
+        grid-column: 2;
+    }
+
+    .sorting-zones-section .weight-range {
+        padding: 0.15rem 0.25rem;
+        font-size: 0.8rem;
+        margin: 0.25rem 0;
+    }
+
+    .sorting-zones-section .safety-tip {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
     }
 
     /* Conveyor belt adjustments */
@@ -682,6 +651,23 @@
         grid-template-columns: 1fr;
     }
 
+    .sorting-zones-section .game-instructions-panel {
+        padding: 0.5rem;
+    }
+
+    .sorting-zones-section .game-instructions-panel h2 {
+        font-size: 1rem;
+    }
+
+    .sorting-zones-section .instruction-category {
+        padding: 0.4rem;
+    }
+
+    .sorting-zones-section .category-icon {
+        width: 28px;
+        height: 28px;
+    }
+
     .sorting-zones-section .package {
         width: 45px;
         height: 45px;
@@ -693,19 +679,6 @@
 
     .sorting-zones-section .zone {
         min-height: 80px;
-    }
-}
-
-/* Height-based adjustments for shorter screens */
-@media (orientation: portrait) and (max-height: 700px) {
-    .sorting-zones-section .game-instructions-panel {
-        max-height: 30vh;
-        overflow-y: auto;
-    }
-
-    .sorting-zones-section .sorting-zones {
-        max-height: 50vh;
-        overflow-y: auto;
     }
 }
 
@@ -729,5 +702,13 @@
     .sorting-zones-section .button-secondary:active {
         opacity: 0.8;
         transform: translateY(1px);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .sorting-zones-section * {
+        animation: none !important;
+        transition: none !important;
     }
 }

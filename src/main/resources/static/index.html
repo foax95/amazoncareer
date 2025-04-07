@@ -581,63 +581,44 @@
         <!-- Game Instructions Panel -->
         <div class="game-instructions-panel">
             <div class="instructions-content">
-                <h2><i class="fas fa-clipboard-check"></i> Pre-hire Checklist Matching Game</h2>
-                <p>Test your knowledge of important pre-hire tasks by finding matching pairs!</p>
+                <h2><i class="fas fa-clipboard-check"></i> Pre-hire Checklist Game</h2>
+                <p class="game-intro">Match pairs to test your pre-hire knowledge!</p>
 
                 <div class="instruction-steps">
                     <div class="step">
                         <i class="fas fa-mouse-pointer"></i>
-                        <p>Click cards to flip them and reveal pre-hire checklist items</p>
+                        <div class="step-content">
+                            <h3>Flip Cards</h3>
+                            <p>Tap to reveal checklist items</p>
+                        </div>
                     </div>
                     <div class="step">
                         <i class="fas fa-sync-alt"></i>
-                        <p>Find matching checklist pairs to score points</p>
+                        <div class="step-content">
+                            <h3>Find Matches</h3>
+                            <p>Pair items to score points</p>
+                        </div>
                     </div>
                     <div class="step">
                         <i class="fas fa-clock"></i>
-                        <p>Complete the game before time runs out (60 seconds)</p>
+                        <div class="step-content">
+                            <h3>Beat the Clock</h3>
+                            <p>Complete in 60 seconds</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="additional-instructions">
-                    <h3>Pre-hire Checklist Items:</h3>
-                    <div class="checklist-preview">
-                        <div class="preview-item">
-                            <i class="fas fa-laptop"></i>
-                            <span>Application Status</span>
-                        </div>
-                        <div class="preview-item">
-                            <i class="fas fa-shoe-prints"></i>
-                            <span>Safety Shoes</span>
-                        </div>
-                        <div class="preview-item">
-                            <i class="fas fa-tags"></i>
-                            <span>Shoe Ordering</span>
-                        </div>
-                        <div class="preview-item">
-                            <i class="fas fa-file-signature"></i>
-                            <span>Pre-hire Forms</span>
-                        </div>
-                        <div class="preview-item">
-                            <i class="fas fa-id-card"></i>
-                            <span>Photo ID</span>
-                        </div>
-                        <div class="preview-item">
-                            <i class="fas fa-tshirt"></i>
-                            <span>Day 1 Attire</span>
-                        </div>
-                    </div>
-
+                <div class="game-rules">
                     <h3>How to Play:</h3>
                     <ol>
-                        <li>Click on any card to flip it and reveal a pre-hire checklist item.</li>
-                        <li>Click on a second card to try and find its match.</li>
-                        <li>If the cards match, they will remain face up, and you'll earn points.</li>
-                        <li>If they don't match, both cards will flip back over.</li>
-                        <li>Remember the locations of cards to make matches more quickly.</li>
-                        <li>Match all 6 pairs before time runs out to win!</li>
+                        <li>Tap a card to flip it</li>
+                        <li>Find its matching pair</li>
+                        <li>Matches stay face up</li>
+                        <li>Non-matches flip back</li>
+                        <li>Remember card locations</li>
+                        <li>Match all 6 pairs to win</li>
                     </ol>
-                    <p><strong>Tip:</strong> The faster you complete the game, the higher your score will be!</p>
+                    <p class="game-tip"><i class="fas fa-lightbulb"></i> Tip: Faster completion = Higher score!</p>
                 </div>
 
                 <button class="start-game-btn button-primary">
@@ -700,11 +681,11 @@
                     </div>
                     <div class="score-breakdown">
                         <div class="score-item">
-                            <span class="label">Items Matched:</span>
+                            <span class="label">Matched:</span>
                             <span class="matches-found">0/6</span>
                         </div>
                         <div class="score-item">
-                            <span class="label">Time Remaining:</span>
+                            <span class="label">Time Left:</span>
                             <span class="time-bonus">0s</span>
                         </div>
                         <div class="score-item">
@@ -728,6 +709,7 @@
             </div>
         </div>
     </section>
+
 
 
     <!-- Quiz Section -->
