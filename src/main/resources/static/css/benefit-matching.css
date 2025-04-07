@@ -1,8 +1,6 @@
 /* Matching Game Base Styles */
 .matching-section {
     /* Variables */
-    --card-width: 150px;
-    --card-height: 200px;
     --card-padding: 15px;
     --flip-duration: 0.6s;
     --amazon-blue: #232F3E;
@@ -63,6 +61,7 @@
     position: relative;
     z-index: 1;
 }
+
 /* Instructions Panel */
 .matching-section .game-instructions-panel {
     border-radius: 15px;
@@ -157,13 +156,16 @@
 .matching-section .game-tip i {
     color: var(--amazon-orange);
 }
+
 /* Game Content */
 .matching-section .game-content {
     display: none;
     width: 100%;
     margin: 0 auto;
+    padding: 0.5rem;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
 }
 
 .matching-section .game-content.show {
@@ -172,7 +174,8 @@
 
 .matching-section .game-header {
     width: 100%;
-    margin-bottom: 1rem;
+    max-width: 500px;
+    margin-bottom: 0.5rem;
 }
 
 .matching-section .game-stats {
@@ -203,18 +206,19 @@
 /* Cards Grid */
 .matching-section .cards-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     gap: 0.5rem;
     width: 100%;
-    aspect-ratio: 1;
+    max-width: 500px;
     margin: 0 auto;
     padding: 0.5rem;
-    max-width: min(100%, 90vmin);
+    aspect-ratio: 3/4;
 }
 
 /* Card Styles */
 .matching-section .checklist-card {
-    aspect-ratio: 1;
+    aspect-ratio: 3/4;
     perspective: 1000px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -246,7 +250,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem;
+    padding: 0.5rem;
     box-shadow: var(--shadow-sm);
 }
 
@@ -263,12 +267,12 @@
 
 .matching-section .card-front i,
 .matching-section .card-back i {
-    font-size: clamp(1rem, 4vmin, 1.5rem);
-    margin-bottom: 0.25rem;
+    font-size: clamp(1.2rem, 5vmin, 1.8rem);
+    margin-bottom: 0.5rem;
 }
 
 .matching-section .card-front span {
-    font-size: clamp(0.6rem, 2vmin, 0.75rem);
+    font-size: clamp(0.7rem, 2.5vmin, 0.9rem);
     font-weight: bold;
     text-align: center;
     line-height: 1.2;
@@ -280,6 +284,7 @@
     background-color: var(--amazon-success);
     color: white;
 }
+
 /* Checklist Info Modal */
 .matching-section .checklist-info-modal {
     position: fixed;
@@ -391,6 +396,7 @@
     background: rgba(45, 140, 1, 0.1);
     border-radius: 8px;
 }
+
 /* Completion Message */
 .matching-section .completion-message {
     position: fixed;
@@ -488,6 +494,7 @@
     gap: 0.75rem;
     margin-top: 1rem;
 }
+
 /* Animations */
 @keyframes flipIn {
     from { transform: rotateY(180deg); }
@@ -546,6 +553,40 @@
     }
 }
 
+/* Mobile Optimizations */
+@media (max-width: 360px) {
+    .matching-section .cards-grid {
+        gap: 0.35rem;
+        padding: 0.35rem;
+    }
+
+    .matching-section .card-front i,
+    .matching-section .card-back i {
+        font-size: clamp(1rem, 4vmin, 1.5rem);
+    }
+
+    .matching-section .card-front span {
+        font-size: clamp(0.6rem, 2vmin, 0.8rem);
+    }
+}
+
+/* For very small screens */
+@media (max-width: 280px) {
+    .matching-section .cards-grid {
+        gap: 0.25rem;
+        padding: 0.25rem;
+    }
+
+    .matching-section .card-front i,
+    .matching-section .card-back i {
+        font-size: clamp(0.8rem, 3.5vmin, 1.2rem);
+    }
+
+    .matching-section .card-front span {
+        font-size: clamp(0.5rem, 1.8vmin, 0.7rem);
+    }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     .matching-section * {
@@ -569,21 +610,5 @@
     .matching-section .completion-message {
         max-height: 80vh;
         overflow-y: auto;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 320px) {
-    .matching-section {
-        padding: 0.25rem;
-    }
-
-    .matching-section .card-front i,
-    .matching-section .card-back i {
-        font-size: clamp(0.8rem, 3vmin, 1rem);
-    }
-
-    .matching-section .card-front span {
-        font-size: clamp(0.5rem, 1.8vmin, 0.65rem);
     }
 }

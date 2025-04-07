@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Onboarding Adventure - Loading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --amazon-blue: #232F3E;
+            --amazon-orange: #FF9900;
+            --amazon-orange-light: #FFAC30;
+            --amazon-white: #FFFFFF;
+            --logo-size: clamp(250px, 40vw, 400px);
+            --content-padding: clamp(1rem, 5vw, 2rem);
+            --tip-font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--amazon-blue);
+            color: var(--amazon-white);
+            overflow: hidden;
+            min-height: 100vh;
+            /* mobile viewport bug fix */
+            min-height: -webkit-fill-available;
+            width: 100%;
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--content-padding);
+        }
+
+        .loading-content {
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(1.5rem, 4vw, 3rem);
+        }
+
+        .loading-logo {
+            width: var(--logo-size);
+            height: var(--logo-size);
+            background-image: url('https://images-game-wfs.s3.us-east-2.amazonaws.com/AMAZON_MASTER_LOGOANIMATION_WHITE%26SMILEORANGE_4K.gif');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 100%;
+            height: clamp(12px, 3vw, 20px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            overflow: hidden;
+            margin: clamp(1rem, 3vw, 2rem) 0;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg,
+            var(--amazon-orange) 0%,
+            var(--amazon-orange-light) 50%,
+            var(--amazon-orange) 100%);
+            border-radius: 999px;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    transparent 100%
+            );
+            animation: shimmer 2s infinite linear;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading-tip {
+            font-size: var(--tip-font-size);
+            min-height: 3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            text-align: center;
+            max-width: 90%;
+            margin: 0 auto;
+            line-height: 1.4;
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .particle {
+            position: absolute;
+            background-color: var(--amazon-orange);
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        @keyframes shimmer {
+            100% { transform: translateX(200%); }
+        }
+
+        /* Mobile Landscape Optimization */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .loading-content {
+                gap: 1rem;
+            }
+
+            .loading-logo {
+                --logo-size: clamp(150px, 30vh, 250px);
+            }
+
+            .progress-container {
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Mobile Portrait Optimization */
+        @media (max-width: 480px) {
+            .loading-content {
+                width: 95%;
+            }
+
+            .loading-logo {
+                --logo-size: clamp(200px, 50vw, 300px);
+            }
+
+            .loading-tip {
+                font-size: clamp(0.8rem, 4vw, 1rem);
+            }
+        }
+
+        /* Better Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .progress-bar,
+            .loading-tip,
+            .particle {
+                transition: none;
+            }
+
+            .progress-bar::after {
+                animation: none;
+            }
+
+            .particle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="loading-overlay">
+    <div class="loading-content">
+        <div class="loading-logo" role="img" aria-label="Amazon Logo Loading Animation"></div>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+            <div class="progress-text" aria-live="polite">0%</div>
+        </div>
+        <div class="loading-tip" aria-live="polite"></div>
+    </div>
+</div>
+
+<script>
+    const loadingSystem = {
+        progress: 0,
+        tips: [
+            "Welcome to your Amazon journey!",
+            "Safety first! Always follow proper lifting techniques.",
+            "Communication is key for team success.",
+            "Stay hydrated throughout your shift.",
+            "Take regular breaks to stay alert and focused.",
+            "Report any safety concerns immediately.",
+            "Teamwork makes the dream work at Amazon!",
+            "Embrace learning opportunities every day.",
+            "Your well-being is our top priority.",
+            "Strive for continuous improvement in all you do."
+        ],
+        currentTipIndex: 0,
+
+        initialize() {
+            this.progressBar = document.querySelector('.progress-bar');
+            this.progressText = document.querySelector('.progress-text');
+            this.tipElement = document.querySelector('.loading-tip');
+            this.startLoading();
+            this.createParticles();
+        },
+
+        startLoading() {
+            this.updateProgress(0);
+            this.showTip();
+            this.loadingInterval = setInterval(() => {
+                this.progress += 1;
+                this.updateProgress(this.progress);
+                if (this.progress % 20 === 0) {
+                    this.showNextTip();
+                }
+                if (this.progress >= 100) {
+                    clearInterval(this.loadingInterval);
+                    this.onLoadingComplete();
+                }
+            }, 100);
+        },
+
+        updateProgress(value) {
+            this.progressBar.style.width = `${value}%`;
+            this.progressText.textContent = `${value}%`;
+        },
+
+        showNextTip() {
+            this.currentTipIndex = (this.currentTipIndex + 1) % this.tips.length;
+            this.showTip();
+        },
+
+        showTip() {
+            this.tipElement.style.opacity = '0';
+            setTimeout(() => {
+                this.tipElement.textContent = this.tips[this.currentTipIndex];
+                this.tipElement.style.opacity = '1';
+            }, 500);
+        },
+
+        createParticles() {
+            const particleCount = window.innerWidth < 768 ? 30 : 50;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 4 + 2}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                document.body.appendChild(particle);
+                this.animateParticle(particle);
+            }
+        },
+
+        animateParticle(particle) {
+            const duration = Math.random() * 3000 + 5000;
+            const animation = particle.animate([
+                { transform: 'translateY(0)' },
+                { transform: `translateY(-${window.innerHeight}px)` }
+            ], {
+                duration,
+                iterations: Infinity
+            });
+
+            if (Math.random() > 0.5) {
+                animation.playbackRate = -1;
+            }
+        },
+
+        onLoadingComplete() {
+            // Handle loading complete
+            console.log('Loading complete!');
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadingSystem.initialize();
+    });
+
+    // Handle visibility change
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            // Pause animations when tab is not visible
+            document.querySelectorAll('.particle').forEach(particle => {
+                const animation = particle.getAnimations()[0];
+                if (animation) animation.pause();
+            });
+        } else {
+            // Resume animations when tab is visible
+            document.querySelectorAll('.particle').forEach(particle => {
+                const animation = particle.getAnimations()[0];
+                if (animation) animation.play();
+            });
+        }
+    });
+</script>
+</body>
+</html>
