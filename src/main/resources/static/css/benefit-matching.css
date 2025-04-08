@@ -218,7 +218,7 @@
 
 /* Card Styles */
 .matching-section .checklist-card {
-    aspect-ratio: 3/4;
+    aspect-ratio: 4/4;
     perspective: 1000px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
