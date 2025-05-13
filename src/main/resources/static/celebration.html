@@ -68,7 +68,7 @@
     .trophy-animation {
       font-size: 6rem;
       margin-bottom: 1rem;
-      animation: trophyBounce 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      animation: trophyBounce 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
       text-shadow: 0 0 20px var(--glow-color), var(--text-shadow-dark);
       cursor: pointer;
       transition: transform 0.3s ease;
@@ -171,6 +171,29 @@
       height: 100%;
       pointer-events: none;
       z-index: 1;
+    }
+
+    .continue-button {
+      margin-top: 2rem;
+    }
+
+    .continue-button a {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      text-shadow: none;
+    }
+
+    .continue-button a:hover {
+      background-color: var(--white);
+      color: var(--secondary-color);
+      box-shadow: 0 0 15px var(--glow-color);
     }
 
     /* Animations */
@@ -299,6 +322,11 @@
         font-size: 0.9rem;
         margin-top: 1rem;
       }
+
+      .continue-button a {
+        font-size: 1rem;
+        padding: 10px 20px;
+      }
     }
 
     /* Very Small Screens */
@@ -387,6 +415,9 @@
         <p>You're now prepared for your exciting journey at Amazon! Your first day will be a breeze.</p>
         <p>Remember to bring this enthusiasm to your new role. We can't wait to see you shine!</p>
       </div>
+      <div class="continue-button">
+        <a href="https://amazonexteu.qualtrics.com/jfe/form/SV_9Hnu4JgPxeXIRGC" target="_blank">Continue to Survey</a>
+      </div>
     </div>
   </div>
 </section>
@@ -459,7 +490,7 @@
         });
       });
     }
-    // Creates firework
+
     createFirework(element) {
       const rect = element.getBoundingClientRect();
       const firework = document.createElement('div');
